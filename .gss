@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# http://eater.org/
+#
+# Dump and load Gnome settings for things I care about.
+
+GCT="`which gconftool-2`"
+DUMPFILE="$HOME/.gss_dump"
+
+dump() {
+  $GCT --dump $DIRS > $DUMPFILE
+}
+
+load() {
+  $GCT --load $DUMPFILE
+}
+
+DIRS="
+ /apps/nautilus
+ /apps/gnome-settings
+ /apps/gnome-terminal
+"
+
+case $1 in
+  dump)
+    dump
+  ;;
+  load)
+    load
+  ;;
+  *)
+    echo "Usage: `basename $0` [dump|load]"
+esac

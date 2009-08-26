@@ -1,0 +1,27 @@
+#!/bin/sh
+
+BACKUP_DST="$HOME/.ocd_backup.tar.gz"
+IGNORE_RE="(update|downdate|README|\.svn)"
+FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
+DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
+
+tar -czp -C $HOME -f $BACKUP_DST $FILES 
+echo "Old files saved in '$BACKUP_DST'."
+
+for dir in $DIRS;do
+  mkdir -p $HOME/$dir
+done
+
+for file in $FILES;do
+  echo -n .
+  src="$file"
+  dst="$HOME/$file"
+  if [ -f $dst ];then
+    chmod +w $dst
+    rm $dst
+  fi
+  cp $file $dst
+  #chmod -w $dst
+done
+
+echo " All Done!"

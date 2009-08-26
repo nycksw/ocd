@@ -1,0 +1,16 @@
+#!/bin/sh
+
+IGNORE_RE="(update|downdate|README|\.svn)"
+FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
+
+for file in $FILES;do
+  echo -n .
+  dst="$file"
+  src="$HOME/$file"
+  if [ -f $src ];then
+    chmod +w $dst
+    cp $src $dst
+  fi
+done
+
+echo " All Done!"

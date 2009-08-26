@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openbox_menu xmlns="http://openbox.org/"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://openbox.org/
+                file:///usr/share/openbox/menu.xsd">
+
+<menu id="root-menu" label="ELITE HACKING MENU">
+  <item label="firefox">
+    <action name="Execute">
+      <execute>firefox</execute>
+    </action>
+  </item>
+  <item label="gnome-terminal">
+    <action name="Execute">
+      <execute>gnome-terminal --geometry=100x40</execute>
+    </action>
+  </item>
+  <item label="eterm">
+    <action name="Execute">
+      <execute>Eterm -F fkp --geometry=120x30</execute>
+    </action>
+  </item>
+  <item label="nautilus">
+    <action name="Execute">
+      <execute>nautilus</execute>
+    </action>
+  </item>
+  <item label="deluge">
+    <action name="Execute">
+      <execute>deluge</execute>
+    </action>
+  </item>
+  <separator />
+  <!-- This requires the presence of the 'menu' package to work -->
+  <menu id="Debian" />
+  <separator />
+  <menu id="client-list-menu" />
+  <separator />
+  <item label="ObConf">
+    <action name="Execute"><execute>obconf</execute></action>
+  </item>
+  <item label="Reconfigure">
+    <action name="Reconfigure" />
+  </item>
+  <item label="Restart">
+    <action name="Restart" />
+  </item>
+  <separator />
+  <item label="Exit">
+    <action name="Exit" />
+  </item>
+</menu>
+
+</openbox_menu>

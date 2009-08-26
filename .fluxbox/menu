@@ -1,0 +1,17 @@
+[begin] (ELITE HACKING MENU)
+   [exec] (Ff) {firefox}
+   [exec] (Eterm) {Eterm --geometry 100x40 --buttonbar=no --scrollbar=no -F fkp}
+   [exec] (Run...) {fbrun}
+   [nop] (--)
+   [include] (~/.fluxbox/menudefs.hook)
+   [nop] (--)
+   [config] (Configuration)
+   [submenu] (Styles) {}
+      [stylesdir] (/usr/share/fluxbox/styles)
+      [stylesdir] (~/.fluxbox/styles)
+   [end]
+   [workspaces] (Workspaces)
+   [reconfig] (Reconfigure)
+   [restart] (Restart)
+   [exit] (Exit)
+[end]

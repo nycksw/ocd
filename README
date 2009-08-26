@@ -1,0 +1,13 @@
+This directory contains lots of dotfiles. It's all shell environment and fluxbox
+customization type stuff.
+
+See also:
+
+  http://blog.eater.org/2009/01/my-obsessive-compulsive-directory.html
+
+Running "./update" will push everything here to your $HOME. It will back up your
+existing crap in a tarball.
+
+Running "./downdate" will copy your current files back into this directory so you
+may commit them back to the svn repository.
+
