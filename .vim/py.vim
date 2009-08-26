@@ -5,9 +5,9 @@
 set invnumber
 
 " Folding
-setl foldmethod=indent
-setl foldnestmax=3  " class, method, if
-setl foldignore=#   " ignore comments
+"setl foldmethod=indent
+"setl foldnestmax=3  " class, method, if
+"setl foldignore=#   " ignore comments
 map F zA
 cab fo %foldo!
 cab fc %foldc!

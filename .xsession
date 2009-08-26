@@ -4,8 +4,8 @@
 ln -sf .bgimg-$(hostname -f) .bgimg
 ln -sf .synergyrc-$(hostname -f) .synergyrc
 
-xset fp+ ~/.fonts
-xset fp rehash
+#xset fp+ ~/.fonts
+#xset fp rehash
 xset -b
 xset m 2 1.6
 

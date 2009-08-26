@@ -1,7 +1,7 @@
 # ~eater/.bashrc
 # http://eater.org/
 #
-# Global bash customizations. This should apply to ALL your systems.
+# Global bash customizations. This should apply to ALL of your systems.
 #
 # Use ~/.bashrc_<domain> or ~/.bashrc_<hostname> for local customizations.
 
