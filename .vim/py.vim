@@ -11,7 +11,7 @@ set invnumber
 map F zA
 cab fo %foldo!
 cab fc %foldc!
-%foldo!
+"%foldo!
 
 
 " Debugger set-trace
