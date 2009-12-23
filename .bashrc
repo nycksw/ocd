@@ -15,7 +15,6 @@ test -z "$PS1" && return
 export EDITOR=vim
 export HISTCONTROL=ignoredups
 export HISTSIZE=4096
-export PATH="~/bin:/bin:/sbin:/usr/bin/X11:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:"
 
 # To enable ISO en_US for ANSI charsets:
 #   sudo sh -c "echo en_US ISO-8859-1 > /var/lib/locales/supported.d/local"
