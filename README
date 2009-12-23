@@ -3,14 +3,10 @@ window manager customization type stuff.
 
 See also:
 
-  http://blog.eater.org/2009/01/my-obsessive-compulsive-directory.html
-
-NOTE: I'm moving this system from Subversion to git. (As soon as I figure out
-how git works.)
+  http://wiki.eater.org/ocd
 
 Running "./update" will push everything here to your $HOME. It will back up your
 existing crap in a tarball.
 
 Running "./downdate" will copy your current files back into this directory so you
-may commit them back to the svn repository.
-
+may commit them back to the git repository.
