@@ -25,7 +25,7 @@
        mouse into it, also raise the window -->
   </focus>
   <placement>
-    <policy>Smart</policy>
+    <policy>UnderMouse</policy>
     <!-- 'Smart' or 'UnderMouse' -->
     <center>yes</center>
     <!-- whether to place windows in the center of the free area found or
@@ -36,7 +36,7 @@
        the active window is -->
   </placement>
   <theme>
-    <name>TropicBomb</name>
+    <name>Simple-Industrial</name>
     <titleLayout>NLIMC</titleLayout>
     <!--
       available characters are NDSLIMC, each can occur at most once.
@@ -78,12 +78,12 @@
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="MenuItem">
-      <name>sans</name>
-      <size>9</size>
+      <name>Verdana</name>
+      <size>14</size>
       <!-- font size in points -->
-      <weight>normal</weight>
+      <weight>Normal</weight>
       <!-- 'bold' or 'normal' -->
-      <slant>normal</slant>
+      <slant>Normal</slant>
       <!-- 'italic' or 'normal' -->
     </font>
     <font place="OnScreenDisplay">
@@ -138,13 +138,13 @@
      Many programs reserve space automatically, but you can use this in other
      cases. -->
   <margins>
-    <top>0</top>
+    <top>5</top>
     <bottom>5</bottom>
-    <left>0</left>
-    <right>0</right>
+    <left>5</left>
+    <right>5</right>
   </margins>
   <dock>
-    <position>TopLeft</position>
+    <position>BottomRight</position>
     <!-- (Top|Bottom)(Left|Right|)|Top|Bottom|Left|Right|Floating -->
     <floatingX>0</floatingX>
     <floatingY>0</floatingY>
@@ -300,6 +300,18 @@
           <name>Konqueror</name>
         </startupnotify>
         <command>kfmclient openProfile filemanagement</command>
+      </action>
+    </keybind>
+    <keybind key="C-A-0">
+      <action name="Execute">
+        <name>Auto Display</name>
+        <command>xrandr --auto</command>
+      </action>
+    </keybind>
+    <keybind key="C-A-space">
+      <action name="ShowMenu">
+        <name>Auto Display</name>
+        <menu>root-menu</menu>
       </action>
     </keybind>
   </keyboard>

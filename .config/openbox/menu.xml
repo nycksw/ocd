@@ -6,35 +6,44 @@
                 file:///usr/share/openbox/menu.xsd">
 
 <menu id="root-menu" label="ELITE HACKING MENU">
-  <item label="firefox">
-    <action name="Execute">
-      <execute>firefox</execute>
-    </action>
-  </item>
   <item label="gnome-terminal">
     <action name="Execute">
-      <execute>gnome-terminal --geometry=100x40</execute>
+      <execute>gnome-terminal --geometry=160x45+75+50</execute>
     </action>
   </item>
-  <item label="eterm">
+  <item label="chrome (ksw@google.com)">
     <action name="Execute">
-      <execute>Eterm -F fkp --geometry=120x30</execute>
+      <execute>google-chrome --proxy-pac-url=http://wpad.corp.google.com/wpad.dat</execute>
     </action>
   </item>
-  <item label="nautilus">
+  <item label="chrome (obeyeater@gmail.com)">
     <action name="Execute">
-      <execute>nautilus</execute>
-    </action>
-  </item>
-  <item label="deluge">
-    <action name="Execute">
-      <execute>deluge</execute>
+      <execute>google-chrome --user-data-dir=/home/ksw/.config/google-chrome/Personal</execute>
     </action>
   </item>
   <separator />
-  <!-- This requires the presence of the 'menu' package to work -->
-  <menu id="Debian" />
-  <separator />
+  <menu id="display" label="Displays">
+    <item label="DVI-0">
+      <action name="Execute">
+        <execute>xrandr --output DVI-0 --primary --auto --output LVDS --off --output VGA-0 --off</execute>
+      </action>
+    </item>
+    <item label="LVDS">
+      <action name="Execute">
+        <execute>xrandr --output DVI-0 --off --output LVDS --primary --auto --output VGA-0 --off</execute>
+      </action>
+    </item>
+    <item label="VGA-0">
+      <action name="Execute">
+        <execute>xrandr --output DVI-0 --off --output LVDS --off --output VGA-0 --primary --auto</execute>
+      </action>
+    </item>
+    <item label="All">
+      <action name="Execute">
+        <execute>xrandr --auto</execute>
+      </action>
+    </item>
+  </menu>
   <menu id="client-list-menu" />
   <separator />
   <item label="ObConf">
