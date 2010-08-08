@@ -11,3 +11,4 @@ xset m 2 1.6
 xscreensaver -nosplash &
 
 which pypanel && (sleep 2 && pypanel) &
+which osd_clock && osd_clock -t -r -c grey -s3 &
