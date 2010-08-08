@@ -1,4 +1,16 @@
 #!/bin/bash
+#
+# eater@eater.org
+#
+# Openbox pipemenu for selecting displays via xrandr. Do something
+# like this in your menu.xml:
+#
+#   <menu id="displays" label="Displays" execute="/path/to/this" />
+#
+# See also:
+#   http://openbox.org/wiki/Help:Menus#Pipe_menus
+#   http://wiki.debian.org/XStrikeForce/HowToRandR12
+#   http://wiki.eater.org/ocd
 
 echo "<openbox_pipe_menu>"
 
@@ -20,8 +32,8 @@ if [ -z "$displays" ]; then
 fi
 
 for display in $displays; do
-  echo "<item label=\"$display\"><action name=\"Execute\"><execute>"
-  echo -n "   xrandr "
+  echo -n "<item label=\"$display\"><action name=\"Execute\"><execute>xrandr"
+  # Set $display auto/primary, set the others to off.
   for d in $displays; do
     if [ "$d" = "$display" ]; then
       echo -n "--output $d --primary --auto "
@@ -29,7 +41,7 @@ for display in $displays; do
       echo -n "--output $d --off "
     fi
   done
-  echo -e "\n</execute></action></item>"
+  echo -e "</execute></action></item>"
 done
 
 cat << END
