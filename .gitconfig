@@ -1,0 +1,6 @@
+[user]
+	name = Eater
+	email = eater@eater.org
+
+[core]
+  excludesfile = .gitexcludes
