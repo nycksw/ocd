@@ -1,6 +1,6 @@
 #!/bin/sh
 
-IGNORE_RE="(update|downdate|README|\.git)"
+IGNORE_RE="(update|downdate|README|\.git/)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 
 for file in $FILES;do

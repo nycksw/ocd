@@ -12,6 +12,8 @@ shopt -s checkwinsize
 # Non-interactive bail-out.
 test -z "$PS1" && return
 
+export PATH=$PATH:~/bin
+
 export EDITOR=vim
 export HISTCONTROL=ignoredups
 export HISTSIZE=4096
