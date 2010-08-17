@@ -32,7 +32,7 @@ if [ -z "$displays" ]; then
 fi
 
 for display in $displays; do
-  echo -n "<item label=\"$display\"><action name=\"Execute\"><execute>xrandr"
+  echo -n "<item label=\"$display\"><action name=\"Execute\"><execute>xrandr "
   # Set $display auto/primary, set the others to off.
   for d in $displays; do
     if [ "$d" = "$display" ]; then

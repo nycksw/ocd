@@ -1,9 +1,14 @@
 #!/bin/sh
 
 BACKUP_DST="$HOME/.ocd_backup.tar.gz"
-IGNORE_RE="(update|downdate|README|\.git)"
+IGNORE_RE="(update|downdate|README|\.git/|\.sedfix$)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
+
+if [ "$PWD" != "$HOME/.ocd" ]; then
+  echo "You must run update from $HOME/.ocd." &>/dev/stderr
+  exit
+fi
 
 tar -czp -C $HOME -f $BACKUP_DST $FILES 
 echo "Old files saved in '$BACKUP_DST'."
@@ -13,6 +18,7 @@ for dir in $DIRS;do
 done
 
 for file in $FILES;do
+
   echo -n .
   src="$file"
   dst="$HOME/$file"
@@ -21,7 +27,13 @@ for file in $FILES;do
     rm $dst
   fi
   cp $file $dst
-  #chmod -w $dst
+
+  # To do arbitrary local subsitution (including shell expansion) an optional
+  # .sedfix shell script may be run.
+  if [ -f ${file}.sedfix ]; then
+    ./${file}.sedfix
+  fi
+
 done
 
 echo " All Done!"
