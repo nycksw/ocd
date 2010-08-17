@@ -5,7 +5,7 @@ IGNORE_RE="(update|downdate|README|\.git/|\.sedfix$)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
 
-if [ "$PWD" != "$HOME/.ocd"]; then
+if [ "$PWD" != "$HOME/.ocd" ]; then
   echo "You must run update from $HOME/.ocd." &>/dev/stderr
   exit
 fi
