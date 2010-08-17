@@ -3,4 +3,4 @@
 	email = obeyeater@gmail.com
 
 [core]
-  excludesfile = .gitexcludes
+	excludesfile = OCD_USER_HOME/.gitexcludes
