@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source $HOME/.ocd/common.sedfix || exit
+TARGET=$(sedfix_get_target $0)
+
+sed -i "s|OCD_USER_HOME|$HOME|g" $TARGET
+sed -i "s|OCD_PROXY_PAC_URL|$(cat $HOME/.proxy_pac_url)|g" $TARGET
