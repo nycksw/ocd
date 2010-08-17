@@ -16,7 +16,7 @@
   <item label="chrome (work)">
     <action name="Execute">
       <execute>
-        google-chrome --proxy-pac-url=OCD_PROXY_PAC_URL
+        google-chrome OCD_PROXY_PAC_URL
                       --user-data-dir=OCD_USER_HOME/.config/google-chrome/Work
       </execute>
     </action>
