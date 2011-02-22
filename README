@@ -1,12 +1,13 @@
-This directory contains lots of dotfiles. It's all shell environment and
-window manager customization type stuff.
+This directory contains lots of dotfiles. It's all shell environment
+and window manager customization type stuff.
 
-See also:
+See also: http://wiki.eater.org/ocd
 
-  http://wiki.eater.org/ocd
+Running "./update" will push everything here to your $HOME. It will back
+up your existing crap in a tarball.
 
-Running "./update" will push everything here to your $HOME. It will back up your
-existing crap in a tarball.
+Running "./downdate" will copy your current files back into this directory
+so you may commit them back to the git repository.
 
-Running "./downdate" will copy your current files back into this directory so you
-may commit them back to the git repository.
+Things to do:
+- The sedfix thing is soooo hacky. Replace it with something less stupid.

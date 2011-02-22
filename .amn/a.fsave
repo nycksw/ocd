@@ -1,4 +1,4 @@
-** amnesiac format file - saved 07/31/10 14:25:36
+** amnesiac format file - saved 08/10/10 17:14:41
 assign scdesc (eater)
 assign theme.format.action 1
 assign theme.format.action_other 1
@@ -38,4 +38,4 @@ assign theme.format.topicby 10
 assign theme.format.statusbar 16
 assign theme.format.version_reply 2
 assign theme.format.whois 9
-assign theme.format.scan 6
+assign theme.format.scan 9

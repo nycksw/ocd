@@ -5,24 +5,21 @@ IGNORE_RE="(update|downdate|README|\.git/|\.sedfix$)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
 
-if [ "$PWD" != "$HOME/.ocd" ]; then
-  echo "You must run update from $HOME/.ocd." &>/dev/stderr
-  exit
-fi
+cd $HOME/.ocd
 
 tar -czp -C $HOME -f $BACKUP_DST $FILES 
 echo "Old files saved in '$BACKUP_DST'."
 
-for dir in $DIRS;do
+for dir in $DIRS; do
   mkdir -p $HOME/$dir
 done
 
-for file in $FILES;do
+for file in $FILES; do
 
-  echo -n .
+  printf .
   src="$file"
   dst="$HOME/$file"
-  if [ -f $dst ];then
+  if [ -f $dst ]; then
     chmod +w $dst
     rm $dst
   fi

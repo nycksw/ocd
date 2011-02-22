@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 source $HOME/.ocd/common.sedfix || exit
 TARGET=$(sedfix_get_target $0)

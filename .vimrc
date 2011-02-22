@@ -37,3 +37,4 @@ set pastetoggle=<F12>
 au BufEnter,BufRead,BufNewFile *.py so ~/.vim/py.vim
 au BufEnter,BufRead,BufNewFile BUILD set filetype=python
 au BufEnter,BufRead,BufNewFile BUILD so ~/.vim/py.vim
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim

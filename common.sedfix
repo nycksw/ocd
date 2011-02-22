@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 #
 # All ${foo}.sedfix files source these functions.
 
-function sedfix_get_target {
+sedfix_get_target() {
   TARGET="$HOME/$(echo $0 | sed 's/.sedfix$//')"
   if [ ! -f "$TARGET" ]; then
     echo "Target ($TARGET) does not exist." >&2
