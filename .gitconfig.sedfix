@@ -1,6 +1,0 @@
-#!/bin/sh
-
-source $HOME/.ocd/common.sedfix || exit
-TARGET=$(sedfix_get_target $0)
-
-sed -i "s|OCD_USER_HOME|$HOME|g" $TARGET

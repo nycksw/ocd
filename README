@@ -8,6 +8,3 @@ up your existing crap in a tarball.
 
 Running "./downdate" will copy your current files back into this directory
 so you may commit them back to the git repository.
-
-Things to do:
-- The sedfix thing is soooo hacky. Replace it with something less stupid.
