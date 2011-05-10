@@ -1,4 +1,4 @@
-" ~eater/.vim/py.vim
+" ~eater/.vimrc
 " http://eater.org/
 
 set nocompatible
