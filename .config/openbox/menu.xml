@@ -17,8 +17,8 @@
     <action name="Execute">
       <execute>
         google-chrome
-            OCD_PROXY_PAC_URL
-            --user-data-dir=OCD_USER_HOME.config/google-chrome/Work
+            --proxy-pac-url=http://wpad.corp.google.com/wpad.dat
+            --user-data-dir=/home/ksw/.config/google-chrome/Work
       </execute>
     </action>
   </item>
@@ -27,7 +27,7 @@
     <action name="Execute">
       <execute>
         google-chrome 
-            --user-data-dir=OCD_USER_HOME/.config/google-chrome/Personal
+            --user-data-dir=/home/e/.config/google-chrome/Personal
       </execute>
     </action>
   </item>
