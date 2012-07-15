@@ -3,12 +3,10 @@
 
 . $GLOBALAUTOSTART
 
-xset fp+ ~/.fonts
-xset fp rehash
 xset b off
 xset m 2 1.6
 
 xscreensaver -nosplash &
-
-which pypanel && (sleep 2 && pypanel) &
-which osd_clock && osd_clock -t -r -c grey -s3 &
+gnome-settings-daemon &
+sleep 2
+feh --bg-scale /home/e/.bg/galaxy.jpg &
