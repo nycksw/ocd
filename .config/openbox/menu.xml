@@ -7,24 +7,27 @@
 
 <menu id="root-menu" label="ELITE HACKING MENU">
 
-  <item label="chrome">
-    <action name="Execute">
-      <execute>
-        google-chrome
-      </execute>
-    </action>
-  </item>
-
   <item label="gnome-terminal">
     <action name="Execute">
       <execute>gnome-terminal --geometry=160x45+75+50</execute>
     </action>
   </item>
 
-  <item label="gnome-control-center">
+  <item label="chrome (work)">
     <action name="Execute">
       <execute>
-        gnome-control-center
+        google-chrome
+            --proxy-pac-url=http://wpad.corp.google.com/wpad.dat
+            --user-data-dir=/home/ksw/.config/google-chrome/Work
+      </execute>
+    </action>
+  </item>
+
+  <item label="chrome (!work)">
+    <action name="Execute">
+      <execute>
+        google-chrome 
+            --user-data-dir=/home/e/.config/google-chrome/Personal
       </execute>
     </action>
   </item>
@@ -47,32 +50,14 @@
     <action name="Reconfigure" />
   </item>
 
-  <item label="Restart Openbox">
+  <item label="Restart">
     <action name="Restart" />
   </item>
 
   <separator />
 
-  <item label="Exit Openbox">
+  <item label="Exit">
     <action name="Exit" />
-  </item>
-
-  <separator />
-
-  <item label="Shutdown System">
-    <action name="Execute">
-      <execute>
-        gdm-control --shutdown
-      </execute>
-    </action>
-  </item>
-
-  <item label="Restart System">
-    <action name="Execute">
-      <execute>
-        gdm-control --reboot
-      </execute>
-    </action>
   </item>
 
 </menu>
