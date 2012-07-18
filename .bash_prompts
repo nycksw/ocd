@@ -20,5 +20,5 @@ C4="\[\e[1;30m\]"
 PROMPT='\$'                       # regular users get a dollar sign
 [ "$UID" == "0" ] && PROMPT='#'   # superuser gets a hash
 
-export PS1="\n  $C2\u$C1@$C3\$(hostname|cut -f1-2 -d.)$C1($C2\!$C1):$C2\w$C1:$C3$C1 $C4\n$C1$PROMPT$C0 "
+export PS1="\n  $C2\u$C1@$C3\$(hostname|cut -f1-1 -d.)$C1($C2\!$C1):$C2\w$C1:$C3$C1 $C4\n$C1$PROMPT$C0 "
 export PS2="... "
