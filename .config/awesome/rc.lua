@@ -12,16 +12,12 @@ require("debian.menu")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init("/home/dba/.config/awesome/themes/gray/theme.lua")
+beautiful.init("/usr/share/awesome/themes/default/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "x-terminal-emulator"
 editor = os.getenv("EDITOR") or "editor"
 editor_cmd = terminal .. " -e " .. editor
-defbrowser = "/home/dba/bin/run-chrome"
-altbrowser = "/home/dba/bin/run-firefox"
-lockscreen = "xscreensaver-command -lock"
-filemanager = "nautilus --no-desktop"
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -33,18 +29,18 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 layouts =
 {
-    awful.layout.suit.tile,
     awful.layout.suit.floating,
+    awful.layout.suit.tile,
     awful.layout.suit.tile.left,
     awful.layout.suit.tile.bottom,
     awful.layout.suit.tile.top,
     awful.layout.suit.fair,
     awful.layout.suit.fair.horizontal,
-   -- awful.layout.suit.spiral,
-   -- awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.spiral,
+    awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
-  --  awful.layout.suit.max.fullscreen,
-  --  awful.layout.suit.magnifier
+    awful.layout.suit.max.fullscreen,
+    awful.layout.suit.magnifier
 }
 -- }}}
 
@@ -66,11 +62,7 @@ myawesomemenu = {
    { "quit", awesome.quit }
 }
 
-mymainmenu = awful.menu({ items = { { "chrome", defbrowser },
-                                    { "nautilus", filemanager },
-                                    { "firefox", altbrowser },
-                                    { "cssh", "cssh" },
-                                    { "awesome", myawesomemenu, beautiful.awesome_icon },
+mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                     { "Debian", debian.menu.Debian_menu.Debian },
                                     { "open terminal", terminal }
                                   }
@@ -172,18 +164,6 @@ root.buttons(awful.util.table.join(
 ))
 -- }}}
 
-keycodes = { }
-keycodes['xf86audiomute'] = '#121'
-keycodes['xf86audiolowervolume'] = '#122'
-keycodes['xf86audioraisevolume'] = '#123'
-keycodes['xf86audionext'] = '#171'
-keycodes['xf86audioplay'] = '#172'
-keycodes['xf86audioprev'] = '#173'
-keycodes['xf86audiostop'] = '#174'
-keycodes['xf86launch5' ] = '#192'
-keycodes['xf86launch6' ] = '#193'
-
-
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
@@ -201,14 +181,7 @@ globalkeys = awful.util.table.join(
             if client.focus then client.focus:raise() end
         end),
     awful.key({ modkey,           }, "w", function () mymainmenu:show(true)        end),
-    awful.key({ modkey, "Mod1"    }, "l", function () awful.util.spawn("xscreensaver-command -lock") end),
-    awful.key({ }, keycodes['xf86launch5'], function () awful.util.spawn("/usr/bin/fetchotp -x --device dba-prime --account 'Google Internal 2Factor'") end),
-    awful.key({ }, keycodes['xf86launch6'], function () awful.util.spawn("/usr/bin/fetchotp -x --device dba-prime --account balbritton@gmail.com") end),
-    awful.key({ }, keycodes['xf86audiomute'], function () awful.util.spawn("/home/dba/bin/togmute") end),
-    --awful.key({ }, keycodes['xf86audiolowervolume'], function () awful.util.spawn("amixer set Master 2%-") end),
-    --awful.key({ }, keycodes['xf86audioraisevolume'], function () awful.util.spawn("amixer set Master 2%+") end),
-    awful.key({ }, keycodes['xf86audiolowervolume'], function () awful.util.spawn("amixer set Speaker 2%-") end),
-    awful.key({ }, keycodes['xf86audioraisevolume'], function () awful.util.spawn("amixer set Speaker 2%+") end),
+
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end),
@@ -303,9 +276,6 @@ for i = 1, keynumber do
                   end))
 end
 
--- media keys
-
-
 clientbuttons = awful.util.table.join(
     awful.button({ }, 1, function (c) client.focus = c; c:raise() end),
     awful.button({ modkey }, 1, awful.mouse.client.move),
@@ -330,32 +300,9 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    -- cssh
-    { rule = { class = "Cssh", instance = "cssh" },
-      properties = { floating = true } },
-    { rule = { class = "DialogBox" },
-      properties = { floating = true } },
-    -- gkrellm
-    { rule = { class = "Gkrellm", instance = "gkrellm" },
-      properties = { floating = false, tag = "gkrellm" },
-    },
-    -- QEMU
-    { rule = { class = "QEMU", instance = "QEMU" },
-      properties = { floating = true } },
-    { rule = { class = "Oracle VM VirtualBox Manager", instance = "Oracle VM VirtualBox Manager" },
-      properties = { floating = true } },
-
-
     -- Set Firefox to always map on tags number 2 of screen 1.
     -- { rule = { class = "Firefox" },
     --   properties = { tag = tags[1][2] } },
-}
-
---WM_CLASS(STRING) = "cssh", "Cssh"
---WM_CLASS(STRING) = "dialogbox1", "DialogBox"
-floatapps =
-{
-   ["QEMU"] = true,
 }
 -- }}}
 
@@ -389,19 +336,3 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
--- {{{ Autostart
-
--- function for preventing overlap when restarting awesome
-function run_once(prg)
-    if not prg then
-        do return nil end
-    end
-    awful.util.spawn_with_shell("pgrep -f -u $USER -x " .. prg .. " || (" .. prg .. ")")
-end
-
-run_once("gnome-settings-daemon")
-run_once("bluetooth-applet")
-awful.util.spawn_with_shell("sleep 1.5 ; killall -9 gnome-screensaver ; xscreensaver")
-run_once("/usr/bin/pulseaudio --start --log-target=syslog")
-awful.util.spawn_with_shell("/home/dba/bin/kill-dbus-ssh-agent")
-awful.util.spawn_with_shell("awsetbg /home/dba/.config/dba-settings/background.png")
