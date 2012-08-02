@@ -1,0 +1,23 @@
+#!/bin/sh
+
+personal() {
+  exec google-chrome --user-data-dir=/home/e/.config/google-chrome/Personal
+}
+
+work() {
+  exec google-chrome \
+      --proxy-pac-url=http://wpad.corp.google.com/wpad.dat \
+      --user-data-dir=/home/ksw/.config/google-chrome/Work
+}
+
+case $1 in
+  personal)
+    personal
+    ;;
+  work)
+    work
+    ;;
+  *)
+    personal
+    ;;
+esac
