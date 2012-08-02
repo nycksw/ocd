@@ -1,0 +1,2 @@
+#!/bin/sh
+dpkg -l | tail -n +6 | awk '{print $2}' | comm -13 - $HOME/.favdebs
