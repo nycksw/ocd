@@ -1,0 +1,27 @@
+#!/bin/sh -e
+
+test -f $HOME/.bashrc_corp.google.com || {
+  echo "This isn't Google."
+  exit 1
+}
+
+op="$1"
+shift
+thing="$@"
+
+case "$op" in
+  "-n")
+    if [ -z "$thing" ];then
+      echo -n "next action: "
+      read thing
+    fi
+    echo '' | mail ${USER}+next -s "$thing"
+    test $? || echo 'err :('
+    ;;
+  *)
+    echo "Usage: $(basename $0) -n}"
+    exit 1
+    ;;
+esac
+
+exit 0
