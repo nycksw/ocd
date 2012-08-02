@@ -46,7 +46,9 @@ myawesomemenu = {
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
                                     { "Debian", debian.menu.Debian_menu.Debian },
-                                    { "terminal", terminal }
+                                    { "terminal", terminal },
+                                    { "chrome (personal)", "/home/e/bin/run-chrome personal" },
+                                    { "chrome (work)", "/home/e/bin/run-chrome work" },
                                   }
                         })
 
