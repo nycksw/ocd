@@ -3,8 +3,8 @@ and window manager customization type stuff.
 
 See also: http://wiki.eater.org/ocd
 
-Running "./update" will push everything here to your $HOME. It will back
+Running ocd-update will push everything here to your $HOME. It will back
 up your existing crap in a tarball.
 
-Running "./downdate" will copy your current files back into this directory
-so you may commit them back to the git repository.
+Running ocd-downdate will copy your current files back into $HOME/.ocd
+where you may commit them back to the git repository.

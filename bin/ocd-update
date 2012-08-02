@@ -1,11 +1,11 @@
 #!/bin/sh
 
+cd $HOME/.ocd
+
 BACKUP_DST="$HOME/.ocd_backup.tar.gz"
-IGNORE_RE="^\./(update$|downdate$|README$|\.git)"
+IGNORE_RE="^\./(README$|\.git)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
-
-cd $HOME/.ocd
 
 tar -czp -C $HOME -f $BACKUP_DST $FILES 
 echo "Old files saved in '$BACKUP_DST'."
