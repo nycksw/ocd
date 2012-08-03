@@ -108,10 +108,10 @@ for s = 1, screen.count() do
     -- We need one layoutbox per screen.
     mylayoutbox[s] = awful.widget.layoutbox(s)
     mylayoutbox[s]:buttons(awful.util.table.join(
-                           awful.button({ }, 1, function () awful.layout.inc(layouts, 1) end),
-                           awful.button({ }, 3, function () awful.layout.inc(layouts, -1) end),
-                           awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
-                           awful.button({ }, 5, function () awful.layout.inc(layouts, -1) end)))
+                           awful.button({}, 1, function () awful.layout.inc(layouts, 1) end),
+                           awful.button({}, 3, function () awful.layout.inc(layouts, -1) end),
+                           awful.button({}, 4, function () awful.layout.inc(layouts, 1) end),
+                           awful.button({}, 5, function () awful.layout.inc(layouts, -1) end)))
     -- Create a taglist widget
     mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.label.all, mytaglist.buttons)
 
@@ -150,10 +150,10 @@ root.buttons(awful.util.table.join(
 globalkeys = awful.util.table.join(
     awful.key({"Mod1", "Control"}, "Left", awful.tag.viewprev),
     awful.key({"Mod1", "Control"}, "Right", awful.tag.viewnext),
-    awful.key({"Mod4", }, "Escape", awful.tag.history.restore),
+    awful.key({"Mod4"}, "Escape", awful.tag.history.restore),
     awful.key({"Mod1", "Control"}, "j",
         function ()
-            awful.client.focus.byidx( 1)
+            awful.client.focus.byidx(1)
             if client.focus then client.focus:raise() end
         end),
     awful.key({"Mod1", "Control"}, "k",
@@ -162,6 +162,9 @@ globalkeys = awful.util.table.join(
             if client.focus then client.focus:raise() end
         end),
     awful.key({"Mod1", "Control"}, "space", function () mymainmenu:show(true) end),
+
+    awful.key({"Mod1", "Control"}, "l",
+        function () awful.util.spawn("gnome-screensaver-command -l") end),
 
     -- Layout manipulation
     awful.key({"Mod1", "Control", "Shift"}, "j", function () awful.client.swap.byidx(  1) end),
@@ -181,9 +184,8 @@ globalkeys = awful.util.table.join(
         end),
 
     awful.key({"Mod4"}, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({"Mod4", "Control" }, "r", awesome.restart),
-    awful.key({"Mod4", "Shift"   }, "q", awesome.quit),
-
+    awful.key({"Mod4", "Control"}, "r", awesome.restart),
+    awful.key({"Mod4", "Shift"}, "q", awesome.quit),
     awful.key({"Mod4"}, "l", function () awful.tag.incmwfact( 0.05) end),
     awful.key({"Mod4"}, "h", function () awful.tag.incmwfact(-0.05) end),
     awful.key({"Mod4", "Shift"}, "h",     function () awful.tag.incnmaster( 1) end),
