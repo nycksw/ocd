@@ -13,21 +13,18 @@
     </action>
   </item>
 
-  <item label="chrome (work)">
+  <item label="chrome">
     <action name="Execute">
       <execute>
-        google-chrome
-            --proxy-pac-url=http://wpad.corp.google.com/wpad.dat
-            --user-data-dir=/home/ksw/.config/google-chrome/Work
+        run-chrome
       </execute>
     </action>
   </item>
 
-  <item label="chrome (!work)">
+  <item label="chrome (work)">
     <action name="Execute">
       <execute>
-        google-chrome 
-            --user-data-dir=/home/e/.config/google-chrome/Personal
+        run-chrome work
       </execute>
     </action>
   </item>
