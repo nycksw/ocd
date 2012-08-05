@@ -1,30 +1,28 @@
 #!/bin/sh
 
-cd $HOME/.ocd
-
-BACKUP_DST="$HOME/.ocd_backup.tar.gz"
 IGNORE_RE="^\./(README$|\.git)"
-FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
-DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
+OCDDIRS="$HOME/.ocd $HOME/.ocd-private"
 
-tar -czp -C $HOME -f $BACKUP_DST $FILES 
-echo "Old files saved in '$BACKUP_DST'."
+for ocddir in $OCDDIRS; do
 
-for dir in $DIRS; do
-  mkdir -p $HOME/$dir
+  echo -n "$ocddir: "
+  cd $ocddir
+
+  files=$(find . -type f | egrep -v  "$IGNORE_RE")
+  dirs=$(find . -type d | egrep -v  "$IGNORE_RE")
+
+  for dir in $dirs; do
+    mkdir -p $HOME/$dir
+  done
+
+  for file in $files; do
+    echo -n .
+    src="$file"
+    dst="$HOME/$file"
+    if [ -f $dst ]; then
+      rm -f $dst
+    fi
+    cp --preserve=mode $file $dst
+  done
+  echo
 done
-
-for file in $FILES; do
-
-  printf .
-  src="$file"
-  dst="$HOME/$file"
-  if [ -f $dst ]; then
-    chmod +w $dst
-    rm $dst
-  fi
-  cp $file $dst
-
-done
-
-echo " All Done!"
