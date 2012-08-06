@@ -1,11 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
 IGNORE_RE="^\./(README$|\.git)"
-OCDDIRS="$HOME/.ocd $HOME/.ocd-private"
+
+# Set OCDDIRS in $HOME/.bashrc_$(dnsdomainname) for your local setup.
+: ${OCDDIRS:="$HOME/.ocd"}
 
 for ocddir in $OCDDIRS; do
 
   echo -n "$ocddir: "
+  if [ ! -d "$ocddir" ]; then
+    echo "doesn't exist!" && continue
+  fi
   cd $ocddir
 
   files=$(find . -type f | egrep -v  "$IGNORE_RE")
