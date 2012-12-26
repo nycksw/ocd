@@ -73,7 +73,7 @@ set virtualedit=block  " Let cursor move past the last char in <C-v> mode.
 set backspace=2  " Allow backspacing over autoindent, EOL, and BOL.
 set showmatch  " Briefly jump to a paren once it's balanced.
 set matchtime=2  " (for only .2 seconds).
-set nowrap  " Don't wrap text.
+"set nowrap  " Don't wrap text.
 set linebreak  " Don't wrap textin the middle of a word.
 set autoindent  " Always set autoindenting on
 set tabstop=2  " <tab> inserts 4 spaces.
