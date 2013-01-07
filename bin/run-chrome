@@ -11,12 +11,20 @@ work() {
       --user-data-dir=/usr/local/google/home/ksw/.config/google-chrome/Work
 }
 
+tor() {
+  exec google-chrome \
+    --proxy-server="socks://127.0.0.1:9050"
+}
+
 case $1 in
   personal)
     personal
     ;;
   work)
     work
+    ;;
+  tor)
+    tor
     ;;
   *)
     personal

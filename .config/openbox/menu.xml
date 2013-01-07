@@ -9,7 +9,7 @@
 
   <item label="gnome-terminal">
     <action name="Execute">
-      <execute>gnome-terminal --geometry=160x45+75+50</execute>
+      <execute>gnome-terminal --geometry=120x35+75+50</execute>
     </action>
   </item>
 
