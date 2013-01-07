@@ -13,7 +13,8 @@ work() {
 
 tor() {
   exec google-chrome \
-    --proxy-server="socks://127.0.0.1:9050"
+    --proxy-server="socks://127.0.0.1:9050" \
+    --user-data-dir=/usr/local/home/e/.config/google-chrome/Tor
 }
 
 case $1 in
