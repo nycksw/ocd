@@ -12,9 +12,12 @@ work() {
 }
 
 tor() {
+  prodir=`mktemp -d`
   exec google-chrome \
     --proxy-server="socks://127.0.0.1:9050" \
-    --user-data-dir=/usr/local/home/e/.config/google-chrome/Tor
+    --incognito \
+    --user-data-dir=$prodir
+  rm -rf $prodir
 }
 
 case $1 in
