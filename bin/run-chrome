@@ -13,7 +13,7 @@ work() {
 
 tor() {
   prodir=`mktemp -d`
-  exec google-chrome \
+  google-chrome \
     --proxy-server="socks://127.0.0.1:9050" \
     --incognito \
     --user-data-dir=$prodir
