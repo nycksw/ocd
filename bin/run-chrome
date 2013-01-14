@@ -2,13 +2,13 @@
 
 personal() {
   exec google-chrome \
-      --user-data-dir=/usr/local/home/e/.config/google-chrome/Personal
+      --user-data-dir=$HOME/.config/google-chrome/Personal
 }
 
 work() {
   exec google-chrome \
       --proxy-pac-url=http://wpad.corp.google.com/wpad.dat \
-      --user-data-dir=/usr/local/google/home/ksw/.config/google-chrome/Work
+      --user-data-dir=$HOME/.config/google-chrome/Work
 }
 
 tor() {
