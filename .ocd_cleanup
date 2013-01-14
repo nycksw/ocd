@@ -1,3 +1,5 @@
 #!/bin/sh -x
+#
+# Mon Jan 14 16:57:22 EST 2013
 
 rm -f $HOME/ocd-{update,downdate}
