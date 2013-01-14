@@ -33,9 +33,9 @@ for ocddir in $OCDDIRS; do
   # Some changes require cleanup that OCD won't handle; e.g., if you rename
   # a file the old file will remain. Housekeeping commands that need to be
   # run may be put in $ocddir/.ocd_cleanup; they run only once.
-  if [ -x $HOME/.ocd_cleanup ]; then
+  if ! cmp $HOME/.ocd_cleanup{,_ran} &>/dev/null; then
     echo -e "\nrunning: $HOME/.ocd_cleanup"
-    $HOME/.ocd_cleanup && chmod -x $ocddir/.ocd_cleanup
+    $HOME/.ocd_cleanup && cp $HOME/.ocd_cleanup{,_ran}
   fi
   echo
 done
