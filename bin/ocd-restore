@@ -40,7 +40,7 @@ for ocddir in $OCDDIRS; do
   # a file the old file will remain. Housekeeping commands that need to be
   # run may be put in $ocddir/.ocd_cleanup; they run only once.
   if ! cmp $HOME/.ocd_cleanup{,_ran} &>/dev/null; then
-    echo -e "\n$ocddir: running $HOME/.ocd_cleanup:"
+    echo -e "$ocddir: running $HOME/.ocd_cleanup:"
     $HOME/.ocd_cleanup && cp $HOME/.ocd_cleanup{,_ran}
   fi
 done
