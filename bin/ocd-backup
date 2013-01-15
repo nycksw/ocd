@@ -15,5 +15,5 @@ for file in $FILES;do
   fi
 done
 
-echo " done!\n\ngit status in `pwd`:\n\n"
+echo -e " done!\n\ngit status in `pwd`:\n\n"
 git status
