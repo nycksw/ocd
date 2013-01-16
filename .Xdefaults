@@ -8,6 +8,6 @@ URxvt*color4: RoyalBlue
 URxvt*color12: RoyalBlue
 URxvt*scrollBar: false
 URxvt*font: xft:Andale Mono:size=13:antialias=false:hinting=true
-URxvt.perl-ext-common : default,matcher,vtwheel
+URxvt.perl-ext-common : default,matcher
 URxvt.urlLauncher     : google-chrome
 URxvt.matcher.button  : 1
