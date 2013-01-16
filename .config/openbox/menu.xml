@@ -7,9 +7,10 @@
 
 <menu id="root-menu" label="ELITE HACKING MENU">
 
-  <item label="gnome-terminal">
+  <item label="terminal">
     <action name="Execute">
       <execute>gnome-terminal --geometry=120x35+75+50</execute>
+      <execute>urxvtc --geometry=120x35+75+50 -n 'ELITE HACKING TERMINAL'</execute>
     </action>
   </item>
 
