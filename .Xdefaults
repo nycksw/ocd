@@ -1,13 +1,13 @@
 URxvt*transparent: true
 URxvt*tintColor: Blue
 URxvt*shading: 40
-URxvt*saveLines: 256
+URxvt*saveLines: 0
 URxvt*foreground: White
 URxvt*background: Blue
 URxvt*color4: RoyalBlue
 URxvt*color12: RoyalBlue
 URxvt*scrollBar: false
-URxvt*font: xft:Andale Mono:size=13:antialias=true:hinting=true
-URxvt.perl-ext-common : default,matcher
+URxvt*font: xft:Andale Mono:size=13:antialias=false:hinting=true
+URxvt.perl-ext-common : default,matcher,vtwheel
 URxvt.urlLauncher     : google-chrome
 URxvt.matcher.button  : 1
