@@ -177,7 +177,7 @@
     </keybind>
     <keybind key="A-F2">
       <action name="execute">
-        <execute>fbrun</execute>
+        <execute>gmrun</execute>
       </action>
     </keybind>
     <chainQuitKey>C-g</chainQuitKey>
