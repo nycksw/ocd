@@ -1,5 +1,6 @@
 #!/bin/sh -x
 #
-# Remove debs that conflict or are unneeded.
+# Remove debs that conflict or are unneeded. Install ones needed.
 
+sudo apt-get install $($HOME/bin/ocd-missing-debs)
 sudo apt-get remove $($HOME/bin/ocd-extra-debs)
