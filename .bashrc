@@ -51,3 +51,9 @@ $HOME/.bashrc_$(hostname -f)
 $HOME/.bashrc_$(dnsdomainname)
 "
 for file in $SOURCE_FILES;do test -f $file && . $file;done
+
+# Check for any OCD updates (at most every 30 minutes.)
+if test `find ~/.bashrc -mmin +30`; then
+  test -f ~/bin/ocd-status && ~/bin/ocd-status
+  touch ~/.bashrc
+fi
