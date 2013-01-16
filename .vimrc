@@ -125,7 +125,7 @@ set incsearch  " Incrementally search while typing a /regex.
 
 colorscheme eater
 
-" Highlight extra whitespace at the end of lines. 
+" Highlight extra whitespace at the end of lines.
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+\%#\@<!$/
 
