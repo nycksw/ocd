@@ -1,14 +1,8 @@
 # ~eater/.config/openbox/autostart.sh
 # http://eater.org/
 
-#. $GLOBALAUTOSTART
-
 xset b off
 xset m 2 1.6
 
-xscreensaver -nosplash &
-#gnome-settings-daemon &
 feh --bg-scale $HOME/.background &
-
-# If an X server is running, start the urxvt-unicode daemon.
-test -z "$DISPLAY" || urxvtd -q -o -f
+urxvtd -q -o -f

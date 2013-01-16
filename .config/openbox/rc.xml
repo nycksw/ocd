@@ -162,17 +162,17 @@
   <keyboard>
     <keybind key="W-l">
       <action name="execute">
-        <execute>xscreensaver-command -lock</execute>
+        <execute>xlock -bg black -fg white</execute>
       </action>
     </keybind>
     <keybind key="C-A-l">
       <action name="execute">
-        <execute>xscreensaver-command -lock</execute>
+        <execute>xlock -bg black -fg white</execute>
       </action>
     </keybind>
     <keybind key="C-A-s">
       <action name="execute">
-        <execute>gnome-terminal -x alsamixer</execute>
+        <execute>urxvtc -e sh -c alsamixer</execute>
       </action>
     </keybind>
     <keybind key="A-F2">
