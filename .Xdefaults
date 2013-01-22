@@ -4,7 +4,7 @@ URxvt*saveLines: 0
 URxvt*foreground: White
 URxvt*background: Blue
 URxvt*scrollBar: false
-URxvt*font: xft:Ubuntu Mono:size=12
+URxvt*font: xft:Ubuntu Mono:size=14
 URxvt.perl-ext-common : default,matcher
 URxvt.urlLauncher     : google-chrome
 URxvt.matcher.button  : 1
