@@ -1,9 +1,18 @@
 #!/bin/sh -x
-#
-# Remove debs that conflict or are unneeded. Install ones needed.
 
-sudo apt-get install $($HOME/bin/ocd-missing-debs)
-sudo apt-get remove $($HOME/bin/ocd-extra-debs)
-
-killall xscreensaver 2>/dev/null
-gnome-screensaver &
+cat <<CONFIG > $HOME/.ocd/.git/config
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = git@github.com:obeyeater/ocd-eater.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[remote "upstream"]
+	url = git@github.com:obeyeater/ocd.git
+	fetch = +refs/heads/*:refs/remotes/upstream/*
+CONFIG
