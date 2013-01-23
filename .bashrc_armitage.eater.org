@@ -1,4 +1,0 @@
-# Set the "Print Screen" key to be middle-click.
-xkbset m
-xkbset exp =m
-xmodmap -e "keycode 107 = Pointer_Button2"

@@ -1,9 +1,0 @@
-# ~eater/.config/openbox/autostart.sh
-# http://eater.org/
-
-xset b off
-xset m 2 1.6
-
-gnome-screensaver &
-feh --bg-scale $HOME/.background &
-urxvtd -q -o -f
