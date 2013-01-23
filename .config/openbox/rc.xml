@@ -162,12 +162,12 @@
   <keyboard>
     <keybind key="W-l">
       <action name="execute">
-        <execute>xlock -bg black -fg white</execute>
+        <execute>gnome-screensaver --lock</execute>
       </action>
     </keybind>
     <keybind key="C-A-l">
       <action name="execute">
-        <execute>xlock -bg black -fg white</execute>
+        <execute>gnome-screensaver-command --lock</execute>
       </action>
     </keybind>
     <keybind key="C-A-s">

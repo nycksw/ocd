@@ -4,3 +4,6 @@
 
 sudo apt-get install $($HOME/bin/ocd-missing-debs)
 sudo apt-get remove $($HOME/bin/ocd-extra-debs)
+
+killall xscreensaver 2>/dev/null
+gnome-screensaver &
