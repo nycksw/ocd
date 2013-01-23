@@ -2,13 +2,15 @@
 
 personal() {
   exec google-chrome \
-      --user-data-dir=$HOME/.config/google-chrome/Personal
+      --user-data-dir=$HOME/.config/google-chrome/Personal \
+      $1
 }
 
 work() {
   exec google-chrome \
       --proxy-pac-url=http://wpad.corp.google.com/wpad.dat \
-      --user-data-dir=$HOME/.config/google-chrome/Work
+      --user-data-dir=$HOME/.config/google-chrome/Work \
+      $1
 }
 
 tor() {
@@ -16,21 +18,26 @@ tor() {
   google-chrome \
     --proxy-server="socks://127.0.0.1:9050" \
     --incognito \
-    --user-data-dir=$prodir
+    --user-data-dir=$prodir \
+    $1
   rm -rf $prodir
 }
 
 case $1 in
   personal)
-    personal
+    personal $2
     ;;
   work)
-    work
+    work $2
     ;;
   tor)
-    tor
+    tor $2
     ;;
   *)
-    personal
+    if [ ! -z "$2" ];then
+      echo "Usage: $(basename $0) [personal|work|tor] [URL]" 1>&2
+      exit
+    fi
+    personal $1
     ;;
 esac
