@@ -18,7 +18,7 @@ done
 echo -e " done!\n\ngit status in `pwd`:\n\n"
 git status
 if ! git status | grep -q "working directory clean"; then
-  echo -n "Commit and push now? (yes/no): "
+  echo "Commit and push now? (yes/no)"
   read ANS
   if [ $ANS == "yes" ];then
     git commit -a && git push
