@@ -4,4 +4,4 @@
 # be a single-word parameter. i.e., "run-chrome -e sel" won't work because it
 # needs args.
 
-urxvt -e run-chrome sel $1
+urxvt -bl -geometry 100x10+5+5 -e run-chrome sel $1
