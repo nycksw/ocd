@@ -6,7 +6,7 @@ URxvt*background: Blue
 URxvt*scrollBar: false
 URxvt*font: xft:Ubuntu Mono:size=14
 URxvt.perl-ext-common : default,matcher
-URxvt.urlLauncher     : google-chrome
+URxvt.urlLauncher     : urxvtc -e run-chrome sel
 URxvt.matcher.button  : 1
 
 ! Match gnome-terminal "Linux console" scheme.

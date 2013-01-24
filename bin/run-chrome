@@ -23,6 +23,19 @@ tor() {
   rm -rf $profile_dir
 }
 
+sel() {
+  echo -n "Open $1 with p)ersonal, w)ork, or t)or profile? [pwt]: "
+  read ANS
+  case $ANS in
+    p) personal $1 ;;
+    w) work $1 ;;
+    t) tor $1 ;;
+    *) echo "lolwut?"
+       sel $1
+       ;;
+  esac
+}
+
 case $1 in
   personal)
     personal $2
@@ -32,6 +45,9 @@ case $1 in
     ;;
   tor)
     tor $2
+    ;;
+  sel)
+    sel $2
     ;;
   *)
     if [ ! -z "$2" ];then
