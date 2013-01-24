@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# This silly thing exists because URxvt.urlLauncher (from .Xdefaults) has to
+# be a single-word parameter. i.e., "run-chrome -e sel" won't work because it
+# needs args.
+
+urxvt -e run-chrome sel $1
