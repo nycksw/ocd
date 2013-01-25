@@ -1,18 +1,7 @@
 #!/bin/sh -x
+#
+# ocd-* now live in the other repo.
 
-cat <<CONFIG > $HOME/.ocd/.git/config
-[core]
-	repositoryformatversion = 0
-	filemode = true
-	bare = false
-	logallrefupdates = true
-[remote "origin"]
-	url = git@github.com:obeyeater/ocd-eater.git
-	fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "master"]
-	remote = origin
-	merge = refs/heads/master
-[remote "upstream"]
-	url = git@github.com:obeyeater/ocd.git
-	fetch = +refs/heads/*:refs/remotes/upstream/*
-CONFIG
+rm -f $HOME/bin/ocd-*
+mkdir -p $HOME/github
+ln -s $HOME/github/ocd/bin/ocd-* $HOME/bin/

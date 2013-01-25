@@ -1,3 +1,0 @@
-#!/bin/sh
-dpkg -l | tail -n +6 | awk '{print $2}' | sort | comm -13 - $HOME/.favdebs \
-  | grep ^- | cut -b2-
