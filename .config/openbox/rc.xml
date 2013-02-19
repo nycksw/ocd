@@ -172,7 +172,9 @@
     </keybind>
     <keybind key="C-A-s">
       <action name="execute">
-        <execute>urxvtc -e sh -c alsamixer</execute>
+        <!-- Requires something like this in sudoers:
+               username ALL=(ALL) NOPASSWD: /usr/sbin/pm-* -->
+        <execute>sudo pm-suspend-hybrid</execute>
       </action>
     </keybind>
     <keybind key="A-F2">
