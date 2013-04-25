@@ -132,7 +132,7 @@ match ExtraWhitespace /\s\+\%#\@<!$/
 """ File types.
 
 au BufEnter,BufRead,BufNewFile *.py so ~/.vim/py.vim
-au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
+"au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
 au BufRead *.js set makeprg=jslint\ %
 
 """ Local configuration.
