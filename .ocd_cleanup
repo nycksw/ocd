@@ -1,7 +1,4 @@
 #!/bin/sh -x
-#
-# ocd-* now live in the other repo.
 
-rm -f $HOME/bin/ocd-*
-mkdir -p $HOME/github
-ln -s $HOME/github/ocd/bin/ocd-* $HOME/bin/
+# autostart.sh is now just autostart
+rm -f $HOME/.config/openbox/autostart.sh
