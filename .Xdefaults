@@ -1,5 +1,5 @@
 URxvt*transparent: true
-URxvt*shading: 40
+URxvt*shading: 20
 URxvt*saveLines: 0
 URxvt*foreground: White
 URxvt*background: Blue
