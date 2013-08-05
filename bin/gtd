@@ -14,7 +14,7 @@ case "$op" in
     to="${USER}+next"
     ;;
   "-p")
-    to="${USER}+next,${USER}+project"
+    to="USER}+project"
     ;;
   "-w")
     to="${USER}+waiting"
