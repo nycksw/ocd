@@ -1,0 +1,59 @@
+#!/bin/bash
+
+personal() {
+  exec google-chrome \
+      --user-data-dir=$HOME/.config/google-chrome/Personal \
+      $1
+}
+
+work() {
+  exec google-chrome \
+      --proxy-pac-url=https://proxyconfig.corp.google.com/wpad.dat \
+      --user-data-dir=$HOME/.config/google-chrome/Work \
+      $1
+}
+
+tor() {
+  profile_dir=`mktemp -d`
+  google-chrome \
+    --proxy-server="socks://127.0.0.1:9050" \
+    --incognito \
+    --user-data-dir=$profile_dir \
+    $1
+  rm -rf $profile_dir
+}
+
+sel() {
+  echo -n "Open $1 with p)ersonal, w)ork, or t)or profile? [pwt]: "
+  read -n1 ANS
+  case $ANS in
+    p) personal $1 ;;
+    w) work $1 ;;
+    t) tor $1 ;;
+    *) echo "lolwut?"
+       sel $1
+       ;;
+  esac
+}
+
+case $1 in
+  personal)
+    personal $2
+    ;;
+  work)
+    work $2
+    ;;
+  tor)
+    tor $2
+    ;;
+  sel)
+    sel $2
+    ;;
+  *)
+    if [ ! -z "$2" ];then
+      echo "Usage: $(basename $0) [personal|work|tor] [URL]" 1>&2
+      exit
+    fi
+    personal $1
+    ;;
+esac
