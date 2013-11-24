@@ -1,0 +1,46 @@
+#!/bin/bash
+
+IGNORE_RE="^\./(README$|\.git)"
+
+# Set OCDDIRS in $HOME/.bashrc_$(dnsdomainname) for your local setup.
+: ${OCDDIRS:="$HOME/.ocd"}
+
+for ocddir in $OCDDIRS; do
+
+  if [ ! -d "$ocddir" ]; then
+    echo "$ocddir: doesn't exist!" && continue
+  fi
+  cd $ocddir
+  echo "$ocddir: git-pull:"
+  git pull || {
+    echo "error: couldn't git-pull; check status in $ocddir" 1>&2
+    exit
+  }
+
+  files=$(find . -type f | egrep -v  "$IGNORE_RE")
+  dirs=$(find . -type d | egrep -v  "$IGNORE_RE")
+
+  for dir in $dirs; do
+    mkdir -p $HOME/$dir
+  done
+
+  echo -n "$ocddir: restoring"
+  for file in $files; do
+    echo -n .
+    src="$file"
+    dst="$HOME/$file"
+    if [ -f $dst ]; then
+      rm -f $dst
+    fi
+    cp --preserve=mode $file $dst
+  done
+  echo
+
+  # Some changes require cleanup that OCD won't handle; e.g., if you rename
+  # a file the old file will remain. Housekeeping commands that need to be
+  # run may be put in $ocddir/.ocd_cleanup; they run only once.
+  if ! cmp $HOME/.ocd_cleanup{,_ran} &>/dev/null; then
+    echo -e "$ocddir: running $HOME/.ocd_cleanup:"
+    $HOME/.ocd_cleanup && cp $HOME/.ocd_cleanup{,_ran}
+  fi
+done
