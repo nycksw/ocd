@@ -57,4 +57,3 @@ for file in $SOURCE_FILES;do test -f $file && . $file;done
 #  test -f ~/bin/ocd-status && ~/bin/ocd-status
 #  touch ~/.bashrc
 #fi
-# Just testing OCD.
