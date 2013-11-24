@@ -7,5 +7,5 @@ setxkbmap -variant altgr-intl us
 
 gnome-settings-daemon &
 gnome-screensaver &
-feh --bg-scale $HOME/.background &
+feh --no-xinerama --bg-scale $HOME/.background &
 urxvtd -q -o -f
