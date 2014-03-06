@@ -314,6 +314,11 @@
         <menu>root-menu</menu>
       </action>
     </keybind>
+    <keybind key="C-A-q">
+      <action name="Exit">
+        <name>Exit Openbox</name>
+      </action>
+    </keybind>
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
         <command>amixer set Master 5%+ unmute</command>
