@@ -32,7 +32,7 @@ for ocddir in $OCDDIRS; do
     if [ -f $dst ]; then
       rm -f $dst
     fi
-    cp --preserve=mode $file $dst
+    ln $file $dst
   done
   echo
 
