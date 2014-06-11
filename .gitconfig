@@ -1,0 +1,8 @@
+[user]
+	name = Eater
+	email = obeyeater@gmail.com
+
+[core]
+	excludesfile = ~/.gitexcludes
+[push]
+	default = simple

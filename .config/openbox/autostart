@@ -15,4 +15,3 @@ if [ "`hostname -s`" = "redqueen" ]; then
 fi
 
 feh --no-xinerama --bg-scale $HOME/.background &
-urxvtd -q -o -f

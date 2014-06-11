@@ -1,0 +1,25 @@
+# ~eater/.agentrc
+# http://eater.org/
+
+SSH_AGENT_FILE=$HOME/.ssh/agent.$HOSTNAME
+
+[ -f $SSH_AGENT_FILE ] && . $SSH_AGENT_FILE &>/dev/null
+
+# Determine if ssh-agent socket exists, and is owned by euid.
+if [ -S $SSH_AUTH_SOCK ]; then
+  # Does the agent file exist?
+  if [ -f $SSH_AGENT_FILE ]; then
+    echo "Using existing ssh-agent file: $SSH_AGENT_FILE"
+    . $SSH_AGENT_FILE # Display agent pid
+  else
+    echo "Socket unavailable for ssh-agent, starting new ssh-agent"
+    ssh-agent > $SSH_AGENT_FILE
+    . $SSH_AGENT_FILE
+    ssh-add
+  fi
+else
+  echo "Socket unavailable for ssh-agent, starting new ssh-agent"
+  ssh-agent > $SSH_AGENT_FILE
+  . $SSH_AGENT_FILE
+  ssh-add
+fi
