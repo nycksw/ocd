@@ -1,4 +1,4 @@
 #!/bin/sh -x
 
 # autostart.sh is now just autostart
-rm -rf $HOME/.vim/autoload
+rm -rf $HOME/bin/urxvt-url-launcher

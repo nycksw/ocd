@@ -13,12 +13,6 @@
     </action>
   </item>
 
-  <item label="urxvtc">
-    <action name="Execute">
-      <execute>urxvtc -geometry 100x35+50+50 -name 'ELITE HACKING TERMINAL'</execute>
-    </action>
-  </item>
-
   <item label="chrome">
     <action name="Execute">
       <execute>
