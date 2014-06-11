@@ -1,4 +1,4 @@
 #!/bin/sh -x
 
 # autostart.sh is now just autostart
-rm -f $HOME/.config/openbox/autostart.sh
+rm -rf $HOME/.vim/autoload
