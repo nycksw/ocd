@@ -9,12 +9,12 @@ servers = (
   }
 );
 
-chatnets = {
-  google = {
-    type = "IRC";
-    #autosendcmd = "/^msg nickserv identify password;wait 2000";
-  };
-};
+#chatnets = {
+#  google = {
+#    type = "IRC";
+#    autosendcmd = "/^msg nickserv identify password;wait 2000";
+#  };
+#};
 
 channels = ( { name = "#irssi"; chatnet = "ircnet"; autojoin = "No"; } );
 
