@@ -2,6 +2,3 @@
 
 # autostart.sh is now just autostart
 rm -rf $HOME/bin/urxvt-url-launcher
-
-# need two runs for the cp->ln change
-~/bin/ocd-restore
