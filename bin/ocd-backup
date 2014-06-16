@@ -2,9 +2,6 @@
 
 cd $HOME/.ocd
 
-IGNORE_RE="^\./(README$|\.git)"
-FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
-
 echo -e "git status in `pwd`:\n"
 git status
 if ! git status | grep -q "working directory clean"; then
