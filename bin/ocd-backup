@@ -5,17 +5,7 @@ cd $HOME/.ocd
 IGNORE_RE="^\./(README$|\.git)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 
-for file in $FILES;do
-  printf .
-  dst="$file"
-  src="$HOME/$file"
-  if [ -f $src ];then
-    chmod +w $dst
-    cp $src $dst
-  fi
-done
-
-echo -e " done!\n\ngit status in `pwd`:\n"
+echo -e "git status in `pwd`:\n"
 git status
 if ! git status | grep -q "working directory clean"; then
   echo -e "\n\ngit diff in `pwd`:\n"
