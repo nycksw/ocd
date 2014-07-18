@@ -39,5 +39,3 @@ bindkey -m "^[[25T" stuff \004
 # %M%d        month and day, like MmmDD.
 # %c          current time, like HH:MM.
 # %H          hostname
-
-electricsheep --root 1
