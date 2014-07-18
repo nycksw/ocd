@@ -96,8 +96,8 @@ au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
 au BufRead *.js set makeprg=jslint\ %
 
 """ Local configuration.
-"if filereadable(expand("~/.vimrc-local"))
-"    source ~/.vimrc-local
-"endif
+if filereadable(expand("~/.vimrc-local"))
+    source ~/.vimrc-local
+endif
 
 au BufRead,BufNewFile *.py source ~/.vim/py.vim

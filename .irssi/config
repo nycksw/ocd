@@ -221,3 +221,4 @@ settings = {
 };
 hilights = ( { text = "nick"; nick = "yes"; word = "yes"; } );
 logs = { };
+chatnets = { google = { type = "IRC"; }; };
