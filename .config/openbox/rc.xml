@@ -165,6 +165,11 @@
         <execute>xscreensaver-command -lock</execute>
       </action>
     </keybind>
+    <keybind key="C-A-c">
+      <action name="execute">
+        <execute>gnome-control-center</execute>
+      </action>
+    </keybind>
     <keybind key="C-A-l">
       <action name="execute">
         <execute>xscreensaver-command -lock</execute>
