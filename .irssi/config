@@ -184,8 +184,8 @@ statusbar = {
 settings = {
   core = {
     real_name = "theo haxtable";
-    user_name = "ksw";
-    nick = "ksw";
+    user_name = "eater";
+    nick = "eater";
     timestamp_format = "%b%d %H:%M";
     quit_message = "kbye";
   };
@@ -213,7 +213,7 @@ settings = {
     autolog = "yes";
   };
   "irc/core" = {
-    alternate_nick = "ksw`";
+    alternate_nick = "eater`";
     ctcp_version_reply = "irssi(v$J): whatever, man.";
     skip_motd = "yes";
   };
@@ -221,3 +221,4 @@ settings = {
 };
 hilights = ( { text = "nick"; nick = "yes"; word = "yes"; } );
 logs = { };
+chatnets = { google = { type = "IRC"; }; };

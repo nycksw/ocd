@@ -20,7 +20,7 @@ case "$op" in
     to="${USER}+waiting"
     ;;
   *)
-    echo "Usage: $(basename $0) -n}"
+    echo "Usage: $(basename $0) -n"
     exit 1
     ;;
 esac
