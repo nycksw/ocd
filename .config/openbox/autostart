@@ -11,7 +11,7 @@ setxkbmap -variant altgr-intl us
 # Hack to properly setup home monitors.
 if [ "`hostname -s`" = "redqueen" ]; then
   xrandr --fb 3120x1920 --output DVI-I-1 --primary --pos 0x340 \
-      --rotate normal --auto --output DVI-D-0 --pos 1920x0 --rotate left
+      --rotate normal --auto --output DVI-D-1 --pos 1920x0 --rotate left
 fi
 
 feh --no-xinerama --bg-scale $HOME/.background &
