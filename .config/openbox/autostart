@@ -5,6 +5,9 @@ xset b off
 xset m 2 1.6
 setxkbmap -variant altgr-intl us
 
+xset +dpms
+xset dpms 0 0 600
+
 #gnome-settings-daemon &
 #gnome-screensaver &
 
@@ -15,3 +18,4 @@ if [ "`hostname -s`" = "redqueen" ]; then
 fi
 
 feh --no-xinerama --bg-scale $HOME/.background &
+
