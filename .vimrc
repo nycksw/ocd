@@ -1,7 +1,7 @@
 " ~eater/.vimrc
 " http://eater.org/
-
 set nocompatible
+
 let mapleader=","
 
 " For when you forget to use sudo to edit a file.
@@ -101,3 +101,5 @@ if filereadable(expand("~/.vimrc-local"))
 endif
 
 au BufRead,BufNewFile *.py source ~/.vim/py.vim
+
+filetype plugin indent on

@@ -19,3 +19,4 @@ fi
 
 feh --no-xinerama --bg-scale $HOME/.background &
 
+xcompmgr -a &
