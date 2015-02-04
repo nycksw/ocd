@@ -184,8 +184,8 @@ statusbar = {
 settings = {
   core = {
     real_name = "theo haxtable";
-    user_name = "eater";
-    nick = "eater";
+    user_name = "ksw";
+    nick = "ksw";
     timestamp_format = "%b%d %H:%M";
     quit_message = "kbye";
   };
