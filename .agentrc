@@ -1,11 +1,14 @@
 SSH_AGENT_FILE=$HOME/.ssh/agent.$HOSTNAME
 
-[ -f $SSH_AGENT_FILE ] && . $SSH_AGENT_FILE
-
-# If ssh-agent socket and PID don't exist, start a new agent.
-if ! ([ -S "$SSH_AUTH_SOCK" ] && kill -0 "$SSH_AGENT_PID"); then
-  echo "Starting new ssh-agent"
-  ssh-agent > $SSH_AGENT_FILE
-  . $SSH_AGENT_FILE
-  ssh-add
+if ! ssh-add -L &>/dev/null; then
+  [ -f $SSH_AGENT_FILE ] && . $SSH_AGENT_FILE
+  # If ssh-agent socket and PID don't exist, start a new agent.
+  if ! ([ -S "$SSH_AUTH_SOCK" ] && kill -0 "$SSH_AGENT_PID"); then
+    echo "Starting new ssh-agent"
+    ssh-agent > $SSH_AGENT_FILE
+    . $SSH_AGENT_FILE
+    ssh-add
+  fi
+else
+  echo "Using existing ssh-agent identities"
 fi
