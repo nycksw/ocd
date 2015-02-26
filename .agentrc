@@ -1,6 +1,7 @@
 SSH_AGENT_FILE=$HOME/.ssh/agent.$HOSTNAME
+IDENTS=$(ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs)
 
-if ! ssh-add -L &>/dev/null; then
+if [ -z "$IDENTS" ];then
   [ -f $SSH_AGENT_FILE ] && . $SSH_AGENT_FILE
   # If ssh-agent socket and PID don't exist, start a new agent.
   if ! ([ -S "$SSH_AUTH_SOCK" ] && kill -0 "$SSH_AGENT_PID"); then
@@ -9,6 +10,5 @@ if ! ssh-add -L &>/dev/null; then
     . $SSH_AGENT_FILE
     ssh-add
   fi
-else
-  echo "Using existing ssh-agent identities"
 fi
+echo "Identities: $IDENTS"
