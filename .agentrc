@@ -2,7 +2,9 @@ ssh_agent_file=$HOME/.ssh/agent.$HOSTNAME
 
 GetIdentities () { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
 
-if [ -z "$(GetIdentities)" ]; then
+identities="$(GetIdentities)"
+
+if [ -z "$identities" ]; then
   [ -f $ssh_agent_file ] && . $ssh_agent_file >/dev/null
   # If ssh-agent socket and PID don't exist, start a new agent.
   if ! ([ -S "$SSH_AUTH_SOCK" ] && kill -0 "$SSH_AGENT_PID"); then
@@ -13,4 +15,5 @@ if [ -z "$(GetIdentities)" ]; then
   fi
 fi
 
-echo "Identities: $(GetIdentities)"
+[ -z "$identities" ] && identities="$(GetIdentities)"
+echo "Identities: $identities"
