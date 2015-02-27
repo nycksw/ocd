@@ -24,10 +24,10 @@ Once the appropriate github SSH identity is in `~/.ssh`, then I can run this:
       -o ~/.ocd_functions
     source ~/.ocd_functions
 
-That clones my entire dotfile repo and allows me to copy the entire
+That clones my entire dotfile repo and allows me to copy the whole
 environment into my home directory. It also includes helper functions to
 easily identify system packages that should also be installed (or removed)
-based on a list also tracked in git as a dotfile: ".favdebs".
+based on a list also tracked in git as a dotfile: `~/.favdebs`
 
 Those simple steps eliminate 98% of the fiddling I used to do when
 moving into a freshly installed system. The only remaining tweaks deal
@@ -104,7 +104,7 @@ back to my master git repository. For example:
 
 Occasionally I'll change something on more than one system without
 running `ocd-backup`, and git will complain that it can't run `git pull`
-without first committing local changes. This is easy to fix my `cd`ing to
+without first committing local changes. This is easy to fix by `cd`ing to
 `~/.ocd` and doing a typical merge, a simple `git push`, a `git checkout
 -f $filename` to overwrite changes, or some other resolution.
 
@@ -113,7 +113,7 @@ without first committing local changes. This is easy to fix my `cd`ing to
 If you want to use my configuration as a starting point, you can just
 branch my git repo and make your own modifications following the workflow
 described above. Be sure to change `INSTALL_FROM` in `~/.ocd_functions`
-so it installs from the right repo. You'll want to do something like this:
+so it clones the right repo. You'll want to do something like this:
 
   * Fork [my repository](https://github.com/obeyeater/ocd) (if you're using GitHub, look for "Fork" in the upper right)
   * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Then:
@@ -121,3 +121,7 @@ so it installs from the right repo. You'll want to do something like this:
     * `source ~/.ocd_functions`
   * Edit `~/.ocd_functions` and update `INSTALL_FROM` with your own repo.
   * `source ~/.ocd_functions`
+
+At this point you can change, add, or remove dotfiles in `~/.ocd` before
+copying anything to your actual environment. When you're happy, just run
+`ocd-restore`, and you're good to go.
