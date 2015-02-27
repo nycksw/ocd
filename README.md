@@ -1,7 +1,7 @@
 ## OCD: tracking dotfiles in git
 
-I got tired of having my common dotfiles (.bashrc, .pythonrc,
-.vimrc, etc.) out of sync across all the different workstations
+I got tired of having my common dotfiles (`.bashrc`, `.pythonrc`,
+`.vimrc`, etc.) out of sync across all the different workstations
 and shells I use on a regular basis. So, I rewrote them in a
 way to be generic, allowing host-specific and domain-specific
 files to be sourced as appropriate. I also included window-manager
@@ -11,33 +11,35 @@ I read a very long time ago.
 
 Now I can take a freshly installed operating system and make it cozy and
 customized without any tedious repetition. I also get the added benefit
-of source control to view previous versions of files.
+of source control to view previous versions of files, and it's really
+easy to share dotfiles with other people just by pointing them at my repo.
 
-When I set up a new box, first I install my private SSH key:
+When I set up a freshly installed system, I first install my private SSH key:
 
-    mkdir -p ~/.ssh
-    scp user@someotherhost:.ssh/id\.\* ~/.ssh
+    mkdir -p ~/.ssh && scp user@someotherhost:.ssh/id\.\* ~/.ssh
 
-With the appropriate github SSH identity in place, I can do this:
+Once the appropriate github SSH identity is in `~/.ssh`, then I can run this:
 
-    curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o $HOME/.ocd_functions
-    source $HOME/.ocd_functions
+    curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions \
+      -o ~/.ocd_functions
+    source ~/.ocd_functions
 
-That clones my entire dotfile git repo and allows me to copy the entire
-environment into my home directory. It also includes helper functions
-to easy identify system packages that should also be installed (or
-removed) based on a list also tracked in git, as a dotfile, ".favdebs".
+That clones my entire dotfile repo and allows me to copy the entire
+environment into my home directory. It also includes helper functions to
+easily identify system packages that should also be installed (or removed)
+based on a list also tracked in git as a dotfile: ".favdebs".
 
 Those simple steps eliminate 98% of the fiddling I used to do when
 moving into a freshly installed system. The only remaining tweaks deal
 with differences between distributions or domain-specific configurations,
 and I write my dotfiles in such a way to accommodate those scenarios. For
-example, my .bashrc only contains things I'm reasonable sure are portable
-across all of the systems I use. To handle host- or domain-specific configs,
-I do the following at the end of my main .bashrc:
+example, my .bashrc only contains things I'm reasonably sure are portable
+across all of the systems I use (it helps that I usually use only Debian
+or Ubuntu systems.) To handle host- or domain-specific configs, I do
+something like the following at the end of my main `.bashrc`:
 
-    . $HOME/.bashrc_$(hostname -f)
-    . $HOME/.bashrc_$(dnsdomainname)
+    source $HOME/.bashrc_$(hostname -f)
+    source $HOME/.bashrc_$(dnsdomainname)
 
 This way, settings are only applied in the appropriate context.
 
@@ -49,11 +51,12 @@ When I log in to a system that I haven't worked on in a while, the first
 thing I do is run `ocd-restore`. Any time I make a config change, I run
 `ocd-backup`. I also have helpers: `ocd-status` tells me if I'm behind the
 master, and `ocd-missing-debs` and `ocd-extra-debs` tell me if my system's
-packages differ from my basic preferences recorded in `$HOME/.favdebs`.
+packages differ from my basic preferences recorded in `~/.favdebs`.
 
 ### Example output
 
-If I change something on any of my systems, I can easily push the change back to my master git repository. For example:
+If I change something on any of my systems, I can easily push the change
+back to my master git repository. For example:
 
     $ echo "# Just testing OCD." >> ~/.bashrc
     $ ocd-backup
@@ -97,8 +100,24 @@ If I change something on any of my systems, I can easily push the change back to
     To git@github.com:obeyeater/ocd.git
     3599b0b..da7e536 master -> master
 
+### Caveats
+
+Occasionally I'll change something on more than one system without
+running `ocd-backup`, and git will complain that it can't run `git pull`
+without first committing local changes. This is easy to fix my `cd`ing to
+`~/.ocd` and doing a typical merge, a simple `git push`, a `git checkout
+-f $filename` to overwrite changes, or some other resolution.
+
 ## Steal this technique
 
 If you want to use my configuration as a starting point, you can just
 branch my git repo and make your own modifications following the workflow
-described above.
+described above. Be sure to change `INSTALL_FROM` in `~/.ocd_functions`
+so it installs from the right repo. You'll want to do something like this:
+
+  * Fork [my repository](https://github.com/obeyeater/ocd) (if you're using GitHub, look for "Fork" in the upper right)
+  * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Then:
+    * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
+    * `source ~/.ocd_functions`
+  * Edit `~/.ocd_functions` and update `INSTALL_FROM` with your own repo.
+  * `source ~/.ocd_functions`

@@ -4,6 +4,7 @@
 # ocd-missing-debs:   compare system against ~/.favdebs and report missing
 # ocd-extra-debs:     compare system against ~/.favdebs and report extras
 
+INSTALL_FROM="git@github.com:obeyeater/ocd.git"
 
 ocd-restore () {
   IGNORE_RE="^\./(README|\.git/)"
