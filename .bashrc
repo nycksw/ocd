@@ -1,16 +1,13 @@
-# ~eater/.bashrc
-# http://eater.org/
-#
-# Global bash customizations. This should apply to ALL of your systems.
-#
-# Use ~/.bashrc_<domain> or ~/.bashrc_<hostname> for local customizations.
+# Global bash customizations. Applies to ALL systems. Use
+# ~/.bashrc_<domain> or ~/.bashrc_<hostname> for local customizations.
+
+test -z "$PS1" && return  # Bail if not interactive.
 
 mesg n
 umask 027
 shopt -s checkwinsize
-
-# Non-interactive bail-out.
-test -z "$PS1" && return
+shopt -s histappend
+shopt -s no_empty_cmd_completion
 
 export PATH=$PATH:~/bin
 
@@ -18,14 +15,7 @@ export EDITOR=vim
 export HISTCONTROL=ignoredups
 export HISTSIZE=4096
 
-# To enable ISO en_US for ANSI charsets:
-#   sudo sh -c "echo en_US ISO-8859-1 > /var/lib/locales/supported.d/local"
-#   sudo locale-gen
-#export LANG=en_US
-#export LANG=en_US.UTF-8
-
-# Don't ignore leading dots when sorting.
-export LC_COLLATE="C" 
+export LC_COLLATE="C"  # Don't ignore leading dots when sorting.
 
 test -f ~/.pythonrc.py && export PYTHONSTARTUP="$HOME/.pythonrc.py" \
                        && export PYTHONPATH="$HOME/py:$PYTHONPATH"
@@ -51,9 +41,3 @@ $HOME/.bashrc_$(hostname -f)
 $HOME/.bashrc_$(dnsdomainname)
 "
 for file in $SOURCE_FILES;do test -f $file && . $file;done
-
-# Check for any OCD updates (at most every 30 minutes.)
-#if test `find ~/.bashrc -mmin +30`; then
-#  test -f ~/bin/ocd-status && ~/bin/ocd-status
-#  touch ~/.bashrc
-#fi
