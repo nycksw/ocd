@@ -84,12 +84,14 @@ ocd-status () {
 }
 
 ocd-missing-debs () {
+  [ -f $HOME/.favdebs ] || touch $HOME/.favdebs
   dpkg --get-selections | grep '\sinstall$' | awk '{print $1}' | sort \
       | comm -13 - <(egrep -v '(^-|^ *#)' $HOME/.favdebs \
       | sed 's/ *#.*$//' |sort)
 }
 
 ocd-extra-debs () {
+  [ -f $HOME/.favdebs ] || touch $HOME/.favdebs
   dpkg --get-selections | grep '\sinstall$' | awk '{print $1}' | sort \
       | comm -12 - <(grep -v '^ *#' $HOME/.favdebs | grep '^-' | cut -b2- \
       | sed 's/ *#.*$//' |sort)
