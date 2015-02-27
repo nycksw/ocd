@@ -1,7 +1,13 @@
-## Track dotfiles in git
+## OCD: tracking dotfiles in git
 
-I got tired of having my common dotfiles (.bashrc, .pythonrc, .vimrc, etc.) out of sync across all the different workstations and shells I use on a regular basis. So, I rewrote them in a way to be generic, allowing host-specific and domain-specific files to be sourced as appropriate. I also included window-manager specifics, like my Openbox configuration. This was inspired by a
-[similar approach](http://books.google.com/books?id=mKgomQz5KH0C&pg=PA149&lpg=PA149&dq=flickenger+movein&oi=book_result&resnum=1&ct=result#v=onepage&q&f=false) I read a very long time ago.
+I got tired of having my common dotfiles (.bashrc, .pythonrc,
+.vimrc, etc.) out of sync across all the different workstations
+and shells I use on a regular basis. So, I rewrote them in a
+way to be generic, allowing host-specific and domain-specific
+files to be sourced as appropriate. I also included window-manager
+specifics, like my Openbox configuration. This was inspired by a [similar
+approach](http://books.google.com/books?id=mKgomQz5KH0C&pg=PA149&lpg=PA149&dq=flickenger+movein&oi=book_result&resnum=1&ct=result#v=onepage&q&f=false)
+I read a very long time ago.
 
 Now I can take a freshly installed operating system and make it cozy and
 customized without any tedious repetition. I also get the added benefit
@@ -14,25 +20,38 @@ When I set up a new box, first I install my private SSH key:
 
 With the appropriate github SSH identity in place, I can do this:
 
-    which git || sudo apt-get install git-core
-    git clone git@github.com:obeyeater/ocd.git ~/.ocd
-    ~/.ocd/bin/ocd-restore
+    curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o $HOME/.ocd_functions
+    source $HOME/.ocd_functions
 
-That clones my git repo and copies my entire environment into my home directory.
+That clones my entire dotfile git repo and allows me to copy the entire
+environment into my home directory. It also includes helper functions
+to easy identify system packages that should also be installed (or
+removed) based on a list also tracked in git, as a dotfile, ".favdebs".
 
-I also have another helper script to keep track of common packages I use across all my systems. It works like this:
-
-    sudo apt-cache update
-    sudo apt-get install `~/bin/ocd-missing-debs`
-
-Those simple steps eliminate 95% of the fiddling I used to do when moving into a freshly installed system. The only remaining tweaks deal with differences between distributions or domain-specific configurations, and I write my dotfiles in such a way to accommodate those scenarios. For example, my .bashrc only contains things I'm reasonable sure are portable across all of the systems I use. For host- or domain-specific things, I do the following at the end of my common .bashrc:
+Those simple steps eliminate 98% of the fiddling I used to do when
+moving into a freshly installed system. The only remaining tweaks deal
+with differences between distributions or domain-specific configurations,
+and I write my dotfiles in such a way to accommodate those scenarios. For
+example, my .bashrc only contains things I'm reasonable sure are portable
+across all of the systems I use. To handle host- or domain-specific configs,
+I do the following at the end of my main .bashrc:
 
     . $HOME/.bashrc_$(hostname -f)
     . $HOME/.bashrc_$(dnsdomainname)
 
-That way, settings are only applied in their appropriate context.
+This way, settings are only applied in the appropriate context.
 
 ## Managing changes
+
+### Workflow
+
+When I log in to a system that I haven't worked on in a while, the first
+thing I do is run `ocd-restore`. Any time I make a config change, I run
+`ocd-backup`. I also have helpers: `ocd-status` tells me if I'm behind the
+master, and `ocd-missing-debs` and `ocd-extra-debs` tell me if my system's
+packages differ from my basic preferences recorded in `$HOME/.favdebs`.
+
+### Example output
 
 If I change something on any of my systems, I can easily push the change back to my master git repository. For example:
 
@@ -40,7 +59,7 @@ If I change something on any of my systems, I can easily push the change back to
     $ ocd-backup
     ..................... done!
 
-    git status in /home/ksw/.ocd:
+    git status in /home/eater/.ocd:
 
     # On branch master
     # Changes not staged for commit:
@@ -51,7 +70,7 @@ If I change something on any of my systems, I can easily push the change back to
     #
     no changes added to commit (use "git add" and/or "git commit -a")
 
-    git diff in /home/ksw/.ocd:
+    git diff in /home/eater/.ocd:
 
     diff --git a/.bashrc b/.bashrc
     index 4e127f4..11d24ff 100644
