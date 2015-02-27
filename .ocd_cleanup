@@ -1,4 +1,4 @@
 #!/bin/sh -x
 
-# autostart.sh is now just autostart
-rm -rf $HOME/bin/urxvt-url-launcher
+# Executables are now functions in ~/.ocd_functions.
+rm -f $HOME/bin/ocd-*
