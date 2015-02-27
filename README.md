@@ -53,6 +53,14 @@ thing I do is run `ocd-restore`. Any time I make a config change, I run
 master, and `ocd-missing-debs` and `ocd-extra-debs` tell me if my system's
 packages differ from my basic preferences recorded in `~/.favdebs`.
 
+Adding new files is something like:
+  * `ln $HOME/.newdotfile $HOME/.ocd/`
+  * cd $HOME/.ocd
+  * git add .newdotfile
+  * git commit -a
+  * git push
+  * TODO: add an `ocd-add filename` command
+
 ### Example output
 
 If I change something on any of my systems, I can easily push the change
@@ -116,6 +124,7 @@ described above. Be sure to change `INSTALL_FROM` in `~/.ocd_functions`
 so it clones the right repo. You'll want to do something like this:
 
   * Fork [my repository](https://github.com/obeyeater/ocd) (if you're using GitHub, look for "Fork" in the upper right)
+    * Alternative: just create an empty repo and only add `.ocd_functions` to it
   * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Then:
     * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
     * `source ~/.ocd_functions`
