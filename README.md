@@ -1,8 +1,7 @@
 ## Track dotfiles in git
 
 I got tired of having my common dotfiles (.bashrc, .pythonrc, .vimrc, etc.) out of sync across all the different workstations and shells I use on a regular basis. So, I rewrote them in a way to be generic, allowing host-specific and domain-specific files to be sourced as appropriate. I also included window-manager specifics, like my Openbox configuration. This was inspired by a
-[http://books.google.com/books?id=mKgomQz5KH0C&pg=PA149&lpg=PA149&dq=flickenger+movein&oi=book_result&resnum=1&ct=result#v=onepage&q&f=false](similar
-approach) I read a very long time ago.
+(similar approach)[http://books.google.com/books?id=mKgomQz5KH0C&pg=PA149&lpg=PA149&dq=flickenger+movein&oi=book_result&resnum=1&ct=result#v=onepage&q&f=false] I read a very long time ago.
 
 Now I can take a freshly installed operating system and make it cozy and
 customized without any tedious repetition. I also get the added benefit
