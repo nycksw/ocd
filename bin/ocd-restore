@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IGNORE_RE="^\./(README$|\.git/)"
+IGNORE_RE="^\./(README|\.git/)"
 
 # Set OCDDIRS in $HOME/.bashrc_$(dnsdomainname) for your local setup.
 : ${OCDDIRS:="$HOME/.ocd"}
