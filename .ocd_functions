@@ -92,3 +92,21 @@ ocd-extra-debs () {
       | comm -12 - <(grep -v '^ *#' $HOME/.favdebs | grep '^-' | cut -b2- \
       | sed 's/ *#.*$//' |sort)
 }
+
+# Check if installed. If it's not, try to install it.
+if [ ! -d "$HOME/.ocd/.git" ]; then
+  GetIdentities () { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
+  identities="$(GetIdentities)"
+  echo "OCD is not installed!"
+  [ -z "$identities" ] && ssh-add
+  if [ -z "$(GetIdentities)" ]; then
+    echo "No SSH identities available; please copy them from another host."
+    return 1
+  fi
+  echo -n "Enter to continue fetch, ctrl-c to abort."
+  read IN
+  echo "Checking for git..."
+  which git || sudo apt-get install git-core
+  git clone $INSTALL_FROM "$HOME/.ocd" && \
+    echo "Done fetching; run ocd-restore to finish."
+fi
