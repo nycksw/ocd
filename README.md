@@ -55,10 +55,10 @@ packages differ from my basic preferences recorded in `~/.favdebs`.
 
 Adding new files is something like:
   * `ln $HOME/.newdotfile $HOME/.ocd/`
-  * cd $HOME/.ocd
-  * git add .newdotfile
-  * git commit -a
-  * git push
+  * `cd $HOME/.ocd`
+  * `git add .newdotfile`
+  * `git commit -a`
+  * `git push`
   * TODO: add an `ocd-add filename` command
 
 ### Example output
@@ -124,7 +124,7 @@ described above. Be sure to change `INSTALL_FROM` in `~/.ocd_functions`
 so it clones the right repo. You'll want to do something like this:
 
   * Fork [my repository](https://github.com/obeyeater/ocd) (if you're using GitHub, look for "Fork" in the upper right)
-    * Alternative: just create an empty repo and only add `.ocd_functions` to it
+    * Alternative: just create an empty repo and only add `.ocd_functions` to it, then manually add your own dotfiles.
   * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Then:
     * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
     * `source ~/.ocd_functions`
