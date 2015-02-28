@@ -57,6 +57,10 @@ Adding new files is just:
   * `ocd-add <filename>`
   * `ocd-backup`
 
+Note: the actual dotfiles are hard-linked to their counterparts in the local
+`~/.ocd` git branch, so there's no need to copy changes there before
+committing. Just edit in place and run `ocd-backup`.
+
 ### Example output
 
 If I change something on any of my systems, I can easily push the change
