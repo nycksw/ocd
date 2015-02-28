@@ -5,56 +5,52 @@
 #   ocd-missing-debs:   compare system against ~/.favdebs and report missing
 #   ocd-extra-debs:     compare system against ~/.favdebs and report extras
 
+IGNORE_RE="^\./(README|\.git/)"
 INSTALL_FROM="git@github.com:obeyeater/ocd.git"
+OCD_DIR="$HOME/.ocd"
 
 ocd-restore () {
-  IGNORE_RE="^\./(README|\.git/)"
+  if [ ! -d "$ocddir" ]; then
+    echo "$ocddir: doesn't exist!" && continue
+  fi
+  pushd $ocddir >/dev/null
+  echo "$ocddir: git-pull:"
+  git pull || {
+    echo "error: couldn't git-pull; check status in $ocddir" 1>&2
+    popd >/dev/null && return 1
+  }
 
-  : ${OCDDIRS:="$HOME/.ocd"}
+  files=$(find . -type f | egrep -v  "$IGNORE_RE")
+  dirs=$(find . -type d | egrep -v  "$IGNORE_RE")
 
-  for ocddir in $OCDDIRS; do
-    if [ ! -d "$ocddir" ]; then
-      echo "$ocddir: doesn't exist!" && continue
-    fi
-    pushd $ocddir >/dev/null
-    echo "$ocddir: git-pull:"
-    git pull || {
-      echo "error: couldn't git-pull; check status in $ocddir" 1>&2
-      popd >/dev/null && return 1
-    }
-
-    files=$(find . -type f | egrep -v  "$IGNORE_RE")
-    dirs=$(find . -type d | egrep -v  "$IGNORE_RE")
-
-    for dir in $dirs; do
-      mkdir -p $HOME/$dir
-    done
-
-    echo -n "$ocddir: restoring"
-    for file in $files; do
-      echo -n .
-      src="$file"
-      dst="$HOME/$file"
-      if [ -f $dst ]; then
-        rm -f $dst
-      fi
-      ln $file $dst
-    done
-    echo
-
-    # Some changes require cleanup that OCD won't handle; e.g., if you rename
-    # a file the old file will remain. Housekeeping commands that need to be
-    # run may be put in $ocddir/.ocd_cleanup; they run only once.
-    if ! cmp $HOME/.ocd_cleanup{,_ran} &>/dev/null; then
-      echo -e "$ocddir: running $HOME/.ocd_cleanup:"
-      $HOME/.ocd_cleanup && cp $HOME/.ocd_cleanup{,_ran}
-    fi
-    popd >/dev/null
+  for dir in $dirs; do
+    mkdir -p $HOME/$dir
   done
+
+  echo -n "OCD: restoring"
+  for file in $files; do
+    echo -n .
+    src="$file"
+    dst="$HOME/$file"
+    if [ -f $dst ]; then
+      rm -f $dst
+    fi
+    ln $file $dst
+  done
+  echo
+
+  # Some changes require cleanup that OCD won't handle; e.g., if you rename
+  # a file the old file will remain. Housekeeping commands that need to be
+  # run may be put in $ocddir/.ocd_cleanup; they run only once.
+  if ! cmp $HOME/.ocd_cleanup{,_ran} &>/dev/null; then
+    echo -e "OCD: running $HOME/.ocd_cleanup:"
+    $HOME/.ocd_cleanup && cp $HOME/.ocd_cleanup{,_ran}
+  fi
+  popd >/dev/null
 }
 
 ocd-backup () {
-  pushd $HOME/.ocd >/dev/null
+  pushd $OCD_DIR >/dev/null
   echo -e "git status in `pwd`:\n"
   git status
   if ! git status | grep -q "working directory clean"; then
@@ -70,7 +66,7 @@ ocd-backup () {
 }
 
 ocd-status () {
-  pushd $HOME/.ocd >/dev/null
+  pushd $OCD_DIR >/dev/null
   git remote update &>/dev/null
   if git status -uno | grep -q behind; then
     echo "Behind"
@@ -97,8 +93,27 @@ ocd-extra-debs () {
       | sed 's/ *#.*$//' |sort)
 }
 
+ocd-add () {
+  if [ ! -f "$1" ];then
+    echo "Usage: ocd-add <filename>"
+    return 1
+  fi
+  base=$(basename $1)
+  abspath=$(cd "`dirname $1`";pwd)
+  relpath=${abspath/#$HOME\//}
+  if [ "${HOME}/${relpath}/$base" != "${abspath}/${base}" ]; then
+    echo "$1 is not in $HOME"
+    return 1
+  fi
+  mkdir -p ${OCD_DIR}/${relpath}
+  ln ${HOME}/${relpath}/${base} $OCD_DIR/${relpath}/${base}
+  pushd $OCD_DIR >/dev/null
+  git add ${relpath}/${base}
+  popd >/dev/null
+}
+
 # Check if installed. If it's not, try to install it.
-if [ ! -d "$HOME/.ocd/.git" ]; then
+if [ ! -d "$OCD_DIR/.git" ]; then
   GetIdentities () { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
   identities="$(GetIdentities)"
   echo "OCD is not installed!"
