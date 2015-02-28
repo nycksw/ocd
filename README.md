@@ -53,13 +53,9 @@ thing I do is run `ocd-restore`. Any time I make a config change, I run
 master, and `ocd-missing-debs` and `ocd-extra-debs` tell me if my system's
 packages differ from my basic preferences recorded in `~/.favdebs`.
 
-Adding new files is something like:
-  * `ln $HOME/.newdotfile $HOME/.ocd/`
-  * `cd $HOME/.ocd`
-  * `git add .newdotfile`
-  * `git commit -a`
-  * `git push`
-  * TODO: add an `ocd-add filename` command
+Adding new files is just:
+  * `ocd-add <filename>`
+  * `ocd-backup`
 
 ### Example output
 
