@@ -5,14 +5,14 @@
 #   ocd-restore:        pull from git master and copy files to homedir
 #   ocd-backup:         push local changes to master
 #   ocd-status:         check if OK or Behind
-#   ocd-missing-debs:   compare system against ~/.favdebs and report missing
-#   ocd-extra-debs:     compare system against ~/.favdebs and report extras
+#   ocd-missing-debs:   compare system against $HOME/.favdebs and report missing
+#   ocd-extra-debs:     compare system against $HOME/.favdebs and report extras
 
-IGNORE_RE="^\./(README|\.git/)"
-INSTALL_FROM="git@github.com:obeyeater/ocd.git"
+OCD_IGNORE_RE="^\./(README|\.git/)"
+OCD_INSTALL_FROM="git@github.com:obeyeater/ocd.git"
 OCD_DIR="$HOME/.ocd"
 
-ocd::rr()  { echo "ocd(ERROR): $@" >&2; }
+ocd::err()  { echo "ocd(ERROR): $@" >&2; }
 ocd::warn() { echo "ocd(WARNING): $@"; }
 
 ocd::yn() {
@@ -36,12 +36,13 @@ ocd-restore() {
   pushd $OCD_DIR >/dev/null
   echo "ocd: git-pull:"
   git pull || {
-    echo "error: couldn't git-pull; check status in $OCD_DIR" 1>&2
-    popd >/dev/null && return 1
+    ocd::err  "error: couldn't git-pull; check status in $OCD_DIR"
+    popd >/dev/null
+    return 1
   }
 
-  files=$(find . -type f | egrep -v  "$IGNORE_RE")
-  dirs=$(find . -type d | egrep -v  "$IGNORE_RE")
+  files=$(find . -type f | egrep -v  "$OCD_IGNORE_RE")
+  dirs=$(find . -type d | egrep -v  "$OCD_IGNORE_RE")
 
   for dir in $dirs; do
     mkdir -p $HOME/$dir
@@ -137,25 +138,48 @@ ocd-add() {
 #    return 1
 #  fi
 #  # Must:
-#  # 1. make sure arg isn't in ~/.ocd
-#  # 2. git rm relative <file> from ~/.ocd (leave original in ~)
-#  # 3. clean up empty dirs in ~/.ocd?
+#  # 1. make sure arg isn't in $HOME/.ocd
+#  # 2. git rm relative <file> from $HOME/.ocd (leave original in $HOME)
+#  # 3. clean up empty dirs in $HOME/.ocd?
 #}
 
-# Check if installed. If it's not, try to install it.
+# Check if installed. If not, fix it.
 if [[ ! -d "$OCD_DIR/.git" ]]; then
+
+  # Have SSH ID set up for the rw git repository.
   get_idents() { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
   idents="$(get_idents)"
   echo "ocd: not installed!"
   [ -z "$idents" ] && ssh-add
   if [[ -z "$(get_idents)" ]]; then
-    echo "No SSH identities available; please copy them from another host."
-    return 1
+    if yn "No SSH IDs Copy them from another host?"; then
+      echo -n "Enter user@hostname: "
+      read SRC
+      mkdir -f $HOME/.ssh && mkdir -p $HOME/.ssh
+      scp ${SRC}:.ssh/id\* .ssh
+      ssh-agent > .ssh/agent.$(hostname)
+      source .ssh/agent.$(hostname)
+      ssh-add
+      if [[ -z "$(get_idents)" ]]; then
+        ocd::err "Still no SSH IDs; something went wrong :("
+        return 1
+      fi
+    else
+      return 1
+    fi
   fi
-  echo -n "Enter to continue fetch, ctrl-c to abort."
-  read IN
-  echo "Checking for git..."
-  which git || sudo apt-get install git-core
-  git clone $INSTALL_FROM "$HOME/.ocd" && \
-    echo "Done fetching; run ocd-restore to finish."
+
+  # Fetch the repository.
+  if ocd::yn "Fetch from \"$OCD_INSTALL_FROM?\""; then
+    echo "Checking for git..."
+    which git || sudo apt-get install git-core
+    if git clone $OCD_INSTALL_FROM "$HOME/.ocd"; then
+      if ! cmp "$HOME/.ocd.sh" "$HOME/.ocd/.ocd.sh"; then
+        cp "$HOME/.ocd.sh" "$HOME/.ocd/.ocd.sh"
+        echo "Done! to finish, run: ocd-backup && ocd-restore && source .bashrc"
+      else
+        echo "Done! to finish, run: ocd-restore && .bashrc"
+      fi
+    fi
+  fi
 fi
