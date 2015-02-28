@@ -127,10 +127,6 @@ so it clones the right repo. You'll want to do something like this:
   * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
   * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Edit `INSTALL_FROM` with your own repo.
   * `source ~/.ocd_functions`
-  * Add additional dotfiles with `ocd-add <filename`
+  * Add additional dotfiles with `ocd-add <filename>`
   * `ocd-backup` to push your changes to the repo.
   * `ocd-restore` to sync everything from your local branch to your home directory.
-
-At this point you can change, add, or remove dotfiles in `~/.ocd` before
-copying anything to your actual environment. When you're happy, just run
-`ocd-restore`, and you're good to go.
