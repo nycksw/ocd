@@ -152,13 +152,13 @@ if [[ ! -d "$OCD_DIR/.git" ]]; then
   echo "ocd: not installed!"
   [ -z "$idents" ] && ssh-add
   if [[ -z "$(get_idents)" ]]; then
-    if ocd::yn "No SSH IDs Copy them from another host?"; then
+    if ocd::yn "No SSH IDs! Copy them from another host?"; then
       echo -n "Enter user@hostname: "
       read SRC
-      mkdir -f $HOME/.ssh && mkdir -p $HOME/.ssh
-      scp ${SRC}:.ssh/id\* .ssh
+      mkdir -p $HOME/.ssh
+      scp ${SRC}:.ssh/id\* .ssh/
       ssh-agent > .ssh/agent.$(hostname)
-      source .ssh/agent.$(hostname)
+      source .ssh/agent.$(hostname) 2>/dev/null
       ssh-add
       if [[ -z "$(get_idents)" ]]; then
         ocd::err "Still no SSH IDs; something went wrong :("
