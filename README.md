@@ -119,13 +119,13 @@ branch my git repo and make your own modifications following the workflow
 described above. Be sure to change `INSTALL_FROM` in `~/.ocd_functions`
 so it clones the right repo. You'll want to do something like this:
 
-  * Fork [my repository](https://github.com/obeyeater/ocd) (if you're using GitHub, look for "Fork" in the upper right)
-    * Alternative: just create an empty repo and only add `.ocd_functions` to it, then manually add your own dotfiles.
-  * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Then:
-    * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
-    * `source ~/.ocd_functions`
-  * Edit `~/.ocd_functions` and update `INSTALL_FROM` with your own repo.
+  * Create an empty git repo for your dotfiles, or fork [mine](https://github.com/obeyeater/ocd).
+  * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
+  * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Edit `INSTALL_FROM` with your own repo.
   * `source ~/.ocd_functions`
+  * Add additional dotfiles with `ocd-add <filename`
+  * `ocd-backup` to push your changes to the repo.
+  * `ocd-restore` to sync everything from your local branch to your home directory.
 
 At this point you can change, add, or remove dotfiles in `~/.ocd` before
 copying anything to your actual environment. When you're happy, just run

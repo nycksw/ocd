@@ -10,13 +10,13 @@ INSTALL_FROM="git@github.com:obeyeater/ocd.git"
 OCD_DIR="$HOME/.ocd"
 
 ocd-restore () {
-  if [ ! -d "$ocddir" ]; then
-    echo "$ocddir: doesn't exist!" && continue
+  if [ ! -d "$OCD_DIR" ]; then
+    echo "$OCD_DIR: doesn't exist!" && continue
   fi
-  pushd $ocddir >/dev/null
-  echo "$ocddir: git-pull:"
+  pushd $OCD_DIR >/dev/null
+  echo "OCD: git-pull:"
   git pull || {
-    echo "error: couldn't git-pull; check status in $ocddir" 1>&2
+    echo "error: couldn't git-pull; check status in $OCD_DIR" 1>&2
     popd >/dev/null && return 1
   }
 
@@ -41,7 +41,7 @@ ocd-restore () {
 
   # Some changes require cleanup that OCD won't handle; e.g., if you rename
   # a file the old file will remain. Housekeeping commands that need to be
-  # run may be put in $ocddir/.ocd_cleanup; they run only once.
+  # run may be put in $OCD_DIR/.ocd_cleanup; they run only once.
   if ! cmp $HOME/.ocd_cleanup{,_ran} &>/dev/null; then
     echo -e "OCD: running $HOME/.ocd_cleanup:"
     $HOME/.ocd_cleanup && cp $HOME/.ocd_cleanup{,_ran}
