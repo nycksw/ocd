@@ -118,6 +118,10 @@ ocd-add () {
 #    echo "Usage: ocd-rm <filename>"
 #    return 1
 #  fi
+#  # Must:
+#  # 1. make sure arg isn't in ~/.ocd
+#  # 2. git rm relative <file> from ~/.ocd (leave original in ~)
+#  # 3. clean up empty dirs in ~/.ocd?
 #}
 
 # Check if installed. If it's not, try to install it.
