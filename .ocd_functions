@@ -106,9 +106,9 @@ ocd-add () {
     return 1
   fi
   mkdir -p ${OCD_DIR}/${relpath}
-  ln ${HOME}/${relpath}/${base} $OCD_DIR/${relpath}/${base}
+  ln -f ${HOME}/${relpath}/${base} $OCD_DIR/${relpath}/${base}
   pushd $OCD_DIR >/dev/null
-  git add ${relpath}/${base}
+  git add ${relpath}/${base} && echo "Added: $1"
   popd >/dev/null
 }
 
