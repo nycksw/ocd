@@ -1,8 +1,8 @@
 ssh_agent_file=$HOME/.ssh/agent.$HOSTNAME
 
-GetIdentities () { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
+get_idents () { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
 
-identities="$(GetIdentities)"
+identities="$(get_idents)"
 
 if [ -z "$identities" ]; then
   [ -f $ssh_agent_file ] && . $ssh_agent_file >/dev/null
@@ -15,5 +15,7 @@ if [ -z "$identities" ]; then
   fi
 fi
 
-[ -z "$identities" ] && identities="$(GetIdentities)"
+[ -z "$identities" ] && identities="$(get_idents)"
 echo "Identities: $identities"
+
+unset get_idents

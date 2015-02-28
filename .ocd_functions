@@ -12,16 +12,16 @@ IGNORE_RE="^\./(README|\.git/)"
 INSTALL_FROM="git@github.com:obeyeater/ocd.git"
 OCD_DIR="$HOME/.ocd"
 
-err()  { echo "ocd(ERROR): $@" >&2; }
-warn() { echo "ocd(WARNING): $@"; }
+ocd::rr()  { echo "ocd(ERROR): $@" >&2; }
+ocd::warn() { echo "ocd(WARNING): $@"; }
 
-yn() {
+ocd::yn() {
   echo -n "$@ (yes/no): "
   while true; do
     read ANS
-    if [ $ANS == "yes" ];then
+    if [[ $ANS == "yes" ]];then
       return 0
-    elif [ $ANS == "no" ];then
+    elif [[ $ANS == "no" ]];then
       return 1
     else
       echo -n "$@ (yes/no): "
@@ -30,7 +30,7 @@ yn() {
 }
 
 ocd-restore() {
-  if [ ! -d "$OCD_DIR" ]; then
+  if [[ ! -d "$OCD_DIR" ]]; then
     echo "$OCD_DIR: doesn't exist!" && continue
   fi
   pushd $OCD_DIR >/dev/null
@@ -52,7 +52,7 @@ ocd-restore() {
     echo -n .
     src="$file"
     dst="$HOME/$file"
-    if [ -f $dst ]; then
+    if [[ -f $dst ]]; then
       rm -f $dst
     fi
     ln $file $dst
@@ -75,7 +75,10 @@ ocd-backup() {
   git status
   if ! git status | grep -q "working directory clean"; then
     git diff
-    yn "Commit and push now?" && git commit -a && git push
+    if ocd::yn "Commit and push now?"; then
+      git commit -a
+      git push
+    fi
   fi
   popd >/dev/null
 }
@@ -109,14 +112,14 @@ ocd-extra-debs() {
 }
 
 ocd-add() {
-  if [ ! -f "$1" ];then
+  if [[ ! -f "$1" ]];then
     echo "Usage: ocd-add <filename>"
     return 1
   fi
   base=$(basename $1)
   abspath=$(cd "`dirname $1`";pwd)
   relpath=${abspath/#$HOME\//}
-  if [ "${HOME}/${relpath}/$base" != "${abspath}/${base}" ]; then
+  if [[ "${HOME}/${relpath}/$base" != "${abspath}/${base}" ]]; then
     echo "$1 is not in $HOME"
     return 1
   fi
@@ -140,12 +143,12 @@ ocd-add() {
 #}
 
 # Check if installed. If it's not, try to install it.
-if [ ! -d "$OCD_DIR/.git" ]; then
+if [[ ! -d "$OCD_DIR/.git" ]]; then
   get_idents() { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
   idents="$(get_idents)"
   echo "ocd: not installed!"
   [ -z "$idents" ] && ssh-add
-  if [ -z "$(get_idents)" ]; then
+  if [[ -z "$(get_idents)" ]]; then
     echo "No SSH identities available; please copy them from another host."
     return 1
   fi
