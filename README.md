@@ -20,9 +20,9 @@ When I set up a freshly installed system, I first install my private SSH key:
 
 Once the appropriate github SSH identity is in `~/.ssh`, then I can run this:
 
-    curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions \
-      -o ~/.ocd_functions
-    source ~/.ocd_functions
+    curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh \
+      -o ~/.ocd.sh
+    source ~/.ocd.sh
 
 That clones my entire dotfile repo and allows me to copy the whole
 environment into my home directory. It also includes helper functions to
@@ -120,13 +120,13 @@ without first committing local changes. This is easy to fix by `cd`ing to
 
 If you want to use my configuration as a starting point, you can just
 branch my git repo and make your own modifications following the workflow
-described above. Be sure to change `INSTALL_FROM` in `~/.ocd_functions`
+described above. Be sure to change `INSTALL_FROM` in `~/.ocd.sh`
 so it clones the right repo. You'll want to do something like this:
 
   * Create an empty git repo for your dotfiles, or fork [mine](https://github.com/obeyeater/ocd).
-  * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd_functions -o ~/.ocd_functions`
-  * Review the `~/.ocd_functions` file to make sure I'm not malicious :-) Edit `INSTALL_FROM` with your own repo.
-  * `source ~/.ocd_functions`
+  * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh -o ~/.ocd.sh`
+  * Review the `~/.ocd.sh` file to make sure I'm not malicious :-) Edit `INSTALL_FROM` with your own repo.
+  * `source ~/.ocd.sh`
   * Add additional dotfiles with `ocd-add <filename>`
   * `ocd-backup` to push your changes to the repo.
   * `ocd-restore` to sync everything from your local branch to your home directory.

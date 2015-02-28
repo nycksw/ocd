@@ -39,6 +39,6 @@ $HOME/.agentrc
 $HOME/.bash_prompts
 $HOME/.bashrc_$(hostname -f)
 $HOME/.bashrc_$(dnsdomainname)
-$HOME/.ocd_functions
+$HOME/.ocd.sh
 "
 for file in $SOURCE_FILES;do test -f $file && . $file;done

@@ -1,4 +1,4 @@
 #!/bin/sh -x
 
-# Executables are now functions in ~/.ocd_functions.
-rm -f $HOME/bin/ocd-*
+rm -f $HOME/.ocd_functions
+echo "You should 'rc' now."
