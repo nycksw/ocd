@@ -150,7 +150,7 @@ if [[ ! -d "$OCD_DIR/.git" ]]; then
   get_idents() { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
   idents="$(get_idents)"
   echo "ocd: not installed!"
-  [ -z "$idents" ] && ssh-add
+  [ -z "$idents" ] && ssh-add 2>/dev/null
   if [[ -z "$(get_idents)" ]]; then
     if ocd::yn "No SSH IDs! Copy them from another host?"; then
       echo -n "Enter user@hostname: "
