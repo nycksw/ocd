@@ -2,3 +2,4 @@
 
 # Executables are now functions in ~/.ocd_functions.
 rm -f $HOME/bin/ocd-*
+source $HOME/.ocd_functions
