@@ -16,7 +16,7 @@ easy to share dotfiles with other people just by pointing them at my repo.
 
 When I set up a freshly installed system, I first install my private SSH key:
 
-    mkdir -p ~/.ssh && scp user@someotherhost:.ssh/id\.\* ~/.ssh
+    mkdir -p ~/.ssh && scp user@someotherhost:.ssh/id\* ~/.ssh
 
 Once the appropriate github SSH identity is in `~/.ssh`, then I can run this:
 
