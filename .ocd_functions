@@ -112,6 +112,14 @@ ocd-add () {
   popd >/dev/null
 }
 
+# TODO: finish this
+#ocd-rm () {
+#  if [ ! -f "$1" ];then
+#    echo "Usage: ocd-rm <filename>"
+#    return 1
+#  fi
+#}
+
 # Check if installed. If it's not, try to install it.
 if [ ! -d "$OCD_DIR/.git" ]; then
   GetIdentities () { ssh-add -l 2>/dev/null |awk '{print $3}' |sort |xargs; }
