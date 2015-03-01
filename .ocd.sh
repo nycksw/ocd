@@ -1,9 +1,9 @@
 # OCD: Obesssive Compulsive Directory
-# See https://github.com/obeyeater/ocd/blob/master/ for detailed information.
+# See https://github.com/obeyeater/ocd for detailed information.
 #
 # Functions and usage:
 #   ocd-restore:        pull from git master and copy files to homedir
-#   ocd-backup:         push local changes to master
+#   ocd-backup:         push all local changes to master
 #   ocd-status:         check if OK or Behind
 #   ocd-missing-debs:   compare system against ${HOME}/.favdebs and report missing
 #   ocd-extra-debs:     compare system against ${HOME}/.favdebs and report extras
@@ -182,11 +182,11 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
   if [[ -z "$(get_idents)" ]]; then
     if ocd::yesno "No SSH identities! Copy them from another host?"; then
       echo -n "Enter user@hostname: "
-      local source_host
       read source_host
       mkdir -p ${HOME}/.ssh
       if scp ${source_host}:.ssh/id\* .ssh/ ; then
         echo "SSH identities copied from \"${source_host}\"."
+        unset source_host
       else
         ocd:err "Failed to copy SSH identities."
         return 1
@@ -206,7 +206,7 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
 
   # Fetch the repository.
   if ocd::yesno "Fetch from git repository \"${OCD_REPO}?\""; then
-    if ! which git ; then
+    if ! which git >/dev/null; then
       echo "Installing git..."
       sudo apt-get install git-core
     fi
