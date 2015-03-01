@@ -1,9 +1,0 @@
-#!/bin/bash
-
-echo -n "OCD: "
-cd $HOME/.ocd
-git remote update &>/dev/null
-if git status -uno | grep -q behind; then
-  echo "needs update!" && exit
-fi
-echo "OK"
