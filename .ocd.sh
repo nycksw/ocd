@@ -4,9 +4,11 @@
 # Functions and usage:
 #   ocd-restore:        pull from git master and copy files to homedir
 #   ocd-backup:         push all local changes to master
-#   ocd-status:         check if OK or Behind
+#   ocd-add:            track a new file in the repository
+#   ocd-rm:             stop tracking a file in the repository
 #   ocd-missing-debs:   compare system against ${HOME}/.favdebs and report missing
 #   ocd-extra-debs:     compare system against ${HOME}/.favdebs and report extras
+#   ocd-status:         check if OK or Behind
 
 OCD_IGNORE_RE="^\./(README|\.git/)"
 OCD_REPO="git@github.com:obeyeater/ocd.git"
@@ -85,17 +87,35 @@ ocd-backup() {
 }
 
 ocd-status() {
-  pushd ${OCD_DIR} >/dev/null
-  git remote update &>/dev/null
-  if git status -uno | grep -q behind; then
-    echo "Behind"
+  # If an arg is passed, assume it's a file and report on if it's tracked.
+  if [[ -e "$1" ]]; then
+    local base=$(basename $1)
+    local abspath=$(cd "$(dirname $1)"; pwd)
+    local relpath=${abspath/#${HOME}/}
+    if [[ -f ${OCD_DIR}${relpath}/${base} ]]; then
+      echo "tracked"
+    else
+      echo "untracked"
+    fi
+    return 0
+  elif [[ -z "$1" ]]; then
+    # Arg isn't passed; report on the repo status instead.
+    pushd ${OCD_DIR} >/dev/null
+    git remote update &>/dev/null
+    if git status -uno | grep -q behind; then
+      echo "behind"
+      popd >/dev/null && return 1
+    else
+      echo "ok"
+      popd >/dev/null && return 0
+    fi
+    echo "Error"
     popd >/dev/null && return 1
   else
-    echo "OK"
-    popd >/dev/null && return 0
+    ocd::err "No such file: $1"
+    return 1
   fi
-  echo "Error"
-  popd >/dev/null && return 1
+  return 0
 }
 
 ocd-missing-debs() {
