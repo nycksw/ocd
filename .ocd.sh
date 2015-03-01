@@ -89,6 +89,10 @@ ocd-backup() {
 ocd-status() {
   # If an arg is passed, assume it's a file and report on if it's tracked.
   if [[ -e "$1" ]]; then
+    if [[ -d "$1" ]]; then
+      ocd::err "Argument should be a file, not a directory."
+      return 1
+    fi
     local base=$(basename $1)
     local abspath=$(cd "$(dirname $1)"; pwd)
     local relpath=${abspath/#${HOME}/}
