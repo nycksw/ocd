@@ -120,6 +120,9 @@ ocd-add() {
   base=$(basename $1)
   abspath=$(cd "`dirname $1`";pwd)
   relpath=${abspath/#$HOME\//}
+  echo $base
+  echo $abspath
+  echo $relpath
   if [[ "${HOME}/${relpath}/$base" != "${abspath}/${base}" ]]; then
     echo "$1 is not in $HOME"
     return 1
@@ -157,6 +160,7 @@ if [[ ! -d "$OCD_DIR/.git" ]]; then
       read SRC
       mkdir -p $HOME/.ssh
       scp ${SRC}:.ssh/id\* .ssh/
+      echo "Done copying SSH IDs from ${SRC}"
       ssh-agent > .ssh/agent.$(hostname)
       source .ssh/agent.$(hostname) 2>/dev/null
       ssh-add
@@ -170,15 +174,16 @@ if [[ ! -d "$OCD_DIR/.git" ]]; then
   fi
 
   # Fetch the repository.
-  if ocd::yn "Fetch from \"$OCD_INSTALL_FROM?\""; then
+  if ocd::yn "Fetch from git repository \"$OCD_INSTALL_FROM?\""; then
     echo "Checking for git..."
     which git || sudo apt-get install git-core
     if git clone $OCD_INSTALL_FROM "$HOME/.ocd"; then
       if ! cmp "$HOME/.ocd.sh" "$HOME/.ocd/.ocd.sh"; then
         cp "$HOME/.ocd.sh" "$HOME/.ocd/.ocd.sh"
-        echo "Done! to finish, run: ocd-backup && ocd-restore && source .bashrc"
+        cp "$HOME/.ocd/.gitconfig" "$HOME/.gitconfig"
+        echo "Done! to finish, run ocd-backup to push changes, then: ocd-restore && source .bashrc"
       else
-        echo "Done! to finish, run: ocd-restore && .bashrc"
+        echo "Done! to finish, run: ocd-restore && source .bashrc"
       fi
     fi
   fi
