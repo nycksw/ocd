@@ -42,3 +42,4 @@ $HOME/.bashrc_$(dnsdomainname)
 $HOME/.ocd.sh
 "
 for file in $SOURCE_FILES;do test -f $file && . $file;done
+# Just testing.
