@@ -120,9 +120,8 @@ ocd-add() {
   base=$(basename $1)
   abspath=$(cd "`dirname $1`";pwd)
   relpath=${abspath/#$HOME\//}
-  echo $base
-  echo $abspath
   echo $relpath
+  echo "${HOME}/${relpath}/$base != ${abspath}/${base}"
   if [[ "${HOME}/${relpath}/$base" != "${abspath}/${base}" ]]; then
     echo "$1 is not in $HOME"
     return 1
