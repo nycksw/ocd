@@ -1,112 +1,111 @@
-## OCD: tracking dotfiles in git
+# OCD: tracking dotfiles in git
 
-I got tired of having my common dotfiles (`.bashrc`, `.pythonrc`,
-`.vimrc`, etc.) out of sync across all the different workstations
-and shells I use on a regular basis. So, I rewrote them in a
-way to be generic, allowing host-specific and domain-specific
-files to be sourced as appropriate. I also included window-manager
-specifics, like my Openbox configuration. This was inspired by a [similar
-approach](http://books.google.com/books?id=mKgomQz5KH0C&pg=PA149&lpg=PA149&dq=flickenger+movein&oi=book_result&resnum=1&ct=result#v=onepage&q&f=false)
-I read a very long time ago.
+It's common to have dotfiles out of sync across all the different hosts
+you may use. The OCD script allows you to easily track them in GitHub,
+or any git repository of your choice. It makes setting up a new system
+very simple.
 
-Now I can take a freshly installed operating system and make it cozy and
-customized without any tedious repetition. I also get the added benefit
-of source control to view previous versions of files, and it's really
-easy to share dotfiles with other people just by pointing them at my repo.
+Using this script you may take a freshly installed operating system and
+set it up quickly doing something like this:
 
-When I set up a freshly installed system, I first install my private SSH key:
-
-    mkdir -p ~/.ssh && scp user@someotherhost:.ssh/id\* ~/.ssh
-
-Once the appropriate github SSH identity is in `~/.ssh`, then I can run this:
-
+    # Substitute your own git repository here.
     curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh \
       -o ~/.ocd.sh
     source ~/.ocd.sh
 
-That clones my entire dotfile repo and allows me to copy the whole
-environment into my home directory. It also includes helper functions to
-easily identify system packages that should also be installed (or removed)
-based on a list also tracked in git as a dotfile: `~/.favdebs`
+This does the following:
 
-Those simple steps eliminate 98% of the fiddling I used to do when
-moving into a freshly installed system. The only remaining tweaks deal
-with differences between distributions or domain-specific configurations,
-and I write my dotfiles in such a way to accommodate those scenarios. For
-example, my .bashrc only contains things I'm reasonably sure are portable
-across all of the systems I use (it helps that I usually use only Debian
-or Ubuntu systems.) To handle host- or domain-specific configs, I do
-something like the following at the end of my main `.bashrc`:
+  * checks if your SSH identity is available, and if it's not, prompts you
+    for a remote host to copy them from (this is necessary to clone a RW
+    git repository)
+  * installs git(1) if it's not already installed
+  * runs `git clone` of your repository into your OCD directory (default is
+    `~/.ocd`)
+  * reminds you to run `ocd-restore`, which finishes the process by copying
+    all the tracked files into your `$HOME`
+
+Make sure `source $your_ocd_dir` (default: `~/.ocd`) is in your `.bashrc`
+to use the other helpers provided by this script, such as adding or removing
+dotfiles from your repository.
+
+# Writing portable config files
+
+This process requires you think a little differently about your dotfiles to
+make sure they're portable across all the systems you use. For example, my
+`.bashrc` is suitable for every system I use, and I put domain-centric 
+customizations (for example, hosts I use at work) in a separate file. Consider
+these lines, which I include at the end of my `.bashrc`:
 
     source $HOME/.bashrc_$(hostname -f)
     source $HOME/.bashrc_$(dnsdomainname)
 
 This way, settings are only applied in the appropriate context.
 
-## Managing changes
-
-### Workflow
+# Managing changes to tracked files
 
 When I log in to a system that I haven't worked on in a while, the first
 thing I do is run `ocd-restore`. Any time I make a config change, I run
-`ocd-backup`. I also have helpers: `ocd-status` tells me if I'm behind the
+`ocd-backup`. 
+
+*Note*: the actual dotfiles are hard-linked to their counterparts in the local
+`~/.ocd` git branch, so there's no need to copy changes anywhere before
+committing. Just edit in place and run `ocd-backup`.
+
+There are also helper functions: `ocd-status` tells me if I'm behind the
 master, and `ocd-missing-debs` and `ocd-extra-debs` tell me if my system's
-packages differ from my basic preferences recorded in `~/.favdebs`.
+packages differ from my basic preferences recorded in `~/.favdebs` (for
+example, your openbox autostart may call programs that are not installed
+by default on a new system; `ocd-missing-debs` is just a very simple way
+to record these dependencies and make it easy to install them, e.g.:
+`sudo apt-get install $(ocd-missing-debs)`)
 
 Adding new files is just:
   * `ocd-add <filename>`
   * `ocd-backup`
 
-Note: the actual dotfiles are hard-linked to their counterparts in the local
-`~/.ocd` git branch, so there's no need to copy changes there before
-committing. Just edit in place and run `ocd-backup`.
-
 ### Example output
 
 If I change something on any of my systems, I can easily push the change
 back to my master git repository. For example:
+```
+  $ ocd-backup 
+  git status in /home/e/.ocd:
 
-    $ echo "# Just testing OCD." >> ~/.bashrc
-    $ ocd-backup
-    ..................... done!
+  On branch master
+  Your branch is up-to-date with 'origin/master'.
 
-    git status in /home/eater/.ocd:
+  Changes not staged for commit:
+    (use "git add <file>..." to update what will be committed)
+    (use "git checkout -- <file>..." to discard changes in working directory)
 
-    # On branch master
-    # Changes not staged for commit:
-    # (use "git add <file>..." to update what will be committed)
-    # (use "git checkout -- <file>..." to discard changes in working directory)
-    #
-    # modified: .bashrc
-    #
-    no changes added to commit (use "git add" and/or "git commit -a")
+          modified:   .bashrc
 
-    git diff in /home/eater/.ocd:
+  no changes added to commit (use "git add" and/or "git commit -a")
+  diff --git a/.bashrc b/.bashrc
+  index 28d1b9a..1d8f266 100644
+  --- a/.bashrc
+  +++ b/.bashrc
+  @@ -42,3 +42,4 @@ $HOME/.bashrc_$(dnsdomainname)
+   $HOME/.ocd.sh
+   "
+   for file in $SOURCE_FILES;do test -f $file && . $file;done
+  +# Just testing.
+  Commit and push now? (yes/no): yes
 
-    diff --git a/.bashrc b/.bashrc
-    index 4e127f4..11d24ff 100644
-    --- a/.bashrc
-    +++ b/.bashrc
-    @@ -57,3 +57,4 @@ for file in $SOURCE_FILES;do test -f $file && . $file;done
-    # test -f ~/bin/ocd-status && ~/bin/ocd-status
-    # touch ~/.bashrc
-    #fi
+  [... add a commit message here ...]
 
-    +# Just testing OCD.
-
-    Commit and push now? (yes/no): yes
-    [Editor launches so you may describe the change here.]
-
-    ".git/COMMIT_EDITMSG" 10L, 270C [w]
-    [master da7e536] Just testing.
-    1 file changed, 1 insertion(+)
-    Counting objects: 5, done.
-    Delta compression using up to 12 threads.
-    Compressing objects: 100% (3/3), done.
-    Writing objects: 100% (3/3), 308 bytes | 0 bytes/s, done.
-    Total 3 (delta 2), reused 0 (delta 0)
-    To git@github.com:obeyeater/ocd.git
-    3599b0b..da7e536 master -> master
+  .git/COMMIT_EDITMSG [+]                                                                                                              1,7            All
+  ".git/COMMIT_EDITMSG" 9L, 265C [w]                                                                                                        
+  [master 623d0be] testing
+   1 file changed, 1 insertion(+)
+  Counting objects: 5, done.
+  Delta compression using up to 12 threads.
+  Compressing objects: 100% (3/3), done.
+  Writing objects: 100% (3/3), 295 bytes | 0 bytes/s, done.
+  Total 3 (delta 2), reused 0 (delta 0)
+  To git@github.com:obeyeater/ocd.git
+     88bfe09..623d0be  master -> master
+```
 
 ### Caveats
 
@@ -116,17 +115,18 @@ without first committing local changes. This is easy to fix by `cd`ing to
 `~/.ocd` and doing a typical merge, a simple `git push`, a `git checkout
 -f $filename` to overwrite changes, or some other resolution.
 
-## Steal this technique
+# Steal this technique
 
 If you want to use my configuration as a starting point, you can just
 branch my git repo and make your own modifications following the workflow
-described above. Be sure to change `INSTALL_FROM` in `~/.ocd.sh`
-so it clones the right repo. You'll want to do something like this:
+described above. Be sure to change `OCD_REPO` in `~/.ocd.sh` so it clones
+the right repo. You'll want to do something like this:
 
   * Create an empty git repo for your dotfiles, or fork [mine](https://github.com/obeyeater/ocd).
   * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh -o ~/.ocd.sh`
-  * Review the `~/.ocd.sh` file to make sure I'm not malicious :-) Edit `INSTALL_FROM` with your own repo.
+  * Review the `~/.ocd.sh` file to make sure I'm not malicious :-) Edit `OCD_REPO` with your own repo.
   * `source ~/.ocd.sh`
   * Add additional dotfiles with `ocd-add <filename>`
+  * Make sure `.bashrc` includes something like `source ~/.ocd.sh`.
   * `ocd-backup` to push your changes to the repo.
   * `ocd-restore` to sync everything from your local branch to your home directory.
