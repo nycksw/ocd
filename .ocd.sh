@@ -14,7 +14,7 @@ OCD_IGNORE_RE="^\./(README|\.git/)"
 OCD_REPO="git@github.com:obeyeater/ocd.git"
 OCD_DIR="${HOME}/.ocd"
 
-ocd::err()  { echo "ocd(ERROR): $@" >&2; }
+ocd::err()  { echo "$@" >&2; }
 
 ocd::yesno() {
   echo -n "$@ (yes/no): "
@@ -36,7 +36,7 @@ ocd-restore() {
     echo "${OCD_DIR}: doesn't exist!" && continue
   fi
   pushd ${OCD_DIR} >/dev/null
-  echo "ocd: git-pull:"
+  echo "Running: git-pull:"
   git pull || {
     ocd::err  "error: couldn't git-pull; check status in ${OCD_DIR}"
     popd >/dev/null
@@ -50,7 +50,7 @@ ocd-restore() {
     mkdir -p ${HOME}/${dir}
   done
 
-  echo -n "ocd: restoring"
+  echo -n "Restoring"
   for file in ${files}; do
     echo -n .
     src="${file}"
@@ -66,7 +66,7 @@ ocd-restore() {
   # a file the old file will remain. Housekeeping commands that need to be
   # run may be put in ${OCD_DIR}/.ocd_cleanup; they run only once.
   if ! cmp ${HOME}/.ocd_cleanup{,_ran} &>/dev/null; then
-    echo -e "ocd: running ${HOME}/.ocd_cleanup:"
+    echo -e "Running: ${HOME}/.ocd_cleanup:"
     ${HOME}/.ocd_cleanup && cp ${HOME}/.ocd_cleanup{,_ran}
   fi
   popd >/dev/null
@@ -190,7 +190,7 @@ ocd-rm() {
 
 # Check if installed. If not, fix it.
 if [[ ! -d "${OCD_DIR}/.git" ]]; then
-  echo "ocd: not installed! running install script..."
+  echo "OCD not installed! running install script..."
 
   # A correct SSH identity needs to be available for the RW git repository.
 
@@ -239,6 +239,9 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
         if [[ ! -f ${OCD_DIR}/$(basename ${BASH_SOURCE}) ]]; then
           echo "It looks like you're starting with a fresh repository."
           echo "Be sure to run: ocd-add ${BASH_SOURCE}"
+        fi
+        if [[ ! -f ${HOME}.favdebs ]]; then
+          echo "You may want to add: ${HOME}/.favdebs"
         fi
     fi
   fi
