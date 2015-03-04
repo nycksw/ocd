@@ -80,22 +80,12 @@ back to my master git repository. For example:
 
           modified:   .bashrc
 
-  no changes added to commit (use "git add" and/or "git commit -a")
-  diff --git a/.bashrc b/.bashrc
-  index 28d1b9a..1d8f266 100644
-  --- a/.bashrc
-  +++ b/.bashrc
-  @@ -42,3 +42,4 @@ $HOME/.bashrc_$(dnsdomainname)
-   $HOME/.ocd.sh
-   "
-   for file in $SOURCE_FILES;do test -f $file && . $file;done
-  +# Just testing.
+  [...]
+  
   Commit and push now? (yes/no): yes
 
   [... add a commit message here ...]
 
-  .git/COMMIT_EDITMSG [+]                                                                                                              1,7            All
-  ".git/COMMIT_EDITMSG" 9L, 265C [w]                                                                                                        
   [master 623d0be] testing
    1 file changed, 1 insertion(+)
   Counting objects: 5, done.
