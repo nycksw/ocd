@@ -8,7 +8,7 @@ personal() {
 
 work() {
   exec google-chrome \
-      --proxy-pac-url=https://proxyconfig.corp.google.com/wpad.dat \
+      --proxy-pac-url=https://your.work.proxy/wpad.dat \
       --user-data-dir=$HOME/.config/google-chrome/Work \
       $1
 }

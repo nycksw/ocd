@@ -1,6 +1,3 @@
-# ~eater/.screenrc
-# http://eater.org/
-
 shell -${SHELL}  # dash (-) is for login shells
 shelltitle ''
 vbell on

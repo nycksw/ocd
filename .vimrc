@@ -1,5 +1,3 @@
-" ~eater/.vimrc
-" http://eater.org/
 set nocompatible
 
 let mapleader=","
