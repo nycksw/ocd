@@ -1,4 +1,7 @@
+" ~eater/.vimrc
+" http://eater.org/
 set nocompatible
+execute pathogen#infect()
 
 let mapleader=","
 
@@ -81,9 +84,6 @@ set smartcase  " ... unless uppercase letters are used in the regex.
 set hlsearch  " Highlight searches by default.
 set incsearch  " Incrementally search while typing a /regex.
 
-""" Display.
-colorscheme eater
-
 " Highlight extra whitespace at the end of lines.
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+\%#\@<!$/
@@ -92,6 +92,11 @@ match ExtraWhitespace /\s\+\%#\@<!$/
 au BufEnter,BufRead,BufNewFile *.py so ~/.vim/py.vim
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/yaml.vim
 au BufRead *.js set makeprg=jslint\ %
+
+""" Plugin-specific settings; requires bundles / pathogen.
+
+" Theme.
+colorscheme eater
 
 """ Local configuration.
 if filereadable(expand("~/.vimrc-local"))

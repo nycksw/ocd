@@ -11,7 +11,7 @@
 #   ocd-status:         check if OK or Behind
 
 OCD_IGNORE_RE="^\./(README|\.git/)"
-OCD_REPO="git@github.com:obeyeater/ocd.git"
+OCD_REPO="git@github.com:obeyeater/dotfiles.git"
 OCD_DIR="${HOME}/.ocd"
 
 ocd::err()  { echo "$@" >&2; }
@@ -33,9 +33,9 @@ ocd::yesno() {
 
 ocd-restore() {
   if [[ ! -d "${OCD_DIR}" ]]; then
-    echo "${OCD_DIR}: doesn't exist!" && continue
+    echo "${OCD_DIR}: doesn't exist!" && return
   fi
-  pushd ${OCD_DIR} >/dev/null
+  pushd "${OCD_DIR}" >/dev/null
   echo "Running: git-pull:"
   git pull || {
     ocd::err  "error: couldn't git-pull; check status in ${OCD_DIR}"
@@ -43,22 +43,21 @@ ocd-restore() {
     return 1
   }
 
-  local files=$(find . -type f | egrep -v  "${OCD_IGNORE_RE}")
+  local files=$(find . -type f -o -type l | egrep -v  "${OCD_IGNORE_RE}")
   local dirs=$(find . -type d | egrep -v  "${OCD_IGNORE_RE}")
 
   for dir in ${dirs}; do
-    mkdir -p ${HOME}/${dir}
+    mkdir -p "${HOME}/${dir}"
   done
 
   echo -n "Restoring"
   for file in ${files}; do
     echo -n .
-    src="${file}"
     dst="${HOME}/${file}"
-    if [[ -f ${dst} ]]; then
-      rm -f ${dst}
+    if [[ -f "${dst}" ]]; then
+      rm -f "${dst}"
     fi
-    ln ${file} ${dst}
+    ln "${file}" "${dst}"
   done
   echo
 
@@ -67,14 +66,14 @@ ocd-restore() {
   # run may be put in ${OCD_DIR}/.ocd_cleanup; they run only once.
   if ! cmp ${HOME}/.ocd_cleanup{,_ran} &>/dev/null; then
     echo -e "Running: ${HOME}/.ocd_cleanup:"
-    ${HOME}/.ocd_cleanup && cp ${HOME}/.ocd_cleanup{,_ran}
+    "${HOME}/.ocd_cleanup" && cp ${HOME}/.ocd_cleanup{,_ran}
   fi
   popd >/dev/null
 }
 
 ocd-backup() {
-  pushd ${OCD_DIR} >/dev/null
-  echo -e "git status in `pwd`:\n"
+  pushd "${OCD_DIR}" >/dev/null
+  echo -e "git status in $(pwd):\n"
   git status
   if ! git status | grep -q "working directory clean"; then
     git diff
@@ -93,10 +92,10 @@ ocd-status() {
       ocd::err "Argument should be a file, not a directory."
       return 1
     fi
-    local base=$(basename $1)
+    local base=$(basename "$1")
     local abspath=$(cd "$(dirname $1)"; pwd)
-    local relpath=${abspath/#${HOME}/}
-    if [[ -f ${OCD_DIR}${relpath}/${base} ]]; then
+    local relpath="${abspath/#${HOME}/}"
+    if [[ -f "${OCD_DIR}${relpath}/${base}" ]]; then
       echo "tracked"
     else
       echo "untracked"
@@ -104,7 +103,7 @@ ocd-status() {
     return 0
   elif [[ -z "$1" ]]; then
     # Arg isn't passed; report on the repo status instead.
-    pushd ${OCD_DIR} >/dev/null
+    pushd "${OCD_DIR}" >/dev/null
     git remote update &>/dev/null
     if git status -uno | grep -q behind; then
       echo "behind"
@@ -123,65 +122,65 @@ ocd-status() {
 }
 
 ocd-missing-debs() {
-  [ -f ${HOME}/.favdebs ] || touch ${HOME}/.favdebs
+  [[ -f "${HOME}/.favdebs" ]] || touch "${HOME}/.favdebs"
   dpkg --get-selections | grep '\sinstall$' | awk '{print $1}' | sort \
-      | comm -13 - <(egrep -v '(^-|^ *#)' ${HOME}/.favdebs \
+      | comm -13 - <(egrep -v '(^-|^ *#)' "${HOME}/.favdebs" \
       | sed 's/ *#.*$//' |sort)
 }
 
 ocd-extra-debs() {
-  [ -f ${HOME}/.favdebs ] || touch ${HOME}/.favdebs
+  [[ -f "${HOME}/.favdebs" ]] || touch "${HOME}/.favdebs"
   dpkg --get-selections | grep '\sinstall$' | awk '{print $1}' | sort \
-      | comm -12 - <(grep -v '^ *#' ${HOME}/.favdebs | grep '^-' | cut -b2- \
+      | comm -12 - <(grep -v '^ *#' "${HOME}/.favdebs" | grep '^-' | cut -b2- \
       | sed 's/ *#.*$//' |sort)
 }
 
 ocd-add() {
-  if [[ ! -z "$1" ]];then
+  if [[ -z "$1" ]];then
     echo "Usage: ocd-add <filename>"
     return 1
   fi
-  if [ ! -f "$1" ];then
+  if [[ ! -f "$1" ]];then
     echo "$1 not found."
     return 1
   fi
-  local base=$(basename $1)
-  local abspath=$(cd "$(dirname $1)"; pwd)
-  local relpath=${abspath/#${HOME}/}
-  if [ "${HOME}${relpath}/${base}" != "${abspath}/${base}" ]; then
+  local base="$(basename $1)"
+  local abspath=$(cd $(dirname "$1"); pwd)
+  local relpath="${abspath/#${HOME}/}"
+  if [[ "${HOME}${relpath}/${base}" != "${abspath}/${base}" ]]; then
     echo "$1 is not in ${HOME}"
     return 1
   fi
-  mkdir -p ${OCD_DIR}/${relpath}
-  ln -f ${HOME}${relpath}/${base} ${OCD_DIR}${relpath}/${base}
-  pushd ${OCD_DIR} >/dev/null
-  git add .${relpath}/${base} && echo "Added: $1"
+  mkdir -p "${OCD_DIR}/${relpath}"
+  ln -f "${HOME}${relpath}/${base}" "${OCD_DIR}${relpath}/${base}"
+  pushd "${OCD_DIR}" >/dev/null
+  git add ".${relpath}/${base}" && echo "Added: $1"
   popd >/dev/null
 }
 
 ocd-rm() {
-  if [ ! -z "$1" ];then
+  if [[ -z "$1" ]];then
     echo "Usage: ocd-rm <filename>"
     return 1
   fi
-  if [ ! -f "$1" ];then
+  if [[ ! -f "$1" ]];then
     echo "$1 not found."
     return 1
   fi
-  local base=$(basename $1)
-  local abspath=$(cd "$(dirname $1)"; pwd)
-  local relpath=${abspath/#${HOME}/}
+  local base="$(basename $1)"
+  local abspath="$(cd "$(dirname $1)"; pwd)"
+  local relpath="${abspath/#${HOME}/}"
   if [[ ! -f "${OCD_DIR}/${relpath}/${base}" ]]; then
     ocd::err "$1 is not in ${OCD_DIR}."
     return 1
   fi
-  pushd ${OCD_DIR}/${relpath} >/dev/null
+  pushd "${OCD_DIR}/${relpath}" >/dev/null
   echo -n "git: "
-  git rm -f ${base}
+  git rm -f "${base}"
   popd >/dev/null
 
   # Clean directory if empty.
-  rm -d ${OCD_DIR}/${relpath} 2>/dev/null
+  rm -d "${OCD_DIR}/${relpath}" 2>/dev/null
 
   echo "File \"$1\" no longer tracked in $OCD_DIR."
   echo "To commit change run: ocd-backup"
@@ -202,13 +201,13 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
     ssh-add 2>/dev/null
   fi
 
-  # If there are still no identites, ask to copy some from another host.
+  # If there are still no identities, ask to copy some from another host.
   if [[ -z "$(get_idents)" ]]; then
     if ocd::yesno "No SSH identities! Copy them from another host?"; then
       echo -n "Enter user@hostname: "
       read source_host
-      mkdir -p ${HOME}/.ssh
-      if scp ${source_host}:.ssh/id\* .ssh/ ; then
+      mkdir -p "${HOME}/.ssh"
+      if scp "${source_host}:.ssh/id\*" .ssh/ ; then
         echo "SSH identities copied from \"${source_host}\"."
         unset source_host
       else
@@ -234,13 +233,13 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
       echo "Installing git..."
       sudo apt-get install git-core
     fi
-    if git clone ${OCD_REPO} ${OCD_DIR} ; then
+    if git clone "${OCD_REPO}" "${OCD_DIR}" ; then
         echo "Done! to finish, run: ocd-restore && source .bashrc"
-        if [[ ! -f ${OCD_DIR}/$(basename ${BASH_SOURCE}) ]]; then
+        if [[ ! -f "${OCD_DIR}/$(basename ${BASH_SOURCE})" ]]; then
           echo "It looks like you're starting with a fresh repository."
           echo "Be sure to run: ocd-add ${BASH_SOURCE}"
         fi
-        if [[ ! -f ${HOME}.favdebs ]]; then
+        if [[ ! -f "${HOME}.favdebs" ]]; then
           echo "You may want to add: ${HOME}/.favdebs"
         fi
     fi
