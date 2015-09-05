@@ -105,14 +105,9 @@ without first committing local changes. This is easy to fix by `cd`ing to
 `~/.ocd` and doing a typical merge, a simple `git push`, a `git checkout
 -f $filename` to overwrite changes, or some other resolution.
 
-# Steal this technique
+# Installation and usage
 
-If you want to use my configuration as a starting point, you can just
-branch my git repo and make your own modifications following the workflow
-described above. Be sure to change `OCD_REPO` in `~/.ocd.sh` so it clones
-the right repo. You'll want to do something like this:
-
-  * Create an empty git repo for your dotfiles, or fork [mine](https://github.com/obeyeater/ocd).
+  * Create an empty git repo for your dotfiles.
   * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh -o ~/.ocd.sh`
   * Review the `~/.ocd.sh` file to make sure I'm not malicious :-) Edit `OCD_REPO` with your own repo.
   * `source ~/.ocd.sh`
