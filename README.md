@@ -107,7 +107,7 @@ without first committing local changes. This is easy to fix by `cd`ing to
 
 # Installation and usage
 
-  * Create an empty git repo for your dotfiles.
+  * Create an empty git repo for your dotfiles (e.g.: `git init --bare ~/.ocd`)
   * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh -o ~/.ocd.sh`
   * Review the `~/.ocd.sh` file to make sure I'm not malicious :-) Edit `OCD_REPO` with your own repo.
   * `source ~/.ocd.sh`
