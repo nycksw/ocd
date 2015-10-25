@@ -211,7 +211,7 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
         echo "SSH identities copied from \"${source_host}\"."
         unset source_host
       else
-        ocd:err "Failed to copy SSH identities."
+        ocd::err "Failed to copy SSH identities."
         return 1
       fi
       echo "Starting an agent and adding identities..."
