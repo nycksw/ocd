@@ -9,10 +9,10 @@ Using this script, you may take a freshly installed operating system and
 set it up quickly, like so:
 
     curl https://raw.githubusercontent.com/nycksw/ocd/master/.ocd.sh -o ~/.ocd.sh
+    vim ~/.ocd.sh  # Change OCD_REPO to your own repository.
     source ~/.ocd.sh
 
-You may want to substitute your own git repository above, if you've made your own edits to the `ocd.sh` script. See 
-"Installation and usage" for more information on how to set up your own repository.
+You'll want to substitute your own git repository above, especially if you've made your own edits to the `ocd.sh` script. See "Installation and usage" for more information on how to set up your own repository.
 
 Sourcing the `ocd.sh` script does the following on its first invocation:
 
