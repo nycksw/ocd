@@ -8,9 +8,9 @@ very simple.
 Using this script you may take a freshly installed operating system and
 set it up quickly doing something like this:
 
-    # Substitute your own git repository here.
-    curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh \
-      -o ~/.ocd.sh
+    # Substitute your own git repository below. See "Installation and usage"
+    # for more information on how to do this.
+    curl https://raw.githubusercontent.com/username/ocd/master/.ocd.sh -o ~/.ocd.sh
     source ~/.ocd.sh
 
 This does the following:
@@ -27,6 +27,22 @@ This does the following:
 Make sure `source $your_ocd_dir` (default: `~/.ocd`) is in your `.bashrc`
 to use the other helpers provided by this script, such as adding or removing
 dotfiles from your repository.
+
+# Installation and usage
+
+  * [Create an empty GitHub repo](https://help.github.com/articles/create-a-repo/) for your dotfiles.
+    * You'll need the repo identifier in a moment, something like: `git@github.com:username/ocd.git`
+  * `curl https://raw.githubusercontent.com/nycksw/ocd/master/.ocd.sh -o ~/.ocd.sh`
+  * Review the `~/.ocd.sh` file to make sure I'm not malicious :-)
+  * Edit `OCD_REPO` with your own repo.
+  * `source ~/.ocd.sh`
+  * Add additional dotfiles with `ocd-add <filename>`
+  * Make sure `.bashrc` includes something like `source ~/.ocd.sh`.
+  * `ocd-backup` to push your changes to the repo.
+  * `ocd-restore` to sync everything from your local branch to your home directory.
+  * Optional: create a `~/.favdebs` file containing packages you routinely install on a new system.
+    * `ocd-missing-debs` will use this to show you which packages are currently missing.
+    * Then you can do something like this: `sudo apt-get install $(ocd-missing-debs)`
 
 # Writing portable config files
 
@@ -93,7 +109,7 @@ back to my master git repository. For example:
   Compressing objects: 100% (3/3), done.
   Writing objects: 100% (3/3), 295 bytes | 0 bytes/s, done.
   Total 3 (delta 2), reused 0 (delta 0)
-  To git@github.com:obeyeater/ocd.git
+  To git@github.com:nycksw/ocd.git
      88bfe09..623d0be  master -> master
 ```
 
@@ -104,14 +120,3 @@ running `ocd-backup`, and git will complain that it can't run `git pull`
 without first committing local changes. This is easy to fix by `cd`ing to
 `~/.ocd` and doing a typical merge, a simple `git push`, a `git checkout
 -f $filename` to overwrite changes, or some other resolution.
-
-# Installation and usage
-
-  * Create an empty git repo for your dotfiles (e.g.: `git init --bare ~/.ocd`)
-  * `curl https://raw.githubusercontent.com/obeyeater/ocd/master/.ocd.sh -o ~/.ocd.sh`
-  * Review the `~/.ocd.sh` file to make sure I'm not malicious :-) Edit `OCD_REPO` with your own repo.
-  * `source ~/.ocd.sh`
-  * Add additional dotfiles with `ocd-add <filename>`
-  * Make sure `.bashrc` includes something like `source ~/.ocd.sh`.
-  * `ocd-backup` to push your changes to the repo.
-  * `ocd-restore` to sync everything from your local branch to your home directory.
