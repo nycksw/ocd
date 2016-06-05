@@ -6,10 +6,10 @@ or any git repository of your choice. It makes setting up a new system
 very simple.
 
 Using this script you may take a freshly installed operating system and
-set it up quickly doing something like this:
+set it up quickly doing something like what follows. You'll need to
+substitute your own git repository below. See "Installation and usage"
+for more information on how to do this.
 
-    # Substitute your own git repository below. See "Installation and usage"
-    # for more information on how to do this.
     curl https://raw.githubusercontent.com/username/ocd/master/.ocd.sh -o ~/.ocd.sh
     source ~/.ocd.sh
 
