@@ -22,9 +22,8 @@ Sourcing the `ocd.sh` script does the following on its first invocation:
   * installs git(1) if it's not already installed
   * runs `git clone` of your repository into your OCD directory (default is
     `~/.ocd`)
-  * reminds you to run `ocd-restore`, which finishes the process by copying
+  * reminds you to run `ocd-restore`, which finishes the process by hard-linking
     all the tracked files into your `$HOME`
-
 
 # Installation and usage
 
