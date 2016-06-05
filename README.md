@@ -5,15 +5,16 @@ you may use. The OCD script allows you to easily track them in GitHub,
 or any git repository of your choice. It makes setting up a new system
 very simple.
 
-Using this script you may take a freshly installed operating system and
-set it up quickly doing something like what follows. You'll need to
-substitute your own git repository below. See "Installation and usage"
-for more information on how to do this.
+Using this script, you may take a freshly installed operating system and
+set it up quickly, like so:
 
-    curl https://raw.githubusercontent.com/username/ocd/master/.ocd.sh -o ~/.ocd.sh
+    curl https://raw.githubusercontent.com/nycksw/ocd/master/.ocd.sh -o ~/.ocd.sh
     source ~/.ocd.sh
 
-This does the following:
+You may want to substitute your own git repository above, if you've made your own edits to the `ocd.sh` script. See 
+"Installation and usage" for more information on how to set up your own repository.
+
+Sourcing the `ocd.sh` script does the following on its first invocation:
 
   * checks if your SSH identity is available, and if it's not, prompts you
     for a remote host to copy them from (this is necessary to clone a RW
@@ -24,9 +25,6 @@ This does the following:
   * reminds you to run `ocd-restore`, which finishes the process by copying
     all the tracked files into your `$HOME`
 
-Make sure `source $your_ocd_dir` (default: `~/.ocd`) is in your `.bashrc`
-to use the other helpers provided by this script, such as adding or removing
-dotfiles from your repository.
 
 # Installation and usage
 
@@ -37,9 +35,9 @@ dotfiles from your repository.
   * Edit `OCD_REPO` with your own repo.
   * `source ~/.ocd.sh`
   * Add additional dotfiles with `ocd-add <filename>`
-  * Make sure `.bashrc` includes something like `source ~/.ocd.sh`.
-  * `ocd-backup` to push your changes to the repo.
-  * `ocd-restore` to sync everything from your local branch to your home directory.
+  * Make sure `.bashrc` includes something like `source $HOME/.ocd.sh`.
+  * Use `ocd-backup` to push your changes to the repo.
+  * Use `ocd-restore` to sync everything from your repository to your home directory.
   * Optional: create a `~/.favdebs` file containing packages you routinely install on a new system.
     * `ocd-missing-debs` will use this to show you which packages are currently missing.
     * Then you can do something like this: `sudo apt-get install $(ocd-missing-debs)`
