@@ -207,7 +207,7 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
       echo -n "Enter user@hostname: "
       read source_host
       mkdir -p "${HOME}/.ssh"
-      if scp "${source_host}:.ssh/id\*" .ssh/ ; then
+      if scp "${source_host}:.ssh/id*" .ssh/ ; then
         echo "SSH identities copied from \"${source_host}\"."
         unset source_host
       else
