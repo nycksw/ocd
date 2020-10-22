@@ -10,9 +10,11 @@
 #   ocd-extra-debs:     compare system against ${HOME}/.favdebs and report extras
 #   ocd-status:         check if OK or Behind
 
-OCD_IGNORE_RE="^\./(README|\.git/)"
-OCD_REPO="git@github.com:obeyeater/dotfiles.git"
-OCD_DIR="${HOME}/.ocd"
+# Set OCD_REPO/OCD_IGNORE_RE/OCD_DIR (usually in .bashrc or .profile).
+# If unset, the following defaults will be used:
+: "${OCD_REPO:=git@github.com:obeyeater/dotfiles.git}" ;
+: "${OCD_IGNORE_RE:=^\./(README|\.git/)}" ;
+: "${OCD_DIR:=${HOME}/.ocd}" ;
 
 ocd::err()  { echo "$@" >&2; }
 
@@ -245,3 +247,4 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
     fi
   fi
 fi
+
