@@ -8,8 +8,7 @@
 #   ocd-rm:             stop tracking a file in the repository
 #   ocd-missing-debs:   compare system against ${HOME}/.favdebs and report missing
 #   ocd-extra-debs:     compare system against ${HOME}/.favdebs and report extras
-#   ocd-status:         check if OK or Behind the Git repo
-#   ocd-whatchanged     "git status" of OCD_DIR
+#   ocd-status:         check if OK or Behind
 
 # Set OCD_REPO/OCD_IGNORE_RE/OCD_DIR (usually in .bashrc or .profile).
 # If unset, the following defaults will be used:
@@ -85,17 +84,6 @@ ocd-backup() {
       git push
     fi
   fi
-  popd >/dev/null
-}
-
-ocd-whatchanged() {
-  if [[ ! -d "${OCD_DIR}" ]]; then
-    echo "${OCD_DIR}: doesn't exist!" && return
-  fi
-  pushd "${OCD_DIR}" >/dev/null
-
-  git status
-
   popd >/dev/null
 }
 
