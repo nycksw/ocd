@@ -247,4 +247,3 @@ if [[ ! -d "${OCD_DIR}/.git" ]]; then
     fi
   fi
 fi
-
