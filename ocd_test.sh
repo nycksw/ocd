@@ -33,20 +33,18 @@ setup() {
   export OCD_CONF=${OCD_USER_HOME}/.ocd.conf-unused  # No custom env vars for testing.
 
   git init --bare "${OCD_REPO}" 2>/dev/null
-  mkdir -p ${OCD_GIT_DIR}/a/b/c
-  touch "${OCD_GIT_DIR}"/{foo,bar,baz} "${OCD_GIT_DIR}"/a/b/c/qux
-
-  echo DEBUG
-  mkdir -p ${OCD_USER_HOME}/a/b/c
-  touch "${OCD_USER_HOME}/fred" "${OCD_USER_HOME}/a/b/c/wilma"
-  mkdir -p ${OCD_USER_HOME}/d/e/f
-  touch "${OCD_USER_HOME}/d/e/f/barney"
-
-
 }
 
 test_install() {
   ./ocd.sh install
+
+  mkdir -p ${OCD_GIT_DIR}/a/b/c
+  touch "${OCD_GIT_DIR}"/{foo,bar,baz} "${OCD_GIT_DIR}"/a/b/c/qux
+
+  mkdir -p ${OCD_USER_HOME}/a/b/c
+  touch "${OCD_USER_HOME}/fred" "${OCD_USER_HOME}/a/b/c/wilma"
+  mkdir -p ${OCD_USER_HOME}/d/e/f
+  touch "${OCD_USER_HOME}/d/e/f/barney"
 
   # Create test files in git repo.
   git -C "${OCD_GIT_DIR}" add .
