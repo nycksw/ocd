@@ -277,7 +277,7 @@ ocd_rm() {
 # exporting your dotfiles to another host where you don't want to run OCD.
 ocd_export() {
   [[ -n "$1" ]] || { ocd_err "Must supply a filename for the new tar.gz archive."; exit 1; }
-  touch "$OCD_GIT_DIR"/".ocd_exported_$(date +%Y%M%d)"
+  touch "$OCD_GIT_DIR"/".ocd_exported_$(date +%Y%m%d)"
   tar -C "$OCD_GIT_DIR" --exclude="${_OCD_IGNORE_RE}" -czf "$1" .
   tar -tvzf "$1"
   ocd_info "Export done."
