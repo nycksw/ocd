@@ -280,6 +280,7 @@ ocd_export() {
   touch "$OCD_GIT_DIR"/".ocd_exported_$(date +%Y%m%d)"
   tar -C "$OCD_GIT_DIR" --exclude="${_OCD_IGNORE_RE}" -czf "$1" .
   tar -tvzf "$1"
+  rm "$OCD_GIT_DIR"/".ocd_exported_$(date +%Y%m%d)"
   ocd_info "Export done."
   ls -lh "$1"
 }
