@@ -1,173 +1,131 @@
-# Optimally Configured Dotfiles
+# OCD: Obsessively Curated Dotfiles
 
-Do you have dotfiles skewed across lots of different machines?
+A Git-backed dotfile management workflow with minimal complexity by using a bare local repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, you only see purposefully staged files for commits. Managing changes is easy, and setting up a new shell only takes a few seconds. It avoids the usual tangle of symlinks by relying on a bare local Git repo and setting the [work tree](https://git-scm.com/docs/git-worktree) to `$HOME`. It requires minimal extra code.
 
-This script allows you to easily track and synchronize them using Git as a backend. It makes
-setting up a new system very fast and simple, and minimizes "config drift", i.e. slightly
-different versions of your configs scattered across the various machines you use.
+For more than 20 years I maintained a little pet script that did the usual symlink-farm approach, because I felt like [every other option](https://dotfiles.github.io/utilities/) was too much extra code and complexity. Then I found this minimal and elegant suggestion in [an old comment](https://news.ycombinator.com/item?id=11071754) by [StreakyCobra](https://github.com/StreakyCobra). Atlassian did a nice [write-up](https://www.atlassian.com/git/tutorials/dotfiles) about it, too. So, I said goodbye to my trusty little 20 year old pet 💔.
 
-OCD works by configuring symlinks for all your dotfiles pointing at the Git-tracked versions in `~/.ocd`, like so:
-```
-$ ls -l ~/.bashrc
-lrwxrwxrwx 1 luser luser 12 Aug 25 02:25 /home/luser/.bashrc -> .ocd/.bashrc
-```
+Below, I'll explain a very slightly more detailed approach to make this work, and how to use the `ocd-install.sh` script I wrote.
 
-OCD functions are wrappers for moving files in and out of "tracked" status,
-restoring files, backup changes to the upstream Git repository, and so forth.
+## Philosophy
 
-To use this, you just need a centrally accessible Git repo (e.g. a repo called "`dotfiles`"
-on Github) and this one shellscript.
+- Store dotfiles in `~/.ocd` (a bare repo).
+- Work directly in `$HOME` with `ocd` as the Git command alias. (`git --git-dir=$HOME/.ocd --work-tree=$HOME`)
+- Use an extensive `.gitignore_ocd` so you don’t accidentally commit secrets or random junk.
+- Keep everything simple—no thousands of lines of code or complicated scripts.
 
-## Download the OCD script
-Replace `~/bin` with wherever you like to keep your tools. Make sure it's in your `PATH`.
+## Basic Idea
+
+1. **Create or pick a GitHub repo** for your dotfiles. Make sure your SSH keys are set up for the remote side.
+
+2. **Clone it as a bare repo** in your `$HOME`. Something like:
+
+```bash
+git clone --bare git@github.com:USER/dotfiles.git $HOME/.ocd
+git --git-dir=$HOME/.ocd --work-tree=$HOME config --local status.showUntrackedFiles no
 ```
-mkdir -p ~/bin
-curl https://raw.githubusercontent.com/nycksw/ocd/main/ocd.sh -o ~/bin/ocd
-chmod +x ~/bin/ocd
-PATH="$PATH:~/bin"
-```
-## Set the repository
-You'll need a Git repository for storing your dotfiles. Put its URL in your OCD config:
-```
-echo 'OCD_REPO=git@github.com:luser/my-dotfiles.git' >> ~/.ocd.conf
-```
-## Install an SSH key for the repository
-Below shows how to create a new SSH keypair for the host.
-```
-ssh-keygen -t ed25519 -f ~/.ssh/your_deploy_key
+3. **Add an alias** like `ocd` to your shell environment:
+
+`.bashrc`:
+
+```bash
+alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
 ```
 
-Add your new public key to your origin repository. Here are the
-[GitHub instructions for managing deploy keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys).
+4. **Start versioning**:
 
-OCD will work if you have an `ssh-agent` running with the appropriate key/config.
-To use a specific SSH deploy key for all the Git commands, set `OCD_IDENT`:
-```
-echo 'OCD_IDENT=~/.ssh/your_deploy_key' >> ~/.ocd.conf
-```
-
-## Install your dotfiles via OCD
-OCD will overwrite your local files with whatever is in the repository, so make sure the Git repo
-has the most recent versions.
-
-To install your dotfiles into your home directory:
-```
-ocd install
-```
-When you run `ocd install` it does the following:
-
-  * checks if an SSH identity is available
-  * runs `git clone`, syncing your central dotfile repository into your OCD directory; the default destination is `~/.ocd`.
-  * creates symlinks in your home directory pointing at versions in `~/.ocd` (the local Git repo).
-  * (Debian-only) reports which of your favorite packages are missing from the system;
-    * this requires keeping a list of your favorite packages in a file called `~/.favpkgs`.
-  * offers to install `bash` completion for itself; this is optional and requires `sudo`.
-
-# Usage
-```
-ocd install:        install files from <OCD_REPO>
-ocd add FILE:       track a new file in the repository
-ocd rm FILE:        stop tracking a file in the repository
-ocd restore:        pull from git main and copy files to homedir
-ocd backup:         push all local changes upstream
-ocd status [FILE]:  check if a file is tracked, or if there are uncommited changes
-ocd export FILE:    create a tar.gz archive with everything in ~/.ocd
-ocd missing-pkgs:   compare system against ~/.favpkgs and report missing
+```bash
+ocd status
+ocd add .bashrc
+ocd commit -m "Add .bashrc"
+ocd push origin main
 ```
 
-# Writing portable config files
+## Automated First-Time Setup
 
-This process may require you think a little differently about your dotfiles to
-make sure they're portable across all the systems you use. For example, my
-`.bashrc` is suitable for *every* system I use, and I put domain-centric or
-host-centric customizations (for example, hosts I use at work) in a separate file.
+The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub or otherwise) that you'll use for your dotfiles. If you already have one with dotfiles in it, that's OK as long as the files are at the root of the repo. If you already have files in it, **this setup will overwrite your local versions**!
 
-Consider these lines, a version of which I include at the end of my `.bashrc`:
+The `ocd-install.sh` script will offer a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files. It will also offer to download a massive `.gitignore` file to keep you from accidentally checking in secrets and other junk files. At the time of this writing it has 8421 rules in it.
 
-```
-source $HOME/.bashrc_$(hostname -f)
-source $HOME/.bashrc_$(dnsdomainname)
-```
+Running the script looks something like this:
 
-This way, settings are only applied in the appropriate context.
+```console
+$ ./ocd-install.sh
+This will create a bare local repo for managing dotfiles (well, ANY files)
+using your homedir as the work tree and a remote repo for backup/sync.
 
-# Managing changes to tracked files
+WARNING! If you use a remote repo with existing dotfiles, this will clobber
+your local versions. If you're not ready for that, you should ctrl-c your
+way out of here.
 
-When I log in to a system that I haven't worked on in a while, the first thing
-I do is run `ocd restore`. Any time I make a config change, I run `ocd backup`.
+For the remote repo, you will need its SSH key set up already.
 
-*Note*: the actual dotfiles are linked to their counterparts in the
-local `~/.ocd` git branch, so there's no need to copy changes anywhere before
-committing. Just edit in place and run `ocd backup`.
+Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).
+URL: git@github.com:luser/dotfiles.git
+LAST WARNING: Anything in git@github.com:luser/dotfiles.git will clobber local versions. Are you sure? (y/N) y
+Cloning into bare repository '/home/luser/.ocd'...
+...
+HEAD is now at feae847 Add new "ocd" alias.
+Install a pre-commit hook to prevent accidental large commits? (Y/n) y
+[*] Pre-commit hook installed: /home/luser/.ocd/hooks/pre-commit
+Fetch a big excludesFile to prevent tracking secrets/junk? (Y/n) y
+-rw-r--r-- 1 luser luser 269K Mar 14 16:31 /home/luser/.gitignore_ocd
 
-There are also helper functions: `ocd status` tells me if I'm behind the
-main, and `ocd missing-pkgs` tells me if my installed
-packages differ from my basic preferences recorded in `~/.favpkgs`; for
-example, your `openbox` autostart may call programs that are not installed
-by default on a new system, and so `ocd missing-pkgs` is just a very simple way
-to record these dependencies and make it easy to install them, e.g.: `sudo
-apt-get install $(ocd missing-pkgs)`
+Tip: Use "ocd check-ignore -v /home/luser/.gitignore_ocd" to troubleshoot matching rules.
 
-Adding new files is just:
-  * `ocd add <filename>`
-  * `ocd backup`
+[*] ALL DONE!
 
-Finally, you may also use `ocd export filename.tar.gz` to create an archive
-with all your files. This is useful if you'd like to copy your files to
-another host where you don't want to use OCD.
+[!] Don't forget this in your .bashrc/.zsh/etc.:
 
-### Example output
+  # Use "ocd" to manage dotfiles in $HOME.
+  alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
 
-If I change something on any of my systems, I can easily push the change
-back to my Git repository. For example:
+  # Update .gitignore_ocd file.
+  alias ocd-update-ignore='curl -sL "https://www.toptal.com/developers/gitignore/api/$(curl -sL https://www.toptal.com/developers/gitignore/api/list | xargs | sed '\''s/ /,/g'\'')" > $HOME/.gitignore_ocd'
 
-```
-$ ocd backup
-✓ git status in /home/e/.ocd:
+After sourcing your file with the new alias you can just do "ocd add", "ocd commit", and so forth.
 
+Save a one-liner like this to set everything up on other machines, AFTER
+your SSH key is available on them; it's pretty close to a one-shot config:
+
+  git clone --bare git@github.com:luser/dotfiles.git "$HOME/.ocd" && \
+      alias ocd="git --git-dir="$HOME/.ocd" --work-tree=$HOME" && \
+      ocd config --local status.showUntrackedFiles no && \
+      ocd config --local core.excludesFile "$HOME/.gitignore_ocd" && \
+      ocd pull && \
+      source "$HOME/.bashrc"
+
+$ alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
+
+$ ocd status
 On branch main
-Your branch is up to date with 'origin/main'.
+nothing to commit (use -u to show untracked files)
 
+$ vi .bashrc
+
+[add the "ocd" alias and such to your .bashrc]
+
+$ ocd status
+On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
         modified:   .bashrc
-[...]
-Commit everything and push to 'git@github.com:nycksw/dotfiles.git'? [NO/yes]: yes
-[main 5ac968a] Remove bash builder line.
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ ocd commit -a
+[main ac0275e] Adding ocd aliases and stuff.
  1 file changed, 1 deletion(-)
-[...]
-To github.com:nycksw/dotfiles.git
-   684882f..5ac968a  main -> main
+
+$ ocd push
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 22 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:luser/dotfiles.git
+   febe867..ac0275e  main -> main
 ```
 
-# Caveats
-
-## Merges
-Occasionally I'll change something on more than one system without
-running `ocd backup`, and git will complain that it can't run `git pull` without
-first committing local changes. This is easy to fix by changing into the `~/.ocd`
-directory and doing a typical merge, a simple `git push`, `git checkout -f $filename`
-to overwrite changes, or some other resolution.
-
-# Portability of this script
-
-I've run OCD on several different distributions, but it might not work on
-yours. Fork this repo and go nuts. `ocd.sh` is relatively simple.
-
-I'd love to receive pull requests that make this script more portable, just so long as
-the changes don't result in a script that's too long or complicated to maintain.
-
-## Alternatives
-
-There are other dotfile managers! You should almost certainly use one of them instead of
-this one. Here's a list:
-
-* [dotbot](https://github.com/anishathalye/dotbot)
-* [chezmoi](https://www.chezmoi.io/why-use-chezmoi/)
-* [yadm](https://yadm.io/)
-* [GNU Stow](https://www.gnu.org/software/stow/)
-
- I wrote OCD before any of these existed, and I've never tried them because they seem too
- heavyweight for my taste, but I'm sure they offer advantages over this little pet script
- of mine.
