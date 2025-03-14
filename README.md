@@ -1,6 +1,6 @@
 # OCD: Obsessively Curated Dotfiles
 
-A Git-backed dotfile management workflow with minimal complexity by using a bare local repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, you only see purposefully staged files for commits. Managing changes is easy, and setting up a new shell only takes a few seconds. It avoids the usual tangle of symlinks by relying on a bare local Git repo and setting the [work tree](https://git-scm.com/docs/git-worktree) to `$HOME`. It requires minimal extra code.
+A Git-backed dotfile management workflow with minimal complexity by using a bare local repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, you only see purposefully staged files for commits. Managing changes is easy, and setting up a new shell only takes a few seconds. It avoids the usual tangle of symlinks. It requires no extra code.
 
 For more than 20 years I maintained a little pet script that did the usual symlink-farm approach, because I felt like [every other option](https://dotfiles.github.io/utilities/) was too much extra code and complexity. Then I found this minimal and elegant suggestion in [an old comment](https://news.ycombinator.com/item?id=11071754) by [StreakyCobra](https://github.com/StreakyCobra). Atlassian did a nice [write-up](https://www.atlassian.com/git/tutorials/dotfiles) about it, too. So, I said goodbye to my trusty little 20 year old pet 💔.
 
