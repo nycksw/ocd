@@ -4,6 +4,12 @@
 
 set -e
 
+if [ -d "$HOME/.ocd" ]; then
+  echo "$HOME/.ocd already exists."
+  echo "Please move it out of the way first."
+  exit 1
+fi
+
 cat << 'END'
 This will create a bare local repo for managing dotfiles (well, ANY files)
 using your homedir as the work tree and a remote repo for backup/sync.
