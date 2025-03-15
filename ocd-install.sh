@@ -73,7 +73,8 @@ fi
 read -p "Fetch a big excludesFile to prevent tracking secrets/junk? (Y/n) " \
     -r ADD_GITIGNORE && [ -z "$ADD_GITIGNORE" ] && ADD_GITIGNORE='y'
 if [[ "$ADD_GITIGNORE" =~ ^[yY] ]]; then
-  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list | xargs | sed 's/ /,/g')
+  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list \
+    | xargs | sed 's/ /,/g' | sed 's/^[*\/]*.*$//g' | cat -s)
   IGNORE_FILE="$HOME/.gitignore_ocd"
   curl -sL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" > "$IGNORE_FILE"
   $OCD config --local core.excludesFile "$IGNORE_FILE"
