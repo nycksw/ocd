@@ -9,7 +9,7 @@ Deploying everything to a new machine is a one-liner. No tangle of symlinks, no 
 One-shot install:
 
 ```
-curl -sL https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh | sh
 ```
 
 Or clone this repo and run,
