@@ -125,9 +125,7 @@ cat << END
 
 After sourcing that you can just do "ocd add", "ocd commit", and so forth.
 
-Save a one-liner like this to set everything up on other machines, AFTER
-your SSH key is available on them, forwarded or otherwise. Then it's a
-one-shot config:
+One-shot one-liner:
 
 # [!] OCD_CLOBBER will overwrite files with versions from the repo.
 export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER="y" && \\
