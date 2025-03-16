@@ -4,10 +4,26 @@
 
 set -e
 
+# Optional environment variables:
+#   OCD_REMOTE      = "git@github.com:USER/REPO.git"
+#   OCD_CLOBBER   = "y" or "n"
+#   OCD_HOOK        = "y" or "n"
+#   OCD_GITIGNORE   = "y" or "n"
+OCD_REMOTE=${OCD_REMOTE:-}
+OCD_CLOBBER=${OCD_CLOBBER:-}
+OCD_HOOK=${OCD_HOOK:-y}
+OCD_GITIGNORE=${OCD_GITIGNORE:-y}
+
 if [ -d "$HOME/.ocd" ]; then
-  echo "$HOME/.ocd already exists."
-  echo "Please move it out of the way first."
-  exit 1
+  if [[ $OCD_CLOBBER =~ ^[yY] ]]; then
+    OCD_BACKUP="$HOME/.ocd_backup_$(date +%s)"
+    mv "$HOME/.ocd" "$OCD_BACKUP"
+    echo "[!} $HOME/.ocd -> $OCD_BACKUP"
+  else
+    echo "$HOME/.ocd already exists."
+    echo "Please move it out of the way first."
+    exit 1
+  fi
 fi
 
 cat << 'END'
@@ -23,14 +39,19 @@ For the remote repo, you will need its SSH key set up already.
 Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).
 END
 
+# Only prompt if OCD_REMOTE is not already set via the environment..
 while [[ -z "$OCD_REMOTE" ]]; do
   read -p "URL: " -r OCD_REMOTE
 done
 
-read -p "LAST WARNING: Anything in $OCD_REMOTE will clobber local versions. Are you sure? (y/N) " \
-    -r CLOBBER_LOCAL && [ -z "$CLOBBER_LOCAL" ] && CLOBBER_LOCAL='n'
+# Only prompt if OCD_CLOBBER is not already set via the environment..
+if [[ -z "$OCD_CLOBBER" ]]; then
+  read -p "LAST WARNING: Anything in $OCD_REMOTE will clobber local versions. Are you sure? (y/N) " \
+      -r OCD_CLOBBER
+  [ -z "$OCD_CLOBBER" ] && OCD_CLOBBER='n'
+fi
 
-if [[ "$CLOBBER_LOCAL" =~ ^[nN] ]]; then
+if [[ "$OCD_CLOBBER" =~ ^[nN] ]]; then
   echo "Exiting." && exit
 fi
 
@@ -46,10 +67,14 @@ $OCD config --local status.showUntrackedFiles no
 $OCD reset --hard HEAD
 $OCD checkout-index -f -a
 
-# Optional pre-commit safety hook.
-read -p "Install a pre-commit hook to prevent accidental large commits? (Y/n) " \
-    -r ADD_HOOK && [ -z "$ADD_HOOK" ] && ADD_HOOK='y'
-if [[ "$ADD_HOOK" =~ ^[yY] ]]; then
+# Optional pre-commit safety hook. Only prompt if OCD_HOOK not already set
+# via the environment.
+if [[ -z "$OCD_HOOK" ]]; then
+  read -p "Install a pre-commit hook to prevent accidental large commits? (Y/n) " \
+      -r OCD_HOOK
+  [ -z "$OCD_HOOK" ] && OCD_HOOK='y'
+fi
+if [[ "$OCD_HOOK" =~ ^[yY] ]]; then
   mkdir -p "$HOME/.ocd/hooks"
   HOOK="$HOME/.ocd/hooks/pre-commit"
   cat << 'END' > "$HOOK"
@@ -70,9 +95,13 @@ END
 fi
 
 # Offer to fetch excludesFile from <gitignore.io>/Toptal.
-read -p "Fetch a big excludesFile to prevent tracking secrets/junk? (Y/n) " \
-    -r ADD_GITIGNORE && [ -z "$ADD_GITIGNORE" ] && ADD_GITIGNORE='y'
-if [[ "$ADD_GITIGNORE" =~ ^[yY] ]]; then
+# Only prompt if OCD_GITIGNORE not already set.
+if [[ -z "$OCD_GITIGNORE" ]]; then
+  read -p "Fetch a big excludesFile to prevent tracking secrets/junk? (Y/n) " \
+      -r OCD_GITIGNORE
+  [ -z "$OCD_GITIGNORE" ] && OCD_GITIGNORE='y'
+fi
+if [[ "$OCD_GITIGNORE" =~ ^[yY] ]]; then
   ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list \
     | xargs | sed 's/ /,/g' | sed 's/^[*\/]*.*$//g' | cat -s)
   IGNORE_FILE="$HOME/.gitignore_ocd"
@@ -97,13 +126,12 @@ cat << END
 After sourcing that you can just do "ocd add", "ocd commit", and so forth.
 
 Save a one-liner like this to set everything up on other machines, AFTER
-your SSH key is available on them; it's pretty close to a one-shot config:
+your SSH key is available on them, forwarded or otherwise. Then it's a
+one-shot config:
 
-  git clone --bare $OCD_REMOTE "\$HOME/.ocd" && \\
-      alias ocd="git --git-dir="\$HOME/.ocd" --work-tree=\$HOME" && \\
-      ocd config --local status.showUntrackedFiles no && \\
-      ocd config --local core.excludesFile "\$HOME/.gitignore_ocd" && \\
-      ocd pull && \\
-      source "\$HOME/.bashrc"
+# [!] OCD_CLOBBER will overwrite files with versions from the repo.
+export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER="y" && \\
+  curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \\
+  | bash
 
 END
