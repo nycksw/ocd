@@ -18,7 +18,7 @@ curl -sL https://raw.githubusercontent.com/luser/ocd/main/ocd-install.sh" | bash
 
 For more than 20 years I maintained a little pet script that did the usual symlink-farm approach, because I felt like [every other option](https://dotfiles.github.io/utilities/) was too much extra code and complexity. Then I found this minimal and elegant suggestion in [an old comment](https://news.ycombinator.com/item?id=11071754) by [StreakyCobra](https://github.com/StreakyCobra). Atlassian did a nice [write-up](https://www.atlassian.com/git/tutorials/dotfiles) about it, too. So, I said goodbye to my trusty little 20 year old pet 💔.
 
-Below, I'll explain a very slightly more detailed approach to make this work, and how to use the `ocd-install.sh` script I wrote.
+Below, I'll explain how it works and how to use the `ocd-install.sh` script which adds extra safety checks.
 
 ## Philosophy
 
