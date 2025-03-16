@@ -11,7 +11,7 @@ Clone this repo and run,
 Or do it in one shot:
 
 ```
-curl -sL https://raw.githubusercontent.com/luser/ocd/main/ocd-install.sh" | bash
+curl -sL https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh | bash
 ```
 
 ### My Tale
