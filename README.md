@@ -5,7 +5,7 @@ A Git-backed dotfile management workflow with minimal complexity by using a bare
 Clone this repo and run,
 
 ```
-./ocd-install.sh`
+./ocd-install.sh
 ```
 
 Or do it in one shot:
