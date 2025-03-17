@@ -1,8 +1,8 @@
 # OCD: Obsessively Curated Dotfiles
 
-A minimalistic dotfile-management workflow using a bare repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, the `status` command only shows intentionally staged files for commits. The `excludesFile` and pre-commit hook prevent accidentally adding secrets/junk. A shell alias makes everything seamless. (`ocd status`, `ocd add`, `ocd commit`, ...)
+A minimalistic dotfile-management workflow using a bare repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, the `status` command only shows intentionally staged files. The `excludesFile` and pre-commit hook prevent accidentally adding secrets/junk. A shell alias makes everything seamless. (`ocd status`, `ocd add`, `ocd commit`, ...)
 
-Deploying everything to a new machine is a one-liner. No tangle of symlinks, no wrappers, no dedendencies. Just Git.
+Deploying to a new machine is a one-liner. No tangle of symlinks, no wrappers, no dependencies. Just Git.
 
 **Important**: Using a remote repo containing existing dotfiles will overwrite your local files. Back up anything important first.
 
@@ -34,13 +34,13 @@ The basic idea:
 Accidentally committing sensitive things from your home directory (e.g., ~~`ocd add .`~~) is a concern, so:
 
 - An extensive `.gitignore_ocd` warns about potential secrets/junk.
-- A pre-commit hook will warn when adding lots of files at once.
+- A pre-commit hook warns when adding many files at once.
 
 ## One-Shot Setup
 
 The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub, GitLab, etc.) for tracking your dotfiles. If you already have one with dotfiles in it, that's fine if the files are at the root of the repo, but remember that **this setup will overwrite your local versions in your home directory**! You may also pass arguments non-interactively, which you'll probably want to do for new machines once you get used to this way of working.
 
-The script will also offer a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
+The script also offers a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
 
 Finally, it also offers to download a massive `excludesFile` (`$HOME/.gitignore_ocd`) to prevent accidentally checking in secrets and other junk files. At the time of this writing it has 5059 rules in it. You may override a bad match with `-f`.
 
@@ -145,7 +145,7 @@ for FILE in \
 done
 ```
 
-For example, to source a specific config on a machine whose short hostname is `lurkstation`, I put it in a file called `$HOME/.bashrc_lurkstation`. This eliminates the need for a more complicated templating system to accommodate different machines. One repo, one branch, one set of dotfiles.
+For example, to source a specific config on a machine whose short hostname is `lurkstation`, I put it in a file called `$HOME/.bashrc_lurkstation`. This removes the need for a more complex templating. One repo, one branch, one set of files.
 
 ### Branches for Dotfiles
 
@@ -157,4 +157,4 @@ Using Git in this way may feel more complicated (or just "weird") vs. using [Sto
 
 ### Security
 
-Hopefully this is obvious, but any time you fetch files from the Internet and write them to your home directory you need to be careful.
+Hopefully this is obvious, but any time you fetch files from the internet and write them to your home directory you need to be careful.
