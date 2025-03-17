@@ -77,9 +77,6 @@ Tip: Use "ocd check-ignore -v /home/luser/.gitignore_ocd" to troubleshoot matchi
   # Use "ocd" to manage dotfiles in $HOME.
   alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
 
-  # Update .gitignore_ocd file.
-  alias ocd-update-ignore='curl -sL "https://www.toptal.com/developers/gitignore/api/$(curl -sL https://www.toptal.com/developers/gitignore/api/list | xargs | sed '\''s/ /,/g'\'')" > $HOME/.gitignore_ocd'
-
 After sourcing that you can just do "ocd add", "ocd commit", and so forth.
 
 One-shot one-liner:
