@@ -9,7 +9,7 @@ Deploying everything to a new machine is a one-liner. No tangle of symlinks, no 
 One-shot install:
 
 ```
-curl -fsSL https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh | bash
 ```
 
 Or clone this repo and run,
@@ -42,7 +42,7 @@ The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub, 
 
 The script will also offer a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
 
-Finally, it also offers to download a massive `excludesFile` (`$HOME/.gitignore_ocd`) to prevent accidentally checking in secrets and other junk files. At the time of this writing it has 8421 rules in it. You may override a bad match with `-f`.
+Finally, it also offers to download a massive `excludesFile` (`$HOME/.gitignore_ocd`) to prevent accidentally checking in secrets and other junk files. At the time of this writing it has 5059 rules in it. You may override a bad match with `-f`.
 
 ### Example
 

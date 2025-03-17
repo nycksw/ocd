@@ -102,10 +102,12 @@ if [[ -z "$OCD_GITIGNORE" ]]; then
   [ -z "$OCD_GITIGNORE" ] && OCD_GITIGNORE='y'
 fi
 if [[ "$OCD_GITIGNORE" =~ ^[yY] ]]; then
-  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list \
-    | xargs | sed 's/ /,/g' | sed 's/^[*\/]*.*$//g' | cat -s)
   IGNORE_FILE="$HOME/.gitignore_ocd"
-  curl -sL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" > "$IGNORE_FILE"
+  # Fetch every .gitignore list available and sed out the cpp-style comments
+  # that shouldn't be in there.
+  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list | xargs | sed 's/ /,/g')
+  curl -sL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" \
+      | sed 's/^ *[\*\\\/]*//g' | cat -s > "$IGNORE_FILE"
   $OCD config --local core.excludesFile "$IGNORE_FILE"
   ls -lh "$IGNORE_FILE"
   echo -e "\nTip: Use \"ocd check-ignore -v $IGNORE_FILE\" to troubleshoot matching rules."
