@@ -28,7 +28,7 @@ Below, I'll explain how it works and how to use the `ocd-install.sh` script whic
 
 The basic idea:
 
-- Store dotfiles in `~/.ocd` (a bare repo).
+- Store dotfiles in `$HOME/.ocd` (a bare repo).
 - Work directly in `$HOME` with `ocd` as the Git command alias: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
 
 Accidentally committing sensitive things from your home directory (e.g., ~~`ocd add .`~~) is a concern, so:
