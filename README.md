@@ -2,7 +2,7 @@
 
 A minimalistic dotfile-management workflow using a bare repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, the `status` command only shows intentionally staged files for commits. The `excludesFile` and pre-commit hook prevent accidentally adding secrets/junk. A shell alias makes everything seamless. (`ocd status`, `ocd add`, `ocd commit`, ...)
 
-Deploying everything to a new machine is a one-liner. No tangle of symlinks, no wrappers, no depdendencies, just Git.
+Deploying everything to a new machine is a one-liner. No tangle of symlinks, no wrappers, no dedendencies, just Git.
 
 **Important**: Using a remote repo containing existing dotfiles will overwrite your local files. Back up anything important first.
 
