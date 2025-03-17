@@ -38,7 +38,7 @@ Accidentally committing sensitive things from your home directory (e.g., ~~`ocd 
 
 ## One-Shot Setup
 
-The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub, GitLab, etc.) for your dotfiles. If you already have one with dotfiles in it, that's fine if the files are at the root of the repo. If you already have files in it, **this setup will overwrite your local versions in your home directory**! You may also pass arguments non-interactively, which you'll probably want to do for new machines once you get used to this way of working.
+The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub, GitLab, etc.) for tracking your dotfiles. If you already have one with dotfiles in it, that's fine if the files are at the root of the repo, but remember that **this setup will overwrite your local versions in your home directory**! You may also pass arguments non-interactively, which you'll probably want to do for new machines once you get used to this way of working.
 
 The script will also offer a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
 
