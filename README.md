@@ -2,7 +2,7 @@
 
 A minimalistic dotfile-management workflow using a bare repository and `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting `showUntrackedFiles no`, the `status` command only shows intentionally staged files for commits. The `excludesFile` and pre-commit hook prevent accidentally adding secrets/junk. A shell alias makes everything seamless. (`ocd status`, `ocd add`, `ocd commit`, ...)
 
-Deploying everything to a new machine is a one-liner. No tangle of symlinks, no wrappers, no dedendencies, just Git.
+Deploying everything to a new machine is a one-liner. No tangle of symlinks, no wrappers, no dedendencies. Just Git.
 
 **Important**: Using a remote repo containing existing dotfiles will overwrite your local files. Back up anything important first.
 
@@ -31,7 +31,7 @@ The basic idea:
 - Store dotfiles in `~/.ocd` (a bare repo).
 - Work directly in `$HOME` with `ocd` as the Git command alias: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
 
-Accidentally committing sensitive things from your home directory (e.g., "~~`ocd add .`~~") is a concern, so:
+Accidentally committing sensitive things from your home directory (e.g., ~~`ocd add .`~~) is a concern, so:
 
 - An extensive `.gitignore_ocd` warns about potential secrets/junk.
 - A pre-commit hook will warn when adding lots of files at once.
@@ -42,7 +42,7 @@ The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub, 
 
 The script will also offer a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
 
-Finally, it also offers to download a massive `excludesFile` ("`.gitignore_ocd`") to prevent accidentally checking in secrets and other junk files. At the time of this writing it has 8421 rules in it. You can always override a bad match with `-f`.
+Finally, it also offers to download a massive `excludesFile` (`$HOME/.gitignore_ocd`) to prevent accidentally checking in secrets and other junk files. At the time of this writing it has 8421 rules in it. You may override a bad match with `-f`.
 
 ### Example
 
