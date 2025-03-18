@@ -23,13 +23,13 @@ ctrl-c your way out of here.
 URL (from env): https://github.com/mathiasbynens/dotfiles.git
 OCD_CLOBBER='y': proceeding!
 
-Cloning into bare repository '/tmp/tmp.E7X4u5VvqB/.ocd'...
+Cloning into bare repository '/tmp/tmp.svg1FG1aHJ/.ocd'...
 HEAD is now at b7c7894 .gitconfig: exclude submodules
 
-[*] Repo https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.E7X4u5VvqB/.ocd @HEAD.
+[*] Repo https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.svg1FG1aHJ/.ocd @HEAD.
 
-[*] Pre-commit hook installed: /tmp/tmp.E7X4u5VvqB/.ocd/hooks/pre-commit
--rw-r--r-- 1 e e 266K Mar 18 14:59 /tmp/tmp.E7X4u5VvqB/.gitignore_ocd
+[*] Pre-commit hook installed: /tmp/tmp.svg1FG1aHJ/.ocd/hooks/pre-commit
+-rw-r--r-- 1 e e 266K Mar 18 15:57 /tmp/tmp.svg1FG1aHJ/.gitignore_ocd
 
 Tip: Use "ocd check-ignore -v .gitignore_ocd" to troubleshoot matching rules.
 
@@ -45,7 +45,7 @@ Then you can run "ocd add", "ocd commit", etc.
 One-shot:
 
 # [!] OCD_CLOBBER will overwrite files with versions from the repo.
-export OCD_REMOTE="https://github.com/mathiasbynens/dotfiles.git" OCD_CLOBBER="y" OCD_HOOK='y' && \
+export OCD_REMOTE="https://github.com/mathiasbynens/dotfiles.git" OCD_CLOBBER=y OCD_HOOK=y OCD_GITIGNORE=y && \
   curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
   | bash
 
@@ -71,6 +71,6 @@ And here is `ocd add` and `ocd commit`:
 ```
 $ ocd add $HOME/.gitconfig
 $ ocd commit -m 'Testing OCD'
-[main b7b3cbf] Testing OCD
+[main 1a2fa50] Testing OCD
  1 file changed, 4 insertions(+), 1 deletion(-)
 ```
