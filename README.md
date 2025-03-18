@@ -2,7 +2,7 @@
 
 A minimalistic dotfile-management workflow using a bare repository and
 `$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting
-`showUntrackedFiles no`, the `status` command only shows intentionally
+`showUntrackedFiles no`, the `status` command only shows modified or
 staged files. The `excludesFile` and pre-commit hook prevent accidentally
 adding secrets/junk. A shell alias makes everything seamless. (`ocd status`,
 `ocd add`, `ocd commit`, ...)
