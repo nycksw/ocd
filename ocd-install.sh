@@ -14,6 +14,18 @@ OCD_CLOBBER=${OCD_CLOBBER:-}
 OCD_HOOK=${OCD_HOOK:-}
 OCD_GITIGNORE=${OCD_GITIGNORE:-}
 
+fail_if_not_interactive() {
+  if [ ! -t 0 ]; then
+   echo "The following env vars are required for non-interactive mode:"
+   echo
+   echo "  OCD_REMOTE (e.g.: git@github.com:USER/REPO.git)"
+   echo "  OCD_CLOBBER ('y' or 'n')"
+   echo "  OCD_HOOK ('y' or 'n')"
+   echo "  OCD_GITIGNORE ('y' or 'n')"
+   exit 1
+  fi
+}
+
 if [ -d "$HOME/.ocd" ]; then
   if [[ $OCD_CLOBBER =~ ^[yY] ]]; then
     OCD_BACKUP="$HOME/.ocd_backup_$(date +%s)"
@@ -39,6 +51,7 @@ END
 test -n "$OCD_REMOTE" && echo "URL (from env): $OCD_REMOTE"
 # Only prompt if OCD_REMOTE is not already set via the environment..
 while [[ -z "$OCD_REMOTE" ]]; do
+  fail_if_not_interactive
   echo 'Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).'
   echo 'For an SSH repo, you will need its SSH key set up already.'
   read -p "URL: " -r OCD_REMOTE
@@ -46,6 +59,7 @@ done
 
 # Only prompt if OCD_CLOBBER is not already set via the environment..
 if [[ -z "$OCD_CLOBBER" ]]; then
+  fail_if_not_interactive
   read -p "LAST WARNING: Anything in $OCD_REMOTE will clobber local versions. Are you sure? (y/N) " \
       -r OCD_CLOBBER
   [ -z "$OCD_CLOBBER" ] && OCD_CLOBBER='n'
@@ -75,6 +89,7 @@ echo -e "\n[*] Repo $OCD_REMOTE cloned into $HOME/.ocd @HEAD."
 # Optional pre-commit safety hook. Only prompt if OCD_HOOK not already set
 # via the environment.
 if [[ -z "$OCD_HOOK" ]]; then
+  fail_if_not_interactive
   read -p "Install a pre-commit hook to prevent accidental large commits? (Y/n) " \
       -r OCD_HOOK
   [ -z "$OCD_HOOK" ] && OCD_HOOK='y'
@@ -102,6 +117,7 @@ fi
 # Offer to fetch excludesFile from <gitignore.io>/Toptal.
 # Only prompt if OCD_GITIGNORE not already set.
 if [[ -z "$OCD_GITIGNORE" ]]; then
+  fail_if_not_interactive
   read -p "Fetch a big excludesFile to prevent tracking secrets/junk? (Y/n) " \
       -r OCD_GITIGNORE
   [ -z "$OCD_GITIGNORE" ] && OCD_GITIGNORE='y'
@@ -132,7 +148,7 @@ Then you can run "ocd add", "ocd commit", etc.
 One-shot:
 
 # [!] OCD_CLOBBER will overwrite files with versions from the repo.
-export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER="y" OCD_HOOK='y' && \\
+export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER=y OCD_HOOK=y OCD_GITIGNORE=y && \\
   curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \\
   | bash
 
