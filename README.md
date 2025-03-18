@@ -58,9 +58,6 @@ elegant suggestion](https://news.ycombinator.com/item?id=11071754) by
 provided a [helpful write-up](https://www.atlassian.com/git/tutorials/dotfiles)
 based on that comment.
 
-Below, I'll explain how it works and how to use the `ocd-install.sh` script
-which implements this idea with some extra safety checks.
-
 ## Example
 
 `ocd-install.sh` looks something like [this](./example.md).
