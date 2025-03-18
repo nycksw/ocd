@@ -20,7 +20,7 @@ Or clone this repo and run,
 
 ### Credits
 
-Previously, "OCD" was my little pet script doing a minimal symlink-farm-to-Git-repo approach. I favored that because [every other option](https://dotfiles.github.io/utilities/) involved too much extra code and complexity, especially for setting up new machines with varying environments. Then I found this  [minimal and elegant suggestion](https://news.ycombinator.com/item?id=11071754) by [StreakyCobra](https://github.com/StreakyCobra) (from 2016!). Atlassian provided a [helpful write-up](https://www.atlassian.com/git/tutorials/dotfiles) based on that comment. 
+Previously, "OCD" was my little pet script doing a minimal symlink-farm-to-Git-repo approach. I favored that because [other options](https://dotfiles.github.io/utilities/) involved too much extra code and complexity, especially for setting up new machines with varying environments. Then I found this  [minimal and elegant suggestion](https://news.ycombinator.com/item?id=11071754) by [StreakyCobra](https://github.com/StreakyCobra) (from 2016!). Atlassian provided a [helpful write-up](https://www.atlassian.com/git/tutorials/dotfiles) based on that comment. 
 
 Below, I'll explain how it works and how to use the `ocd-install.sh` script which implements this idea with some extra safety checks.
 
@@ -40,86 +40,13 @@ Accidentally committing sensitive things from your home directory (e.g., ~~`ocd 
 
 The `ocd-install.sh` script will ask for your existing remote repo URL (GitHub, GitLab, etc.) for tracking your dotfiles. If you already have one with dotfiles in it, that's fine if the files are at the root of the repo, but remember that **this setup will overwrite your local versions in your home directory**! You may also pass arguments non-interactively, which you'll probably want to do for new machines once you get used to this way of working.
 
-The script also offers a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
+The script offers a pre-commit hook to make sure you don't accidentally add your entire home directory by flagging commits with more than 20 files.
 
 Finally, it also offers to download a massive `excludesFile` (`$HOME/.gitignore_ocd`) to prevent accidentally checking in secrets and other junk files. At the time of this writing it has 5059 rules in it. You may override a bad match with `-f`.
 
-### Example
+## Example
 
-Running the script looks like this:
-
-```console
-$ ./ocd-install.sh
-This will create a bare local repo for managing dotfiles.
-using your homedir as the work tree and a remote repo for backup/sync.
-
-WARNING! If you use a remote repo with existing dotfiles, this will clobber
-your local versions. If you're not ready for that, you should ctrl-c your
-way out of here.
-
-For the remote repo, you will need its SSH key set up already.
-
-Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).
-URL: git@github.com:luser/dotfiles.git
-LAST WARNING: Anything in git@github.com:luser/dotfiles.git will clobber local versions. Are you sure? (y/N) y
-Cloning into bare repository '/home/luser/.ocd'...
-...
-HEAD is now at 98a3d17 Comment update.
-[*] Pre-commit hook installed: /home/luser/.ocd/hooks/pre-commit
--rw-r--r-- 1 e e 200 Mar 15 22:25 /home/luser/.gitignore_ocd
-
-Tip: Use "ocd check-ignore -v /home/luser/.gitignore_ocd" to troubleshoot matching rules.
-
-[*] ALL DONE!
-
-[!] Don't forget this in your .bashrc/.zsh/etc.:
-
-  # Use "ocd" to manage dotfiles in $HOME.
-  alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
-
-After sourcing that you can just do "ocd add", "ocd commit", and so forth.
-
-One-shot one-liner:
-
-# [!] OCD_CLOBBER="y" will overwrite files with versions from the repo.
-export OCD_REMOTE="git@github.com:luser/dotfiles.git" OCD_CLOBBER="y" && \\
-  curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \\
-  | bash
-
-$ alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
-
-$ ocd status
-On branch main
-nothing to commit (use -u to show untracked files)
-
-$ vi .bashrc
-
-[add the "ocd" alias and such to your .bashrc]
-
-$ ocd status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   .bashrc
-
-no changes added to commit (use "git add" and/or "git commit -a")
-
-$ ocd commit -a
-[main ac0275e] Adding ocd aliases and stuff.
- 1 file changed, 1 deletion(-)
-
-$ ocd push
-Enumerating objects: 5, done.
-Counting objects: 100% (5/5), done.
-Delta compression using up to 22 threads
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 294 bytes | 294.00 KiB/s, done.
-Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To github.com:luser/dotfiles.git
-   febe867..ac0275e  main -> main
-```
+`ocd-install.sh` looks something like [this](./example.md).
 
 ## But...
 
@@ -154,4 +81,4 @@ Using Git in this way may feel more complicated (or just "weird") vs. using [Sto
 
 ### Security
 
-Hopefully this is obvious, but any time you fetch files from the internet and write them to your home directory you need to be careful.
+Hopefully this is obvious, but any time you fetch files from the internet and write them to your home directory, you need to be careful.

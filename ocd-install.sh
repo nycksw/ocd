@@ -11,14 +11,14 @@ set -e
 #   OCD_GITIGNORE   = "y" or "n"
 OCD_REMOTE=${OCD_REMOTE:-}
 OCD_CLOBBER=${OCD_CLOBBER:-}
-OCD_HOOK=${OCD_HOOK:-y}
-OCD_GITIGNORE=${OCD_GITIGNORE:-y}
+OCD_HOOK=${OCD_HOOK:-}
+OCD_GITIGNORE=${OCD_GITIGNORE:-}
 
 if [ -d "$HOME/.ocd" ]; then
   if [[ $OCD_CLOBBER =~ ^[yY] ]]; then
     OCD_BACKUP="$HOME/.ocd_backup_$(date +%s)"
     mv "$HOME/.ocd" "$OCD_BACKUP"
-    echo "[!} $HOME/.ocd -> $OCD_BACKUP"
+    echo "[!] $HOME/.ocd -> $OCD_BACKUP"
   else
     echo "$HOME/.ocd already exists."
     echo "Please move it out of the way first."
@@ -27,20 +27,20 @@ if [ -d "$HOME/.ocd" ]; then
 fi
 
 cat << 'END'
-This will create a bare local repo for managing dotfiles (well, ANY files)
-using your homedir as the work tree and a remote repo for backup/sync.
+This will create a bare local repo for managing dotfiles using your
+homedir as the work tree and a remote repo for backup/sync.
 
-WARNING! If you use a remote repo with existing dotfiles, this will clobber
-your local versions. If you're not ready for that, you should ctrl-c your
-way out of here.
+WARNING! If you use a remote repo with existing dotfiles, this will
+clobber your local versions. If you're not ready for that, you should
+ctrl-c your way out of here.
 
-For the remote repo, you will need its SSH key set up already.
-
-Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).
 END
 
+test -n "$OCD_REMOTE" && echo "URL (from env): $OCD_REMOTE"
 # Only prompt if OCD_REMOTE is not already set via the environment..
 while [[ -z "$OCD_REMOTE" ]]; do
+  echo 'Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).'
+  echo 'For an SSH repo, you will need its SSH key set up already.'
   read -p "URL: " -r OCD_REMOTE
 done
 
@@ -53,12 +53,15 @@ fi
 
 if [[ "$OCD_CLOBBER" =~ ^[nN] ]]; then
   echo "Exiting." && exit
+  else
+    echo "OCD_CLOBBER='y': proceeding!"; echo
 fi
 
 OCD="git --git-dir=$HOME/.ocd --work-tree=$HOME"
 
-# Create local bare repo and set remote origin.
+# Create local bare repo.
 git clone --bare "$OCD_REMOTE" "$HOME/.ocd"
+chmod 700 "$HOME"/.ocd
 
 # Any new files in $HOME appear as unstaged unless you do this.
 $OCD config --local status.showUntrackedFiles no
@@ -66,6 +69,8 @@ $OCD config --local status.showUntrackedFiles no
 # Fetch existing files from remote, creating or OVERWRITING local ones.
 $OCD reset --hard HEAD
 $OCD checkout-index -f -a
+
+echo -e "\n[*] Repo $OCD_REMOTE cloned into $HOME/.ocd @HEAD."
 
 # Optional pre-commit safety hook. Only prompt if OCD_HOOK not already set
 # via the environment.
@@ -91,7 +96,7 @@ if [[ "$STAGED_COUNT" -gt "$MAX_ALLOWED" ]]; then
 fi
 END
   chmod +x "$HOOK"
-  echo "[*] Pre-commit hook installed: $HOOK"
+  echo -e "\n[*] Pre-commit hook installed: $HOOK"
 fi
 
 # Offer to fetch excludesFile from <gitignore.io>/Toptal.
@@ -110,7 +115,7 @@ if [[ "$OCD_GITIGNORE" =~ ^[yY] ]]; then
       | sed 's/^ *[\*\\\/]*//g' | cat -s > "$IGNORE_FILE"
   $OCD config --local core.excludesFile "$IGNORE_FILE"
   ls -lh "$IGNORE_FILE"
-  echo -e "\nTip: Use \"ocd check-ignore -v $IGNORE_FILE\" to troubleshoot matching rules."
+  echo -e "\nTip: Use \"ocd check-ignore -v $(basename "$IGNORE_FILE")\" to troubleshoot matching rules."
 fi
 
 cat << END
@@ -122,12 +127,12 @@ cat << END
   # Use "ocd" to manage dotfiles in \$HOME.
   alias ocd='git --git-dir=\$HOME/.ocd --work-tree=\$HOME'
 
-After sourcing that you can just do "ocd add", "ocd commit", and so forth.
+Then you can run "ocd add", "ocd commit", etc.
 
-One-shot one-liner:
+One-shot:
 
 # [!] OCD_CLOBBER will overwrite files with versions from the repo.
-export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER="y" && \\
+export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER="y" OCD_HOOK='y' && \\
   curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \\
   | bash
 
