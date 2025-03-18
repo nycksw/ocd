@@ -24,7 +24,7 @@ export OCD_CLOBBER='y'
 cat > $EXAMPLE_FILE << 'END'
 # Example: `ocd-install.sh`
 
-The following is console output from `ocd-install.sh` (run from the
+The following is console output from `ocd-install.sh` (via the
 [test script](./test.sh)) to demonstrate what running the
 install script looks like:
 

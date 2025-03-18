@@ -1,114 +1,76 @@
 # OCD: Obsessively Curated Dotfiles
 
-A minimalistic dotfile-management workflow using a bare repository and
-`$HOME` as the [work tree](https://git-scm.com/docs/git-worktree). By setting
-`showUntrackedFiles no`, the `status` command only shows intentionally
-staged files. The `excludesFile` and pre-commit hook prevent accidentally
-adding secrets/junk. A shell alias makes everything seamless. (`ocd status`,
-`ocd add`, `ocd commit`, ...)
+A simple dotfile management workflow using a bare Git repository stored in `$HOME/.ocd`, with `$HOME` itself as the Git work tree. No symlinks, wrappers, or extra dependencies—just Git.
 
-Deploying to a new machine is a one-liner. No tangle of symlinks, no wrappers,
-no dependencies. Just Git.
+The setup:
+
+- Bare repository at `$HOME/.ocd`
+- Alias `ocd` simplifies commands: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
+
+Setting `showUntrackedFiles no` hides untracked files to avoid clutter. A custom `.gitignore_ocd` and a pre-commit hook protect against accidentally committing sensitive or unwanted files.
+
+Deploying all your dotfiles to a new machine is a one-liner.
 
 ## Philosophy
 
-The basic idea:
+- Dotfiles tracked directly in `$HOME`
+- Git command simplified by `ocd` alias
 
-- Store dotfiles in `$HOME/.ocd` (a bare repo).
-- Work directly in `$HOME` with `ocd` as the Git command alias: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
+To prevent accidental commits (e.g., ~~`ocd add .`~~):
 
-Accidentally committing sensitive things from your home directory (e.g.,
-~~`ocd add .`~~) is a concern, so:
+- Comprehensive `.gitignore_ocd`
+- Pre-commit hook warns if adding many files at once
 
-- An extensive `.gitignore_ocd` warns about potential secrets/junk.
-- A pre-commit hook warns when adding many files at once.
+## Installation
 
+**Caution**: Using this with existing remote dotfiles will overwrite local files. Backup important files first.
 
-## Running the Installation Script
+To install, clone this repo, inspect the script, and run:
 
-**Important**: Using a remote repo containing existing dotfiles will overwrite
-your local files. Back up anything important first.
+```bash
+./ocd-install.sh
+```
 
-Clone this repo, review the code, and run: `./ocd-install.sh`
+The install script:
 
-The `ocd-install.sh` script will ask for your existing remote repo URL
-(GitHub, GitLab, etc.) for tracking your dotfiles. If you already have one with
-dotfiles already in it, that's fine if the files are at the root of the repo,
-but remember that **this setup will overwrite your local versions in your
-home directory**! You may also pass arguments non-interactively, which you'll
-probably want to do for new machines once you get used to this way of working.
-
-The script offers a pre-commit hook to make sure you don't accidentally add
-your entire home directory by flagging commits with more than 20 files.
-
-Finally, it also offers to download a massive `excludesFile`
-(`$HOME/.gitignore_ocd`) to prevent accidentally checking in secrets and
-other junk files. At the time of this writing it has 5059 rules in it. You
-may override a bad match with `-f`.
+- Prompts for your dotfile remote URL (GitHub, GitLab, etc.)
+- Overwrites existing dotfiles in your home directory from your remote
+- Accepts command-line arguments for automated deployment
+- Installs a pre-commit hook to warn against committing many files
+- Downloads an extensive `.gitignore_ocd` file (5059 rules) to avoid accidental commits. Override with `-f` if needed.
 
 ### Credits
 
-"OCD" was my little pet script implementing a minimal
-symlink-farm-to-Git-repo approach. I favored that because [other
-options](https://dotfiles.github.io/utilities/) involved too
-much extra code and complexity, especially when setting up new
-machines with varying environments. Then I found this  [minimal and
-elegant suggestion](https://news.ycombinator.com/item?id=11071754) by
-[StreakyCobra](https://github.com/StreakyCobra) (from 2016!). Atlassian
-provided a [helpful write-up](https://www.atlassian.com/git/tutorials/dotfiles)
-based on that comment.
+Originally, "OCD" was my own minimal dotfile helper-script based on symlinks. Later, inspired by [StreakyCobra’s elegant suggestion](https://news.ycombinator.com/item?id=11071754) (2016!) and an [Atlassian write-up](https://www.atlassian.com/git/tutorials/dotfiles), it became simpler and cleaner—no more symlinks.
 
 ## Example
 
-`ocd-install.sh` looks something like [this](./example.md).
+See [`example.md`](./example.md) for how `ocd-install.sh` looks in action.
 
-## But...
+## Notes and Alternatives
 
-### Alternatives
+### System-specific configs
 
-For people who live in a terminal, this whole topic is deeply personal. There
-are [many ways to do this](https://dotfiles.github.io/utilities/).
+For machine-specific files, I source configs based on hostname/domain within `.bashrc`:
 
-### System Agnosticism
-
-This workflow only uses Git. `ocd-install.sh` is Bash but this workflow
-works anywhere Git works.
-
-However, if you want to use this workflow across heterogeneous systems,
-you'll need to write your dotfiles in a suitable way. I do something like
-this in my `.bashrc`:
-
-```
+```bash
 for FILE in \
   "${HOME}/.bashrc_$(dnsdomainname -s)" \
-  "${HOME}/.bashrc_$(hostname -s)" \
-  # ...
-  do if [[ -f "${FILE}" ]]; then source "${FILE}"; fi
+  "${HOME}/.bashrc_$(hostname -s)"; do
+  [[ -f "${FILE}" ]] && source "${FILE}"
 done
 ```
 
-For example, to source a specific config on a machine whose short hostname is
-`lurkstation`, I put it in a file called `$HOME/.bashrc_lurkstation`. This
-removes the need for a more complex templating. One repo, one branch, one
-set of files.
+This avoids branching and templating complexity.
 
-### Branches for Dotfiles
+### Using Branches
 
-If you don't like the system-agnosticism suggestion above and you _really_
-need to keep different branches for your dotfiles, you can. The `ocd` alias
-is just Git. Adjust the alias or the workflow to suit your needs
+If preferred, you can still manage different systems using branches. Adjust the `ocd` alias or workflow as needed.
 
-### "This is More Complicated Than..."
+### Complexity vs. Other Tools
 
-Using Git in this way may feel more complicated (or just
-"weird") vs. using [Stow](https://www.gnu.org/software/stow/),
-or [dotbot](https://github.com/anishathalye/dotbot), or
-[chezmoi](https://www.chezmoi.io/), but it's hard to argue that those tools
-don't add _code complexity_ and extra dependencies. Once you understand the
-relationship between the bare repo and the work tree, this feels cleaner,
-_more_ intuitive, and safer.
+This method might seem unusual compared to [Stow](https://www.gnu.org/software/stow/), [dotbot](https://github.com/anishathalye/dotbot), or [chezmoi](https://www.chezmoi.io/). However, those tools add dependencies and code complexity. Once familiar, this Git-centric approach feels simpler and safer.
 
-### Security
+### Security Reminder
 
-Hopefully this is obvious, but any time you fetch files from the internet
-and write them to your home directory, you need to be careful.
+Always carefully review scripts fetched from the internet before executing them locally.
