@@ -1,7 +1,5 @@
 # OCD: Obsessively Curated Dotfiles
 
-A simple dotfile management workflow using a bare Git repository stored in `$HOME/.ocd`, with `$HOME` itself as the Git work tree. No symlinks, wrappers, or extra dependencies—just Git.
-
 The setup:
 
 - Bare repository at `$HOME/.ocd`
