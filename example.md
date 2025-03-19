@@ -13,14 +13,14 @@ will be overwritten.
 
 OCD_CLOBBER='y' => local files may be overwritten.
 
-Cloning into bare repository '/tmp/tmp.kwwNak4dtw/.ocd'...
+Cloning into bare repository '/tmp/tmp.mM7zdu5Rji/.ocd'...
 HEAD is now at b7c7894 .gitconfig: exclude submodules
 
-[*] https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.kwwNak4dtw/.ocd as a bare repo.
-[*] Pre-commit hook installed at: /tmp/tmp.kwwNak4dtw/.ocd/hooks/pre-commit
--rw-r--r-- 1 e e 266K Mar 19 11:37 /tmp/tmp.kwwNak4dtw/.gitignore_ocd
+[*] https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.mM7zdu5Rji/.ocd as a bare repo.
+[*] Pre-commit hook installed at: /tmp/tmp.mM7zdu5Rji/.ocd/hooks/pre-commit
+-rw-r--r-- 1 e e 266K Mar 19 11:44 /tmp/tmp.mM7zdu5Rji/.gitignore_ocd
 
-Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.kwwNak4dtw/.gitignore_ocd")"  to troubleshoot matching rules.
+Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.mM7zdu5Rji/.gitignore_ocd")"  to troubleshoot matching rules.
 
 [*] All done!
 
@@ -50,12 +50,13 @@ Changes not staged for commit:
 	modified:   .gitconfig
 
 no changes added to commit (use "git add" and/or "git commit -a")
+```
 
 And then `ocd add` and `ocd commit`:
 
 ```
 $ ocd add $HOME/.gitconfig
 $ ocd commit -m 'Testing OCD'
-[main ddc62f0] Testing OCD
+[main 19db706] Testing OCD
  1 file changed, 4 insertions(+), 1 deletion(-)
 ```

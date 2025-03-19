@@ -53,6 +53,7 @@ $OCD config --global commit.gpgsign false
 {
   $OCD status;
   cat << 'END'
+```
 
 And then `ocd add` and `ocd commit`:
 
