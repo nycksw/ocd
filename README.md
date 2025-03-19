@@ -2,24 +2,16 @@
 
 A simple dotfile management workflow using a bare Git repository stored in `$HOME/.ocd`, with `$HOME` itself as the Git work tree. No symlinks, wrappers, or extra dependencies—just Git.
 
-The setup:
-
-- Bare repository at `$HOME/.ocd`
-- Alias `ocd` simplifies commands: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
-
-Setting `showUntrackedFiles no` hides untracked files to avoid clutter. A custom `.gitignore_ocd` and a pre-commit hook protect against accidentally committing sensitive or unwanted files.
-
-Deploying all your dotfiles to a new machine is a one-liner.
-
 ## Basic Idea
 
-- Dotfiles tracked directly in `$HOME`
+- Dotfiles tracked directly in `$HOME` (no symlink farming)
 - Git command simplified by `ocd` alias: `git --git-dir=$HOME/.ocd --work-tree=$HOME`
+- Deploying all your dotfiles to a new machine is a one-liner.
 
-To prevent accidental commits (e.g., ~~`ocd add .`~~):
+To prevent accidental commits (e.g., ~~`ocd add .`~~ in `$HOME`):
 
-- Comprehensive `.gitignore_ocd`
-- Pre-commit hook warns if adding many files at once
+- Comprehensive `.gitignore_ocd` to filter secrets and junk files
+- Pre-commit hook warns if too many files at once
 
 ## Installation
 
@@ -47,7 +39,7 @@ See [`example.md`](./example.md) for how `ocd-install.sh` looks in action.
 
 The main alias you need: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
 
-Here are a few others you might find handy:
+Here are a few other shortcuts you might find handy:
 
 ```
 # Set Git remote repo for dotfiles.
