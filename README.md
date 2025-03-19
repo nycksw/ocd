@@ -54,7 +54,14 @@ Here are a few others you might find handy:
 export OCD_REMOTE="git@github.com:USER/dotfiles.git"
 
 # Main command for interacting with the local dotfile repo.
-alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
+ocd () {
+  # Don't allow ocd commands inside another Git repo.
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Can't use 'ocd' while inside another Git repo." >&2
+    return 1
+  fi
+  git --git-dir="$HOME/.ocd" --work-tree="$HOME" "$@"
+}
 
 # Create a tarball with tracked dotfiles only (no .git dir).
 alias ocd-export='( f="$HOME/ocd-$(date +%Y%m%d).tar.gz" && cd "$HOME" && ocd ls-files -z | tar --null -T - -czvf $f; ls -l $f )'
