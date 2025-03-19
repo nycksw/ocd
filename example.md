@@ -1,53 +1,39 @@
 # Example: `ocd-install.sh`
 
-The following is console output from `ocd-install.sh` (run from the
-[test script](./test.sh)) to demonstrate what running the
-install script looks like:
+The following shows console output from `ocd-install.sh` (via
+the [test script](./test.sh)) to demonstrate what the setup looks like:
 
 ```
-# These env vars are for non-interactive mode.
-$ export OCD_REMOTE='https://github.com/mathiasbynens/dotfiles.git'
-$ export OCD_HOOK='y'
-$ export OCD_GITIGNORE='y'
-$ export OCD_CLOBBER='y'
-
-$  ./ocd-install.sh
-
+$ ./ocd-install.sh -r https://github.com/mathiasbynens/dotfiles.git -c -h -g
 This will create a bare local repo for managing dotfiles using your
 homedir as the work tree and a remote repo for backup/sync.
 
-WARNING! If you use a remote repo with existing dotfiles, this will
-clobber your local versions. If you're not ready for that, you should
-ctrl-c your way out of here.
+WARNING! If you use a remote repo with existing dotfiles, local versions
+will be overwritten.
 
-URL (from env): https://github.com/mathiasbynens/dotfiles.git
-OCD_CLOBBER='y': proceeding!
+OCD_CLOBBER='y' => local files may be overwritten.
 
-Cloning into bare repository '/tmp/tmp.svg1FG1aHJ/.ocd'...
+Cloning into bare repository '/tmp/tmp.kwwNak4dtw/.ocd'...
 HEAD is now at b7c7894 .gitconfig: exclude submodules
 
-[*] Repo https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.svg1FG1aHJ/.ocd @HEAD.
+[*] https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.kwwNak4dtw/.ocd as a bare repo.
+[*] Pre-commit hook installed at: /tmp/tmp.kwwNak4dtw/.ocd/hooks/pre-commit
+-rw-r--r-- 1 e e 266K Mar 19 11:37 /tmp/tmp.kwwNak4dtw/.gitignore_ocd
 
-[*] Pre-commit hook installed: /tmp/tmp.svg1FG1aHJ/.ocd/hooks/pre-commit
--rw-r--r-- 1 e e 266K Mar 18 15:57 /tmp/tmp.svg1FG1aHJ/.gitignore_ocd
+Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.kwwNak4dtw/.gitignore_ocd")"  to troubleshoot matching rules.
 
-Tip: Use "ocd check-ignore -v .gitignore_ocd" to troubleshoot matching rules.
+[*] All done!
 
-[*] ALL DONE!
+Add an alias in your shell rc:
 
-[!] Don't forget this in your .bashrc/.zsh/etc.:
-
-  # Use "ocd" to manage dotfiles in $HOME.
   alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
 
-Then you can run "ocd add", "ocd commit", etc.
+Then "ocd add", "ocd commit", etc.
 
-One-shot:
+One-liner for new machine setup:
 
-# [!] OCD_CLOBBER will overwrite files with versions from the repo.
-export OCD_REMOTE="https://github.com/mathiasbynens/dotfiles.git" OCD_CLOBBER=y OCD_HOOK=y OCD_GITIGNORE=y && \
-  curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
-  | bash
+curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
+  | bash -s -- -r "https://github.com/mathiasbynens/dotfiles.git" -c -h -g
 
 ```
 
@@ -64,13 +50,12 @@ Changes not staged for commit:
 	modified:   .gitconfig
 
 no changes added to commit (use "git add" and/or "git commit -a")
-```
 
-And here is `ocd add` and `ocd commit`:
+And then `ocd add` and `ocd commit`:
 
 ```
 $ ocd add $HOME/.gitconfig
 $ ocd commit -m 'Testing OCD'
-[main 1a2fa50] Testing OCD
+[main ddc62f0] Testing OCD
  1 file changed, 4 insertions(+), 1 deletion(-)
 ```

@@ -1,28 +1,36 @@
 #!/usr/bin/env bash
-# ocd-install.sh - Minimal script for initializing a bare Git repo in $HOME.
+# ocd-install.sh - Setup script for minimalistic Git dotfile tracking.
 # <https://github.com/nycksw/ocd>
 
 set -e
 
-# Optional environment variables:
-#   OCD_REMOTE      = "git@github.com:USER/REPO.git"
-#   OCD_CLOBBER   = "y" or "n"
-#   OCD_HOOK        = "y" or "n"
-#   OCD_GITIGNORE   = "y" or "n"
-OCD_REMOTE=${OCD_REMOTE:-}
-OCD_CLOBBER=${OCD_CLOBBER:-}
-OCD_HOOK=${OCD_HOOK:-}
-OCD_GITIGNORE=${OCD_GITIGNORE:-}
+usage() {
+  echo "Usage: $0 [-r <REMOTE>] [-c] [-h] [-g]"
+  echo
+  echo "  -r <REMOTE>   Set remote repo URL (e.g., git@github.com:USER/REPO.git)."
+  echo "  -c            Clobber local dotfiles with the remote version."
+  echo "  -h            Install a pre-commit hook to prevent large commits."
+  echo "  -g            Fetch a large excludesFile to ignore secrets/junk."
+  echo
+  echo "Examples:"
+  echo "  $0 -r git@github.com:USER/REPO.git -c -h -g"
+  exit 1
+}
+
+while getopts "r:chg" opt; do
+  case $opt in
+    r) OCD_REMOTE="$OPTARG";;
+    c) OCD_CLOBBER='y';;
+    h) OCD_HOOK='y';;
+    g) OCD_GITIGNORE='y';;
+    *) usage;;
+  esac
+done
 
 fail_if_not_interactive() {
   if [ ! -t 0 ]; then
-   echo "The following env vars are required for non-interactive mode:"
-   echo
-   echo "  OCD_REMOTE (e.g.: git@github.com:USER/REPO.git)"
-   echo "  OCD_CLOBBER ('y' or 'n')"
-   echo "  OCD_HOOK ('y' or 'n')"
-   echo "  OCD_GITIGNORE ('y' or 'n')"
-   exit 1
+    echo "Non-interactive mode requires -r, -c, -h, and -g flags (no prompts)." >&2
+    exit 1
   fi
 }
 
@@ -32,8 +40,8 @@ if [ -d "$HOME/.ocd" ]; then
     mv "$HOME/.ocd" "$OCD_BACKUP"
     echo "[!] $HOME/.ocd -> $OCD_BACKUP"
   else
-    echo "$HOME/.ocd already exists."
-    echo "Please move it out of the way first."
+    echo "$HOME/.ocd already exists." >&2
+    echo "Move or remove it before re-running, or use -c." >&2
     exit 1
   fi
 fi
@@ -42,56 +50,54 @@ cat << 'END'
 This will create a bare local repo for managing dotfiles using your
 homedir as the work tree and a remote repo for backup/sync.
 
-WARNING! If you use a remote repo with existing dotfiles, this will
-clobber your local versions. If you're not ready for that, you should
-ctrl-c your way out of here.
+WARNING! If you use a remote repo with existing dotfiles, local versions
+will be overwritten.
 
 END
 
-test -n "$OCD_REMOTE" && echo "URL (from env): $OCD_REMOTE"
-# Only prompt if OCD_REMOTE is not already set via the environment..
+# Prompt if OCD_REMOTE is missing
 while [[ -z "$OCD_REMOTE" ]]; do
   fail_if_not_interactive
-  echo 'Enter the Git remote URL for your dotfiles (e.g., git@github.com:USER/REPO.git).'
-  echo 'For an SSH repo, you will need its SSH key set up already.'
-  read -p "URL: " -r OCD_REMOTE
+  read -p "Enter Git remote URL (e.g., git@github.com:USER/REPO.git): " \
+    -r OCD_REMOTE
 done
 
-# Only prompt if OCD_CLOBBER is not already set via the environment..
+# Prompt if OCD_CLOBBER isn't set.
 if [[ -z "$OCD_CLOBBER" ]]; then
   fail_if_not_interactive
-  read -p "LAST WARNING: Anything in $OCD_REMOTE will clobber local versions. Are you sure? (y/N) " \
-      -r OCD_CLOBBER
+  read -p "Overwrite local dotfiles with $OCD_REMOTE? (y/N): " -r OCD_CLOBBER
   [ -z "$OCD_CLOBBER" ] && OCD_CLOBBER='n'
 fi
 
 if [[ "$OCD_CLOBBER" =~ ^[nN] ]]; then
-  echo "Exiting." && exit
-  else
-    echo "OCD_CLOBBER='y': proceeding!"; echo
+  echo "This setup overwrites any local dotfiles with those in your remote " \
+       "repo. Exiting."
+  exit
+else
+  echo "OCD_CLOBBER='y' => local files may be overwritten."
+  echo
 fi
 
 OCD="git --git-dir=$HOME/.ocd --work-tree=$HOME"
 
-# Create local bare repo.
+# Clone remote as a bare repo.
 git clone --bare "$OCD_REMOTE" "$HOME/.ocd"
-chmod 700 "$HOME"/.ocd
+chmod 700 "$HOME/.ocd"
 
-# Any new files in $HOME appear as unstaged unless you do this.
+# Local untracked files remain hidden in Git status.
 $OCD config --local status.showUntrackedFiles no
 
-# Fetch existing files from remote, creating or OVERWRITING local ones.
+# Overwrite local files from remote HEAD.
 $OCD reset --hard HEAD
 $OCD checkout-index -f -a
 
-echo -e "\n[*] Repo $OCD_REMOTE cloned into $HOME/.ocd @HEAD."
+echo -e "\n[*] $OCD_REMOTE cloned into $HOME/.ocd as a bare repo."
 
-# Optional pre-commit safety hook. Only prompt if OCD_HOOK not already set
-# via the environment.
+# Optional pre-commit hook.
 if [[ -z "$OCD_HOOK" ]]; then
   fail_if_not_interactive
-  read -p "Install a pre-commit hook to prevent accidental large commits? (Y/n) " \
-      -r OCD_HOOK
+  read -p "Install pre-commit hook to prevent accidental commits? (Y/n): " \
+    -r OCD_HOOK
   [ -z "$OCD_HOOK" ] && OCD_HOOK='y'
 fi
 if [[ "$OCD_HOOK" =~ ^[yY] ]]; then
@@ -105,51 +111,47 @@ exec > /dev/tty
 MAX_ALLOWED=20
 STAGED_COUNT=$(git diff --cached --name-only | wc -l)
 if [[ "$STAGED_COUNT" -gt "$MAX_ALLOWED" ]]; then
-  echo -e "[!] You are about to commit $STAGED_COUNT files. Continue? (y/N) "
+  echo "[!] You are about to commit $STAGED_COUNT files. Continue? (y/N)"
   read ans
   [[ "$ans" =~ ^[yY] ]] || exit 1
 fi
 END
   chmod +x "$HOOK"
-  echo -e "\n[*] Pre-commit hook installed: $HOOK"
+  echo "[*] Pre-commit hook installed at: $HOOK"
 fi
 
-# Offer to fetch excludesFile from <gitignore.io>/Toptal.
-# Only prompt if OCD_GITIGNORE not already set.
+# Optional excludesFile.
 if [[ -z "$OCD_GITIGNORE" ]]; then
   fail_if_not_interactive
-  read -p "Fetch a big excludesFile to prevent tracking secrets/junk? (Y/n) " \
-      -r OCD_GITIGNORE
+  read -p "Fetch a big excludesFile to ignore secrets/junk? (Y/n): " \
+    -r OCD_GITIGNORE
   [ -z "$OCD_GITIGNORE" ] && OCD_GITIGNORE='y'
 fi
 if [[ "$OCD_GITIGNORE" =~ ^[yY] ]]; then
   IGNORE_FILE="$HOME/.gitignore_ocd"
-  # Fetch every .gitignore list available and sed out the cpp-style comments
-  # that shouldn't be in there.
-  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list | xargs | sed 's/ /,/g')
-  curl -sL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" \
-      | sed 's/^ *[\*\\\/]*//g' | cat -s > "$IGNORE_FILE"
+  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list \
+    | xargs | sed 's/ /,/g')
+  curl -fsSL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" \
+    | sed 's/^ *[\*\\\/]*//g' | cat -s > "$IGNORE_FILE"
   $OCD config --local core.excludesFile "$IGNORE_FILE"
   ls -lh "$IGNORE_FILE"
-  echo -e "\nTip: Use \"ocd check-ignore -v $(basename "$IGNORE_FILE")\" to troubleshoot matching rules."
+  echo -e "\nTip: Use \"ocd check-ignore -v \$(basename \"$IGNORE_FILE\")\" " \
+          "to troubleshoot matching rules."
 fi
 
 cat << END
 
-[*] ALL DONE!
+[*] All done!
 
-[!] Don't forget this in your .bashrc/.zsh/etc.:
+Add an alias in your shell rc:
 
-  # Use "ocd" to manage dotfiles in \$HOME.
   alias ocd='git --git-dir=\$HOME/.ocd --work-tree=\$HOME'
 
-Then you can run "ocd add", "ocd commit", etc.
+Then "ocd add", "ocd commit", etc.
 
-One-shot:
+One-liner for new machine setup:
 
-# [!] OCD_CLOBBER will overwrite files with versions from the repo.
-export OCD_REMOTE="$OCD_REMOTE" OCD_CLOBBER=y OCD_HOOK=y OCD_GITIGNORE=y && \\
-  curl -sL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \\
-  | bash
+curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \\
+  | bash -s -- -r "$OCD_REMOTE" -c -h -g
 
 END
