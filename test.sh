@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # A basic non-hermetic test to validate changes and demonstrate output.
 
+set -e  # Exit on error.
+
 test -f ./ocd-install.sh || \
   (echo 'Run this in the same dir as ocd-install.sh' && exit 1)
 
 # Use a tmpdir as the homedir for testing.
-HOME_SAVE=$HOME
-FAKE_HOME=$(mktemp -d)
-export HOME=$FAKE_HOME
-cleanup() {
-  export HOME="$HOME_SAVE"
-  rm -rf "$FAKE_HOME"
-}
+FAKE_HOME="$(mktemp -d)"
+OCD_HOME="$FAKE_HOME"  # For safety because I rm -rf $FAKE_HOME below.
+OCD_BARE="${OCD_HOME}/.ocd"
+
+cleanup() { rm -rf "$FAKE_HOME"; }
 trap cleanup EXIT SIGINT SIGTERM
 
-OCD="git --git-dir=$FAKE_HOME/.ocd --work-tree=$FAKE_HOME"
+OCD="git --git-dir=$OCD_BARE --work-tree=$FAKE_HOME"
 EXAMPLE_FILE="example.md"
 
 # Write the initial part of example.md to show how the script is invoked.
@@ -30,10 +30,10 @@ END
 
 # Run ocd-install.sh with flags, capturing output in example.md.
 {
-  ./ocd-install.sh -r "https://github.com/mathiasbynens/dotfiles.git" -c -h -g;
+  ./ocd-install.sh -r "https://github.com/mathiasbynens/dotfiles.git" \
+    -c -h -g -B "$OCD_BARE" -H "$OCD_HOME"
   echo '```';
 } &>> "$EXAMPLE_FILE"
-
 
 cat >> "$EXAMPLE_FILE" << 'END'
 
@@ -45,26 +45,24 @@ Running `ocd status` after modifying tracked file `.gitconfig`:
 $ ocd status
 END
 
-# Make a few .gitconfig changes so there's something to see in ocd status.
-$OCD config --global user.email "you@example.com"
-$OCD config --global user.name "Your Name"
-$OCD config --global commit.gpgsign false
+echo "# Hello from $0" >> $OCD_HOME/.gitconfig
 
 {
   $OCD status;
-  cat << 'END'
-```
+  cat << END
+\`\`\`
 
-And then `ocd add` and `ocd commit`:
+And then \`ocd add\` and \`ocd commit\`:
 
-```
-$ ocd add $HOME/.gitconfig
+\`\`\`
+$ ocd add $OCD_HOME/.gitconfig
 $ ocd commit -m 'Testing OCD'
 END
 
-  $OCD add "$HOME/.gitconfig";
+  $OCD add "$OCD_HOME/.gitconfig";
   $OCD commit -m 'Testing OCD';
   echo '```';
+
 } >> "$EXAMPLE_FILE"
 
 echo "OK: ocd-install.sh"
@@ -77,10 +75,10 @@ else
 fi
 
 # Confirm the pre-commit hook is in place.
-if [ ! -f "$FAKE_HOME/.ocd/hooks/pre-commit" ]; then
-  echo "[!] Missing pre-commit hook at $FAKE_HOME/.ocd/hooks/pre-commit" && exit 1
+if [ ! -f "$OCD_BARE/hooks/pre-commit" ]; then
+  echo "[!] Missing pre-commit hook at $OCD_BARE/hooks/pre-commit" && exit 1
 else
-  echo "OK: $FAKE_HOME/.ocd/hooks/pre-commit"
+  echo "OK: $OCD_BARE/hooks/pre-commit"
 fi
 
 echo -e "\n[*] Don't forget to add example.md to your commit!"
