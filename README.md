@@ -35,35 +35,16 @@ The install script:
 
 See [`example.md`](./example.md) for how `ocd-install.sh` looks in action.
 
-### OCD Aliases
+### Helpful Aliases and Functions
 
 The main alias you need: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
 
-Here are a few other shortcuts you might find handy:
-
-```
-# Set Git remote repo for dotfiles.
-export OCD_REMOTE="git@github.com:USER/dotfiles.git"
-
-# Main command for interacting with the local dotfile repo.
-ocd () {
-  # Don't allow ocd commands inside another Git repo.
-  if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo "Can't use 'ocd' while inside another Git repo." >&2
-    return 1
-  fi
-  git --git-dir="$HOME/.ocd" --work-tree="$HOME" "$@"
-}
-
-# Create a tarball with tracked dotfiles only (no .git dir).
-alias ocd-export='( f="$HOME/ocd-$(date +%Y%m%d).tar.gz" && cd "$HOME" && ocd ls-files -z | tar --null -T - -czvf $f; ls -l $f )'
-
-# (Destructive) Re-run OCD setup and fetch latest dotfiles from OCD_REMOTE.
-alias ocd-install="curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" | bash -s -- -r "$OCD_REMOTE" -c -h -g"
-
-# Create a new Issue for OCD/dotfiles repo. Requires GitHub CLI.
-alias ocd-issue='(cd ~/.ocd ; gh issue create --assignee @me)'
-```
+See [helpers.sh](./helpers.sh) for some handy utilities, including:
+- A better `ocd` function to use instead of the alias above.
+- Pushing all dotfiles to a remote host.
+- Create a `.tar.gz` archive with all dotfiles.
+- Yoink changes from a remote host for review/add/commit.
+- Create a GitHub issue in your dotfiles repo for tracking TODOs.
 
 ### System-specific configs
 
