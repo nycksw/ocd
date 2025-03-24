@@ -117,15 +117,11 @@ if [[ "$OCD_HOOK" =~ ^[yY] ]]; then
   HOOK="$OCD_BARE/hooks/pre-commit"
   cat << 'END' > "$HOOK"
 #!/usr/bin/env bash
-exec < /dev/tty
-exec > /dev/tty
-
 MAX_ALLOWED=20
 STAGED_COUNT=$(git diff --cached --name-only | wc -l)
 if [[ "$STAGED_COUNT" -gt "$MAX_ALLOWED" ]]; then
-  echo "[!] You are about to commit $STAGED_COUNT files. Continue? (y/N)"
-  read ans
-  [[ "$ans" =~ ^[yY] ]] || exit 1
+  echo "[!] You are about to commit $STAGED_COUNT files from $OCD_HOME."
+  echo "If you really want to do this, use '--no-verify'."
 fi
 END
   chmod +x "$HOOK"
