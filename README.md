@@ -1,23 +1,51 @@
 # OCD: Obsessively Curated Dotfiles
 
-A simple dotfile management workflow using a bare Git repository stored in `$HOME/.ocd`, with `$HOME` itself as the Git work tree. No symlinks, wrappers, or extra dependencies—just Git.
+A simple workflow using a bare Git repository in `$HOME/.ocd` and `$HOME` itself as the Git work tree.
 
-## Basic Idea
+No symlinks, wrappers, or extra dependencies. Just Git.
 
 - Dotfiles tracked directly in `$HOME` (no symlink farming)
-- Git command simplified by `ocd` alias: `git --git-dir=$HOME/.ocd --work-tree=$HOME`
+- `ocd` alias is just `git --git-dir=$HOME/.ocd --work-tree=$HOME`
 - Deploying all your dotfiles to a new machine is a one-liner.
 
-To prevent accidental commits (e.g., ~~`ocd add .`~~ in `$HOME`):
+Optionally, you can install:
 
-- Comprehensive `.gitignore_ocd` to filter secrets and junk files
-- Pre-commit hook warns if too many files at once
+- A comprehensive `.gitignore_ocd` file to filter secrets and junk files.
+- A pre-commit hook warns about too many files being committed at once.
 
 ## Installation
 
-**Caution**: Using this with existing remote dotfiles will overwrite local files. Backup important files first.
+**Caution**: This may overwrite local files with whatever's in your remote repository.
 
-To install, clone this repo, **inspect the script**, and run:
+### TL;DR Example
+
+```bash
+# Set the repository that has your dotfiles.
+$ export OCD_REMOTE=git@github.com:nycksw/dotfiles.git
+
+# Verify access.
+$ git ls-remote "$OCD_REMOTE"
+d27b61295bd9ffe1f01c9a1004b800350846b98f        HEAD
+d27b61295bd9ffe1f01c9a1004b800350846b98f        refs/heads/main
+
+# Install everything.
+$ curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
+  | bash -s -- -r "$OCD_REMOTE" -c -h -g
+
+# Use the ocd alias.
+$ alias ocd='git --git-dir=\$HOME/.ocd --work-tree=\$HOME'
+```
+
+When you're comfortable with how this works, setting up a new machine is just a one-liner:
+
+```bash
+$ curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
+  | bash -s -- -r git@github.com:nycksw/dotfiles.git -c -h -g
+```
+
+### Interactive Setup
+
+Clone (or fork) this repo, **inspect the script**, and run:
 
 ```bash
 ./ocd-install.sh
@@ -58,11 +86,11 @@ for FILE in \
 done
 ```
 
-This avoids branching and templating complexity.
+This avoids the need for branching and templating.
 
 ### Using Branches
 
-If preferred, you can still manage different systems using branches. Adjust the `ocd` alias or workflow as needed.
+If preferred, you can still manage different systems using branches. Adjust the `ocd` alias or workflow as needed. It's just Git.
 
 ## Complexity vs. Other Tools
 
@@ -74,4 +102,4 @@ Always carefully review scripts fetched from the internet before executing them 
 
 ## Credits
 
-Originally, "OCD" was my own minimal dotfile helper-script based on symlinks. More recently, I found this [elegant (and very old) suggestion](https://news.ycombinator.com/item?id=11071754), and so my workflow became simpler and cleaner—no more symlinks. I wish I had done this years ago!
+Originally, "OCD" was my dotfile helper-script based on symlinks. Then I found this [elegant (and very old) suggestion](https://news.ycombinator.com/item?id=11071754), and so my workflow became simpler and cleaner—no more symlinks. I wish I had done this years ago!
