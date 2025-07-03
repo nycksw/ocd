@@ -1,14 +1,17 @@
 # OCD: Obsessively Curated Dotfiles
 
-A simple workflow using a bare Git repository in `$HOME/.ocd` and `$HOME` itself as the Git work tree.
+A simple workflow using a bare Git repository in `$HOME/.ocd` and `$HOME`
+itself as the Git work tree.
 
 No symlinks, wrappers, or extra dependencies. Just Git.
 
 - Dotfiles tracked directly in `$HOME` (no symlink farming)
 - `ocd` alias is just `git --git-dir=$HOME/.ocd --work-tree=$HOME`
-- Deploying all your dotfiles to a new machine is a one-liner.
+- Deploying all your dotfiles to a new machine becomes a one-liner.
 
-Optionally, you can install:
+Using
+[`ocd_install.sh`](https://github.com/nycksw/nix-tools/blob/main/home.nix)
+you can also install:
 
 - A comprehensive `.gitignore_ocd` file to filter secrets and junk files.
 - A pre-commit hook warns about too many files being committed at once.
@@ -17,7 +20,7 @@ Optionally, you can install:
 
 **Caution**: This may overwrite local files with whatever's in your remote repository.
 
-### TL;DR Example
+### Example
 
 ```bash
 # Set the repository that has your dotfiles.
@@ -71,7 +74,7 @@ $ curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" 
 
 ### Interactive Setup
 
-Clone (or fork) this repo, **inspect the script**, and run:
+Clone or fork this repo, **inspect the script**, and run:
 
 ```bash
 ./ocd-install.sh
@@ -102,7 +105,8 @@ See [helpers.sh](./helpers.sh) for some handy utilities, including:
 
 ### System-specific configs
 
-To use one set of dotfiles for all my machines, I source configs based on hostname/domain within `.bashrc`:
+To use one set of dotfiles for all my machines, I source configs based on
+hostname/domain within `.bashrc`:
 
 ```bash
 for FILE in \
@@ -116,16 +120,28 @@ This avoids the need for branching and templating.
 
 ### Using Branches
 
-If preferred, you can still manage different systems using branches. Adjust the `ocd` alias or workflow as needed. It's just Git.
+If preferred, you can still manage different systems using branches. Adjust
+the `ocd` alias or workflow as needed. It's just Git.
 
 ## Complexity vs. Other Tools
 
-This method might seem unusual compared to [Stow](https://www.gnu.org/software/stow/), [dotbot](https://github.com/anishathalye/dotbot), or [chezmoi](https://www.chezmoi.io/). However, those tools add dependencies and code complexity. Once familiar, this Git-centric approach feels simpler and safer.
+This method might seem unusual compared to
+[Stow](https://www.gnu.org/software/stow/),
+[dotbot](https://github.com/anishathalye/dotbot), or
+[chezmoi](https://www.chezmoi.io/). However, those tools add dependencies
+and code complexity. Once familiar, this Git-centric approach feels simpler
+and safer.
 
 ## Security Reminder
 
-Always carefully review scripts fetched from the internet before executing them locally. You should probably fork this repo and use your version after you've reviewed it.
+Always carefully review scripts fetched from the internet before executing
+them locally. You should probably fork this repo and use your version after
+you've reviewed it.
 
 ## Credits
 
-Originally, "OCD" was my dotfile helper-script based on symlinks. Then I found this [elegant (and very old) suggestion](https://news.ycombinator.com/item?id=11071754), and so my workflow became simpler and cleaner—no more symlinks. I wish I had done this years ago!
+Originally, "OCD" was my dotfile helper-script based
+on symlinks. Then I found this [elegant (and very old)
+suggestion](https://news.ycombinator.com/item?id=11071754), and so my
+workflow became simpler and cleaner—no more symlinks. I wish I had done
+this years ago!
