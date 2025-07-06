@@ -81,4 +81,19 @@ else
   echo "OK: $OCD_BARE/hooks/pre-commit"
 fi
 
+# Test the pre-commit hook.
+for i in $(seq 1 22); do
+  touch "$FAKE_HOME/testfile$i"
+done
+$OCD add $FAKE_HOME/testfile*
+if $OCD commit -m 'big commit' >/dev/null 2>&1; then
+  echo "[!] Pre-commit hook did not block a large commit." && exit 1
+else
+  echo "OK: pre-commit hook blocked large commit."
+fi
+
+# Clean up staged files and temp files.
+$OCD reset --quiet HEAD
+rm $FAKE_HOME/testfile*
+
 echo -e "\n[*] Don't forget to add example.md to your commit!"
