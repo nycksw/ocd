@@ -10,7 +10,7 @@ No symlinks, wrappers, or extra dependencies. Just Git.
 - Deploying all your dotfiles to a new machine becomes a one-liner.
 
 Using
-[`ocd_install.sh`](https://github.com/nycksw/nix-tools/blob/main/home.nix)
+[`ocd-install.sh`](./ocd-install.sh)
 you can also install:
 
 - A comprehensive `.gitignore_ocd` file to filter secrets and junk files.
