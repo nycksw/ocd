@@ -119,8 +119,9 @@ if [[ "$OCD_HOOK" =~ ^[yY] ]]; then
 #!/usr/bin/env bash
 MAX_ALLOWED=20
 STAGED_COUNT=$(git diff --cached --name-only | wc -l)
+WORK_TREE=$(git rev-parse --work-tree)
 if [[ "$STAGED_COUNT" -gt "$MAX_ALLOWED" ]]; then
-  echo "[!] You are about to commit $STAGED_COUNT files from $OCD_HOME."
+  echo "[!] You are about to commit $STAGED_COUNT files from: $WORK_TREE"
   echo "If you really want to do this, use '--no-verify'."
 fi
 END
