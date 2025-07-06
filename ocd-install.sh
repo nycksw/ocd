@@ -38,6 +38,7 @@ done
 
 OCD_HOME="${OCD_HOME:-$HOME}"
 OCD_BARE="${OCD_BARE:-$OCD_HOME/.ocd}"
+SKIP_CLONE=n
 
 fail_if_not_interactive() {
   if [ ! -t 0 ]; then
@@ -52,13 +53,18 @@ if [ -d "$OCD_BARE" ]; then
     mv "$OCD_BARE" "$OCD_BACKUP"
     echo "[!] $OCD_BARE -> $OCD_BACKUP"
   else
-    echo "$OCD_BARE already exists." >&2
-    echo "Move or remove it before re-running, or use -c." >&2
-    exit 1
+    if [[ "$OCD_HOOK" =~ ^[yY] || "$OCD_GITIGNORE" =~ ^[yY] ]]; then
+      SKIP_CLONE=y
+    else
+      echo "$OCD_BARE already exists." >&2
+      echo "Move or remove it before re-running, or use -c, -h, or -g." >&2
+      exit 1
+    fi
   fi
 fi
 
-cat << 'END'
+if [[ "$SKIP_CLONE" == n ]]; then
+  cat << 'END'
 This will create a bare local repo for managing dotfiles using your
 homedir as the work tree and a remote repo for backup/sync.
 
@@ -67,43 +73,43 @@ will be overwritten.
 
 END
 
-# Prompt if OCD_REMOTE is missing
-while [[ -z "$OCD_REMOTE" ]]; do
-  fail_if_not_interactive
-  read -p "Enter Git remote URL (e.g., git@github.com:USER/REPO.git): " \
-    -r OCD_REMOTE
-done
+  # Prompt if OCD_REMOTE is missing
+  while [[ -z "$OCD_REMOTE" ]]; do
+    fail_if_not_interactive
+    read -p "Enter Git remote URL (e.g., git@github.com:USER/REPO.git): " \
+      -r OCD_REMOTE
+  done
 
-# Prompt if OCD_CLOBBER isn't set.
-if [[ -z "$OCD_CLOBBER" ]]; then
-  fail_if_not_interactive
-  read -p "Overwrite local dotfiles with $OCD_REMOTE? (y/N): " -r OCD_CLOBBER
-  [ -z "$OCD_CLOBBER" ] && OCD_CLOBBER='n'
+  # Prompt if OCD_CLOBBER isn't set.
+  if [[ -z "$OCD_CLOBBER" ]]; then
+    fail_if_not_interactive
+    read -p "Overwrite local dotfiles with $OCD_REMOTE? (y/N): " -r OCD_CLOBBER
+    [ -z "$OCD_CLOBBER" ] && OCD_CLOBBER='n'
+  fi
+
+  if [[ "$OCD_CLOBBER" =~ ^[nN] ]]; then
+    echo "This setup overwrites any local dotfiles with those in your remote " \
+        "repo. Exiting."
+    exit
+  else
+    echo "OCD_CLOBBER='y' => local files may be overwritten."
+    echo
+  fi
+
+  OCD="git --git-dir=$OCD_BARE --work-tree=$OCD_HOME"
+
+  # Clone remote as a bare repo.
+  git clone --bare "$OCD_REMOTE" "$OCD_BARE"
+  chmod 700 "$OCD_BARE"
+
+  # Local untracked files remain hidden in Git status.
+  $OCD config --local status.showUntrackedFiles no
+
+  # Overwrite local files from remote HEAD.
+  $OCD reset --hard HEAD
+
+  echo -e "\n[*] $OCD_REMOTE cloned into $OCD_BARE as a bare repo."
 fi
-
-if [[ "$OCD_CLOBBER" =~ ^[nN] ]]; then
-  echo "This setup overwrites any local dotfiles with those in your remote " \
-       "repo. Exiting."
-  exit
-else
-  echo "OCD_CLOBBER='y' => local files may be overwritten."
-  echo
-fi
-
-OCD="git --git-dir=$OCD_BARE --work-tree=$OCD_HOME"
-
-# Clone remote as a bare repo.
-git clone --bare "$OCD_REMOTE" "$OCD_BARE"
-chmod 700 "$OCD_BARE"
-
-# Local untracked files remain hidden in Git status.
-$OCD config --local status.showUntrackedFiles no
-
-# Overwrite local files from remote HEAD.
-$OCD reset --hard HEAD
-$OCD checkout-index -f -a
-
-echo -e "\n[*] $OCD_REMOTE cloned into $OCD_BARE as a bare repo."
 
 # Optional pre-commit hook.
 if [[ -z "$OCD_HOOK" ]]; then
