@@ -5,27 +5,39 @@
 set -e
 
 usage() {
-  echo "Usage: $0 [-r <REMOTE>] [-c] [-h] [-g]"
+  echo "Usage: $0 [-r <REMOTE>] [-c] [-h] [-g] [-H <OCD_HOME>] [-B <OCD_BARE>]"
   echo
-  echo "  -r <REMOTE>   Set remote repo URL (e.g., git@github.com:USER/REPO.git)."
-  echo "  -c            Clobber local dotfiles with the remote version."
-  echo "  -h            Install a pre-commit hook to prevent large commits."
-  echo "  -g            Fetch a large excludesFile to ignore secrets/junk."
+  echo "  -r <REMOTE>    Set remote repo URL (e.g., git@github.com:USER/REPO.git)."
+  echo "  -c             Clobber local dotfiles with the remote version."
+  echo "  -h             Install a pre-commit hook to prevent large commits."
+  echo "  -g             Fetch a large excludesFile to ignore secrets/junk."
+  echo
+  echo "  -H <OCD_HOME>  Working tree (default: \$HOME)."
+  echo "  -B <OCD_BARE>  Bare repo dir (default: \$OCD_HOME/.ocd)."
   echo
   echo "Examples:"
+  echo "  # Basic usage"
   echo "  $0 -r git@github.com:USER/REPO.git -c -h -g"
+  echo
+  echo "  # Custom home and bare repo directory"
+  echo "  $0 -r git@github.com:USER/REPO.git -c -h -g -H /tmp/ocdtest -B /tmp/ocdtest/.ocd"
   exit 1
 }
 
-while getopts "r:chg" opt; do
-  case $opt in
-    r) OCD_REMOTE="$OPTARG";;
-    c) OCD_CLOBBER='y';;
-    h) OCD_HOOK='y';;
-    g) OCD_GITIGNORE='y';;
-    *) usage;;
+while getopts "r:H:B:chg" opt; do
+  case "$opt" in
+    r) OCD_REMOTE="$OPTARG" ;;
+    H) OCD_HOME="$OPTARG"   ;;
+    B) OCD_BARE="$OPTARG"   ;;
+    c) OCD_CLOBBER='y'      ;;
+    h) OCD_HOOK='y'         ;;
+    g) OCD_GITIGNORE='y'    ;;
+    *) usage                ;;
   esac
 done
+
+OCD_HOME="${OCD_HOME:-$HOME}"
+OCD_BARE="${OCD_BARE:-$OCD_HOME/.ocd}"
 
 fail_if_not_interactive() {
   if [ ! -t 0 ]; then
@@ -34,13 +46,13 @@ fail_if_not_interactive() {
   fi
 }
 
-if [ -d "$HOME/.ocd" ]; then
+if [ -d "$OCD_BARE" ]; then
   if [[ $OCD_CLOBBER =~ ^[yY] ]]; then
-    OCD_BACKUP="$HOME/.ocd_backup_$(date +%s)"
-    mv "$HOME/.ocd" "$OCD_BACKUP"
-    echo "[!] $HOME/.ocd -> $OCD_BACKUP"
+    OCD_BACKUP="${OCD_BARE}_backup_$(date +%s)"
+    mv "$OCD_BARE" "$OCD_BACKUP"
+    echo "[!] $OCD_BARE -> $OCD_BACKUP"
   else
-    echo "$HOME/.ocd already exists." >&2
+    echo "$OCD_BARE already exists." >&2
     echo "Move or remove it before re-running, or use -c." >&2
     exit 1
   fi
@@ -78,11 +90,11 @@ else
   echo
 fi
 
-OCD="git --git-dir=$HOME/.ocd --work-tree=$HOME"
+OCD="git --git-dir=$OCD_BARE --work-tree=$OCD_HOME"
 
 # Clone remote as a bare repo.
-git clone --bare "$OCD_REMOTE" "$HOME/.ocd"
-chmod 700 "$HOME/.ocd"
+git clone --bare "$OCD_REMOTE" "$OCD_BARE"
+chmod 700 "$OCD_BARE"
 
 # Local untracked files remain hidden in Git status.
 $OCD config --local status.showUntrackedFiles no
@@ -91,7 +103,7 @@ $OCD config --local status.showUntrackedFiles no
 $OCD reset --hard HEAD
 $OCD checkout-index -f -a
 
-echo -e "\n[*] $OCD_REMOTE cloned into $HOME/.ocd as a bare repo."
+echo -e "\n[*] $OCD_REMOTE cloned into $OCD_BARE as a bare repo."
 
 # Optional pre-commit hook.
 if [[ -z "$OCD_HOOK" ]]; then
@@ -101,19 +113,17 @@ if [[ -z "$OCD_HOOK" ]]; then
   [ -z "$OCD_HOOK" ] && OCD_HOOK='y'
 fi
 if [[ "$OCD_HOOK" =~ ^[yY] ]]; then
-  mkdir -p "$HOME/.ocd/hooks"
-  HOOK="$HOME/.ocd/hooks/pre-commit"
+  mkdir -p "$OCD_BARE/hooks"
+  HOOK="$OCD_BARE/hooks/pre-commit"
   cat << 'END' > "$HOOK"
 #!/usr/bin/env bash
-exec < /dev/tty
-exec > /dev/tty
-
 MAX_ALLOWED=20
 STAGED_COUNT=$(git diff --cached --name-only | wc -l)
+WORK_TREE=$(git rev-parse --work-tree)
 if [[ "$STAGED_COUNT" -gt "$MAX_ALLOWED" ]]; then
-  echo "[!] You are about to commit $STAGED_COUNT files. Continue? (y/N)"
-  read ans
-  [[ "$ans" =~ ^[yY] ]] || exit 1
+  echo "[!] You are about to commit $STAGED_COUNT files from: $WORK_TREE"
+  echo "If you really want to do this, use '--no-verify'."
+  exit 1
 fi
 END
   chmod +x "$HOOK"
@@ -128,7 +138,7 @@ if [[ -z "$OCD_GITIGNORE" ]]; then
   [ -z "$OCD_GITIGNORE" ] && OCD_GITIGNORE='y'
 fi
 if [[ "$OCD_GITIGNORE" =~ ^[yY] ]]; then
-  IGNORE_FILE="$HOME/.gitignore_ocd"
+  IGNORE_FILE="$OCD_HOME/.gitignore_ocd"
   ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list \
     | xargs | sed 's/ /,/g')
   curl -fsSL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" \
