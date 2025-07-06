@@ -20,57 +20,41 @@ you can also install:
 
 **Caution**: This may overwrite local files with whatever's in your remote repository.
 
-### Example
+### Quick Start Example
 
 ```bash
-# Set the repository that has your dotfiles.
-$ export OCD_REMOTE=git@github.com:nycksw/dotfiles.git
+# Set the repository that has your dotfiles
+export OCD_REMOTE=git@github.com:YOUR_USERNAME/dotfiles.git
 
-# Verify access.
-$ git ls-remote "$OCD_REMOTE"
-d27b61295bd9ffe1f01c9a1004b800350846b98f        HEAD
-d27b61295bd9ffe1f01c9a1004b800350846b98f        refs/heads/main
+# Verify you have access to the repository
+git ls-remote "$OCD_REMOTE"
 
-# Install everything.
-$ curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
+# Install OCD with all recommended options
+curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
   | bash -s -- -r "$OCD_REMOTE" -c -h -g
 
-# Set the ocd alias.
-$ alias ocd='git --git-dir=\$HOME/.ocd --work-tree=\$HOME'
+# Add the ocd alias to your shell (add this to ~/.bashrc or ~/.zshrc)
+alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
 
-$ echo '# Be the change you want to see in the world' >> ~/.bashrc
+# Now you can use ocd like git for your dotfiles
+echo '# Be the change you want to see in the world' >> ~/.bashrc
 
-$ ocd status
-On branch main
-Changes not staged for commit:
-  (use "git add <file>..." to update what will be committed)
-  (use "git restore <file>..." to discard changes in working directory)
-        modified:   .bashrc
-
-no changes added to commit (use "git add" and/or "git commit -a")
-
-$ ocd commit -a -m 'Testing OCD for README.md'
-[main b1d26eb] Testing OCD for README.md
- 1 file changed, 1 insertion(+)
-
-$ ocd push
-Enumerating objects: 5, done.
-Counting objects: 100% (5/5), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (3/3), done.
-Writing objects: 100% (3/3), 344 bytes | 344.00 KiB/s, done.
-Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To github.com:nycksw/dotfiles.git
-   4db3f5c..b1d26eb  main -> main
+ocd status
+ocd add ~/.bashrc
+ocd commit -m 'Update bashrc with inspirational comment.'
+ocd push
 ```
 
-When you're comfortable with how this works, setting up a new machine is just a one-liner:
+### One-liner Setup for New Machines
+
+Once you're comfortable with how this works, setting up a new machine becomes a simple one-liner:
 
 ```bash
-$ curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
-  | bash -s -- -r git@github.com:nycksw/dotfiles.git -c -h -g
+curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
+  | bash -s -- -r git@github.com:YOUR_USERNAME/dotfiles.git -c -h -g
 ```
+
+**Remember to replace `YOUR_USERNAME` with your actual GitHub username!**
 
 ### Interactive Setup
 

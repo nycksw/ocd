@@ -4,14 +4,21 @@
 set -e  # Exit on error.
 
 test -f ./ocd-install.sh || \
-  (echo 'Run this in the same dir as ocd-install.sh' && exit 1)
+  (echo 'ERROR: Run this in the same dir as ocd-install.sh' >&2 && exit 1)
+
+test -x ./ocd-install.sh || \
+  (echo 'ERROR: ocd-install.sh is not executable' >&2 && exit 1)
 
 # Use a tmpdir as the homedir for testing.
 FAKE_HOME="$(mktemp -d)"
 OCD_HOME="$FAKE_HOME"  # For safety because I rm -rf $FAKE_HOME below.
 OCD_BARE="${OCD_HOME}/.ocd"
 
-cleanup() { rm -rf "$FAKE_HOME"; }
+cleanup() {
+  if [[ -n "$FAKE_HOME" && "$FAKE_HOME" != "$HOME" ]]; then
+    rm -rf "$FAKE_HOME"
+  fi
+}
 trap cleanup EXIT SIGINT SIGTERM
 
 OCD="git --git-dir=$OCD_BARE --work-tree=$FAKE_HOME"
@@ -67,11 +74,11 @@ END
 
 echo "OK: ocd-install.sh"
 
-# Spot-check .gitignore_ocd for a known SSH rule.
-if ! grep -q '^.ssh/id_' "$FAKE_HOME/.gitignore_ocd"; then
-  echo "[!] .gitignore_ocd is missing some rules." && exit 1
+# Spot-check .gitignore_ocd for known rules.
+if ! grep -q -E '(\.ssh/|\.DS_Store|node_modules/)' "$FAKE_HOME/.gitignore_ocd"; then
+  echo "[!] .gitignore_ocd is missing expected rules." >&2 && exit 1
 else
-  echo "OK: .gitignore_ocd"
+  echo "OK: .gitignore_ocd contains expected rules"
 fi
 
 # Confirm the pre-commit hook is in place.
