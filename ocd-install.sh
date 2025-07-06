@@ -123,6 +123,7 @@ WORK_TREE=$(git rev-parse --work-tree)
 if [[ "$STAGED_COUNT" -gt "$MAX_ALLOWED" ]]; then
   echo "[!] You are about to commit $STAGED_COUNT files from: $WORK_TREE"
   echo "If you really want to do this, use '--no-verify'."
+  exit 1
 fi
 END
   chmod +x "$HOOK"
