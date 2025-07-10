@@ -60,3 +60,5 @@ ocd-yoink () {
 
 # Create a new Issue for OCD/dotfiles repo. Requires GitHub CLI.
 alias ocd-issue='(cd ~/.ocd ; gh issue create --assignee @me)'
+
+# vim: set ft=bash :
