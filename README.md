@@ -1,97 +1,56 @@
 # OCD: Obsessively Curated Dotfiles
 
-A simple workflow using a bare Git repository in `$HOME/.ocd` and `$HOME`
-itself as the Git work tree.
+Manage dotfiles using a bare Git repository in `$HOME/.ocd` with `$HOME` as the work tree. No symlinks, wrappers, or extra dependencies. Just Git.
 
-No symlinks, wrappers, or extra dependencies. Just Git.
+TL;DR:
+- `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
+- `ocd init`
+- `ocd config --local status.showUntrackedFiles no`
+- `ocd add .bashrc  # Then ocd commit, push, pull, etc.`
 
-- Dotfiles tracked directly in `$HOME` (no symlink farming)
-- `ocd` alias is just `git --git-dir=$HOME/.ocd --work-tree=$HOME`
-- Deploying all your dotfiles to a new machine becomes a one-liner.
+See `ocd-install.sh` for a more comprehensive approach to do the same thing.
 
-Using
-[`ocd-install.sh`](./ocd-install.sh)
-you can also install:
+## Quick Start
 
-- A comprehensive `.gitignore_ocd` file to filter secrets and junk files.
-- A pre-commit hook warns about too many files being committed at once.
-
-## Installation
-
-**Caution**: This may overwrite local files with whatever's in your remote repository.
-
-### Quick Start Example
+**Warning**: This overwrites local files with your remote repository contents.
 
 ```bash
-# Set the repository that has your dotfiles
-export OCD_REMOTE=git@github.com:YOUR_USERNAME/dotfiles.git
-
-# Verify you have access to the repository
-git ls-remote "$OCD_REMOTE"
-
-# Install OCD with all recommended options
+# Replace with your Git dotfile repository
 curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
-  | bash -s -- -r "$OCD_REMOTE" -c -h -g
+  | bash -s -- -r git@github.com:nycksw/dotfiles.git -c -h -g
 
-# Add the ocd alias to your shell (add this to ~/.bashrc or ~/.zshrc)
+# Add to ~/.bashrc or ~/.zshrc
 alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'
 
-# Now you can use ocd like git for your dotfiles
-echo '# Be the change you want to see in the world' >> ~/.bashrc
-
+# Use like regular git
 ocd status
 ocd add ~/.bashrc
-ocd commit -m 'Update bashrc with inspirational comment.'
+ocd commit -m 'Update bashrc'
 ocd push
 ```
 
-### One-liner Setup for New Machines
+## Installation Options
 
-Once you're comfortable with how this works, setting up a new machine becomes a simple one-liner:
-
+### Automated Setup
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
-  | bash -s -- -r git@github.com:YOUR_USERNAME/dotfiles.git -c -h -g
+./ocd-install.sh -r <YOUR_REPO> -c -h -g
 ```
 
-**Remember to replace `YOUR_USERNAME` with your actual GitHub username!**
-
 ### Interactive Setup
-
-Clone or fork this repo, **inspect the script**, and run:
-
 ```bash
 ./ocd-install.sh
 ```
 
-The install script:
+The installer can:
+- Clone your remote dotfiles repository
+- Install a pre-commit hook to prevent large commits
+- Download a comprehensive `.gitignore_ocd` file
 
-- Prompts for your dotfile remote URL (GitHub, GitLab, etc.)
-- Overwrites existing dotfiles in your home directory from your remote
-- Accepts command-line arguments for automated deployment
-- Installs a pre-commit hook to warn against committing many files
-- Downloads an extensive `.gitignore_ocd` file (thousands of rules) to avoid accidental commits. Override with `-f` if needed.
+## Advanced Usage
 
-### Example
+### System-Specific Configs
 
-See [`example.md`](./example.md) for how `ocd-install.sh` looks in action.
-
-### Helpful Aliases and Functions
-
-The main alias you need: `alias ocd='git --git-dir=$HOME/.ocd --work-tree=$HOME'`
-
-See [helpers.sh](./helpers.sh) for some handy utilities, including:
-- A better `ocd` function to use instead of the alias above.
-- Pushing all dotfiles to a remote host.
-- Create a `.tar.gz` archive with all dotfiles.
-- Yoink changes from a remote host for review/add/commit.
-- Create a GitHub issue in your dotfiles repo for tracking TODOs.
-
-### System-specific configs
-
-To use one set of dotfiles for all my machines, I source configs based on
-hostname/domain within `.bashrc`:
-
+Source different configs per machine in `.bashrc`:
 ```bash
 for FILE in \
   "${HOME}/.bashrc_$(dnsdomainname -s)" \
@@ -100,32 +59,25 @@ for FILE in \
 done
 ```
 
-This avoids the need for branching and templating.
+### Helper Functions
 
-### Using Branches
+See [helpers.sh](./helpers.sh) for utilities like:
+- `ocd-deploy` - Push dotfiles to remote hosts
+- `ocd-export` - Create tarball archives
+- `ocd-yoink` - Pull changes from remote hosts
 
-If preferred, you can still manage different systems using branches. Adjust
-the `ocd` alias or workflow as needed. It's just Git.
+### Example Output
 
-## Complexity vs. Other Tools
+See [example.md](./example.md) for installation walkthrough.
 
-This method might seem unusual compared to
-[Stow](https://www.gnu.org/software/stow/),
-[dotbot](https://github.com/anishathalye/dotbot), or
-[chezmoi](https://www.chezmoi.io/). However, those tools add dependencies
-and code complexity. Once familiar, this Git-centric approach feels simpler
-and safer.
+## Why Not Stow/dotbot/chezmoi?
 
-## Security Reminder
+Those tools add dependencies and complexity. This approach uses only Git. It's simpler and more portable.
 
-Always carefully review scripts fetched from the internet before executing
-them locally. You should probably fork this repo and use your version after
-you've reviewed it.
+## Security
+
+Always review scripts before running them. Consider forking/cloning this repository and using your own copy.
 
 ## Credits
 
-Originally, "OCD" was my dotfile helper-script based
-on symlinks. Then I found this [elegant (and very old)
-suggestion](https://news.ycombinator.com/item?id=11071754), and so my
-workflow became simpler and cleaner—no more symlinks. I wish I had done
-this years ago!
+Inspired by this very old [HN suggestion](https://news.ycombinator.com/item?id=11071754) for bare Git repository dotfile management.
