@@ -1,10 +1,13 @@
 # Example: `ocd-install.sh`
 
 The following shows console output from `ocd-install.sh` (via
-the [test script](./test.sh)) to demonstrate what the setup looks like:
+the [test script](./test.sh)) to demonstrate what the setup looks like.
+
+Note: This example uses a local test repository. In practice, you would use
+your own dotfiles repository (e.g., `git@github.com:USER/dotfiles.git`).
 
 ```
-$ ./ocd-install.sh -r https://github.com/mathiasbynens/dotfiles.git -c -h -g
+$ ./ocd-install.sh -r <YOUR_DOTFILES_REPO> -c -h -g
 This will create a bare local repo for managing dotfiles using your
 homedir as the work tree and a remote repo for backup/sync.
 
@@ -13,14 +16,14 @@ will be overwritten.
 
 OCD_CLOBBER='y' => local files may be overwritten.
 
-Cloning into bare repository '/tmp/tmp.0UKQAFwqrR/.ocd'...
-HEAD is now at b7c7894 .gitconfig: exclude submodules
+Cloning into bare repository '/tmp/tmp.9EExvOz4Oh/.ocd'...
+HEAD is now at 72fe735 Add example bashrc for OCD testing
 
-[*] https://github.com/mathiasbynens/dotfiles.git cloned into /tmp/tmp.0UKQAFwqrR/.ocd as a bare repo.
-[*] Pre-commit hook installed at: /tmp/tmp.0UKQAFwqrR/.ocd/hooks/pre-commit
--rw-r--r-- 1 e e 266K Mar 21 14:40 /tmp/tmp.0UKQAFwqrR/.gitignore_ocd
+[*] file:///tmp/sample-dotfiles/dotfiles.git cloned into /tmp/tmp.9EExvOz4Oh/.ocd as a bare repo.
+[*] Pre-commit hook installed at: /tmp/tmp.9EExvOz4Oh/.ocd/hooks/pre-commit
+-rw-r--r-- 1 e e 266K Jul 27 13:55 /tmp/tmp.9EExvOz4Oh/.gitignore_ocd
 
-Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.0UKQAFwqrR/.gitignore_ocd")"  to troubleshoot matching rules.
+Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.9EExvOz4Oh/.gitignore_ocd")"  to troubleshoot matching rules.
 
 [*] All done!
 
@@ -33,21 +36,19 @@ Then "ocd add", "ocd commit", etc.
 One-liner for new machine setup:
 
 curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/ocd-install.sh" \
-  | bash -s -- -r "https://github.com/mathiasbynens/dotfiles.git" -c -h -g
+  | bash -s -- -r "file:///tmp/sample-dotfiles/dotfiles.git" -c -h -g
 
 ```
 
-Running `ocd status` after modifying tracked file `.gitconfig`:
+Running `ocd status` after modifying tracked file `.bashrc_example`:
 
 ```
-# [...modifying config here...]
-
 $ ocd status
 On branch main
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
-	modified:   .gitconfig
+	modified:   .bashrc_example
 
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
@@ -55,8 +56,8 @@ no changes added to commit (use "git add" and/or "git commit -a")
 And then `ocd add` and `ocd commit`:
 
 ```
-$ ocd add /tmp/tmp.0UKQAFwqrR/.gitconfig
+$ ocd add /tmp/tmp.9EExvOz4Oh/.bashrc_example
 $ ocd commit -m 'Testing OCD'
-[main 58f0162] Testing OCD
+[main 4cf67ac] Testing OCD
  1 file changed, 1 insertion(+)
 ```
