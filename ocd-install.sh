@@ -139,10 +139,9 @@ if [[ -z "$OCD_GITIGNORE" ]]; then
 fi
 if [[ "$OCD_GITIGNORE" =~ ^[yY] ]]; then
   IGNORE_FILE="$OCD_HOME/.gitignore_ocd"
-  ALL_LISTS=$(curl -sL https://www.toptal.com/developers/gitignore/api/list \
-    | xargs | sed 's/ /,/g')
-  curl -fsSL "https://www.toptal.com/developers/gitignore/api/$ALL_LISTS" \
-    | sed 's/^ *[\*\\\/]*//g' | cat -s > "$IGNORE_FILE"
+  # Fetch the pre-generated compressed gitignore file.
+  curl -fsSL "https://raw.githubusercontent.com/nycksw/ocd/main/gitignore_ocd.gz" \
+    | gunzip > "$IGNORE_FILE"
   $OCD config --local core.excludesFile "$IGNORE_FILE"
   ls -lh "$IGNORE_FILE"
   echo -e "\nTip: Use \"ocd check-ignore -v \$(basename \"$IGNORE_FILE\")\" " \

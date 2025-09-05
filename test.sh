@@ -18,7 +18,7 @@ rm -f "$SAMPLE_DOTFILES"  # Remove any existing symlink.
 ln -s "$TEST_REPO_DIR" "$SAMPLE_DOTFILES"
 TEST_REMOTE="${SAMPLE_DOTFILES}/dotfiles.git"
 
-cleanup() { 
+cleanup() {
   rm -rf "$FAKE_HOME" "$TEST_REPO_DIR"
   rm -f "$SAMPLE_DOTFILES"
 }
@@ -32,7 +32,7 @@ echo "[*] Creating test repository..."
   git init -q
   git config user.email "test@example.com"
   git config user.name "Test User"
-  
+
   # Create a single example dotfile.
   cat > .bashrc_example << 'EOF'
 # Example bashrc for OCD testing
@@ -40,7 +40,7 @@ echo "[*] Creating test repository..."
 export OCD_TEST="Hello from OCD!"
 alias ocd-test='echo "OCD is working!"'
 EOF
-  
+
   git add .bashrc_example
   git commit -q -m "Add example bashrc for OCD testing"
   cd ..

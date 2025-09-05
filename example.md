@@ -16,14 +16,14 @@ will be overwritten.
 
 OCD_CLOBBER='y' => local files may be overwritten.
 
-Cloning into bare repository '/tmp/tmp.9EExvOz4Oh/.ocd'...
-HEAD is now at 72fe735 Add example bashrc for OCD testing
+Cloning into bare repository '/tmp/tmp.Mrme2lMzOz/.ocd'...
+HEAD is now at cea977e Add example bashrc for OCD testing
 
-[*] file:///tmp/sample-dotfiles/dotfiles.git cloned into /tmp/tmp.9EExvOz4Oh/.ocd as a bare repo.
-[*] Pre-commit hook installed at: /tmp/tmp.9EExvOz4Oh/.ocd/hooks/pre-commit
--rw-r--r-- 1 e e 266K Jul 27 13:55 /tmp/tmp.9EExvOz4Oh/.gitignore_ocd
+[*] file:///tmp/sample-dotfiles/dotfiles.git cloned into /tmp/tmp.Mrme2lMzOz/.ocd as a bare repo.
+[*] Pre-commit hook installed at: /tmp/tmp.Mrme2lMzOz/.ocd/hooks/pre-commit
+-rw-r--r-- 1 e e 266K Sep  5 09:17 /tmp/tmp.Mrme2lMzOz/.gitignore_ocd
 
-Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.9EExvOz4Oh/.gitignore_ocd")"  to troubleshoot matching rules.
+Tip: Use "ocd check-ignore -v $(basename "/tmp/tmp.Mrme2lMzOz/.gitignore_ocd")"  to troubleshoot matching rules.
 
 [*] All done!
 
@@ -56,8 +56,8 @@ no changes added to commit (use "git add" and/or "git commit -a")
 And then `ocd add` and `ocd commit`:
 
 ```
-$ ocd add /tmp/tmp.9EExvOz4Oh/.bashrc_example
+$ ocd add /tmp/tmp.Mrme2lMzOz/.bashrc_example
 $ ocd commit -m 'Testing OCD'
-[main 4cf67ac] Testing OCD
+[main 9af26ba] Testing OCD
  1 file changed, 1 insertion(+)
 ```
